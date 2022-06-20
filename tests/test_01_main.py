@@ -15,7 +15,7 @@ def test_get_process_list() -> None:
             {"id": "retrieve-era5-land", "version": "0.1"},
             {"id": "retrieve-era5-monthly-means", "version": "0.1"},
         ],
-        "links": [{"href": "http://127.0.0.1:8000/processes/", "rel": "self"}],
+        "links": [{"href": "http://testserver/processes", "rel": "self"}],
     }
 
 
@@ -26,5 +26,5 @@ def test_get_process_list_limit() -> None:
         "processes": [
             {"id": "retrieve-era5-single-levels", "version": "0.1"},
         ],
-        "links": [{"href": "http://127.0.0.1:8000/processes/", "rel": "self"}],
+        "links": [{"href": "http://testserver/processes", "rel": "self"}],
     }
