@@ -21,15 +21,25 @@ PROCESS_LIST: Dict[str, List[Dict[str, Any]]] = {
 
 processes_router = APIRouter(
     prefix="/processes",
-    tags=["processes"],
+    tags=["Processes"],
 )
 
 
-@processes_router.get("/", response_model=ProcessList, response_model_exclude_none=True)
+@processes_router.get(
+    "/",
+    response_model=ProcessList,
+    response_model_exclude_none=True,
+    summary="retrieve the list of available processes",
+    operation_id="geProcesses",
+)
 def get_process_list(
-    limit: int = Query(default=3, ge=1, le=100)
+    limit: int = Query(default=10, ge=1, le=100)
 ) -> Dict[str, List[Dict[str, Any]]]:
-
+    """
+    The list of processes contains a summary of each process
+    the OGC API - Processes offers, including the link to a
+    more detailed description of the process.
+    """
     process_list = {
         "processes": PROCESS_LIST["processes"][0:limit],
         "links": PROCESS_LIST["links"],
