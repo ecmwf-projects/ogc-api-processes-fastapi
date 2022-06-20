@@ -5,21 +5,6 @@ from fastapi import APIRouter, Query, Request
 from . import api
 from .models import ProcessesList
 
-PROCESS_LIST: Dict[str, List[Dict[str, Any]]] = {
-    "processes": [
-        {"id": "retrieve-era5-single-levels", "version": "0.1"},
-        {"id": "retrieve-era5-pressure-levels", "version": "0.1"},
-        {"id": "retrieve-era5-land", "version": "0.1"},
-        {"id": "retrieve-era5-monthly-means", "version": "0.1"},
-    ],
-    "links": [
-        {
-            "href": "http://127.0.0.1:8000/processes/",
-            "rel": "self",
-        }
-    ],
-}
-
 processes_router = APIRouter(
     prefix="/processes",
     tags=["Processes"],
@@ -42,7 +27,7 @@ def get_processes_list(
     more detailed description of the process.
     """
     process_list = {
-        "processes": PROCESS_LIST["processes"][0:limit],
+        "processes": api.get_processes_list(limit=limit),
         "links": api.get_processes_links(request),
     }
     return process_list
