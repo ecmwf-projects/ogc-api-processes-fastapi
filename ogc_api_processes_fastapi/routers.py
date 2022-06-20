@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Query
-from models import ProcessList
+
+from .models import ProcessList
 
 PROCESS_LIST: dict[str, list] = {
     "processes": [
