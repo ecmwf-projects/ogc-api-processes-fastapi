@@ -1,8 +1,9 @@
 from typing import Any, Dict, List
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Request
 
-from .models import ProcessList
+from . import api
+from .models import ProcessesList
 
 PROCESS_LIST: Dict[str, List[Dict[str, Any]]] = {
     "processes": [
@@ -27,13 +28,13 @@ processes_router = APIRouter(
 
 @processes_router.get(
     "/",
-    response_model=ProcessList,
+    response_model=ProcessesList,
     response_model_exclude_none=True,
     summary="retrieve the list of available processes",
     operation_id="geProcesses",
 )
-def get_process_list(
-    limit: int = Query(default=10, ge=1, le=100)
+def get_processes_list(
+    request: Request, limit: int = Query(default=10, ge=1, le=100)
 ) -> Dict[str, List[Dict[str, Any]]]:
     """
     The list of processes contains a summary of each process
@@ -42,6 +43,6 @@ def get_process_list(
     """
     process_list = {
         "processes": PROCESS_LIST["processes"][0:limit],
-        "links": PROCESS_LIST["links"],
+        "links": api.get_processes_links(request),
     }
     return process_list

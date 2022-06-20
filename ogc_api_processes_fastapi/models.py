@@ -54,6 +54,6 @@ class ProcessSummary(DescriptionType):
     links: Optional[List[Link]] = None
 
 
-class ProcessList(BaseModel):
+class ProcessesList(BaseModel):
     processes: List[ProcessSummary]
     links: List[Link]
