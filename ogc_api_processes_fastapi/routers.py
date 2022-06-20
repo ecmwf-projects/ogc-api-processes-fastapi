@@ -24,7 +24,7 @@ processes_router = APIRouter(
 
 
 @processes_router.get("/", response_model=ProcessList, response_model_exclude_none=True)
-def get_process_list(limit: int = Query(default=3, ge=1, le=100)) -> ProcessList:
+def get_process_list(limit: int = Query(default=3, ge=1, le=100)):
 
     return {
         "processes": PROCESS_LIST["processes"][0:limit],
