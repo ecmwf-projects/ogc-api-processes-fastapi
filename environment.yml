@@ -2,8 +2,10 @@ channels:
 - conda-forge
 - nodefaults
 dependencies:
+- fastapi
 - make
 - mypy
 - pre-commit
 - pytest
 - pytest-cov
+- uvicorn
