@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -12,7 +12,7 @@ class Metadata(BaseModel):
 
 class AdditionalParameter(BaseModel):
     name: str
-    value: List[Union[str, float, int, List[Any], Dict[str, Any]]]
+    value: list[Union[str, float, int, list[Any], dict[str, Any]]]
 
 
 class JobControlOptions(Enum):
@@ -35,25 +35,25 @@ class Link(BaseModel):
 
 
 class AdditionalParameters(Metadata):
-    parameters: Optional[List[AdditionalParameter]] = None
+    parameters: Optional[list[AdditionalParameter]] = None
 
 
 class DescriptionType(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
-    keywords: Optional[List[str]] = None
-    metadata: Optional[List[Metadata]] = None
+    keywords: Optional[list[str]] = None
+    metadata: Optional[list[Metadata]] = None
     additionalParameters: Optional[AdditionalParameters] = None
 
 
 class ProcessSummary(DescriptionType):
     id: str
     version: str
-    jobControlOptions: Optional[List[JobControlOptions]] = None
-    outputTransmission: Optional[List[TransmissionMode]] = None
-    links: Optional[List[Link]] = None
+    jobControlOptions: Optional[list[JobControlOptions]] = None
+    outputTransmission: Optional[list[TransmissionMode]] = None
+    links: Optional[list[Link]] = None
 
 
 class ProcessesList(BaseModel):
-    processes: List[ProcessSummary]
-    links: List[Link]
+    processes: list[ProcessSummary]
+    links: list[Link]
