@@ -13,6 +13,18 @@ def test_get_process_list() -> None:
             {"id": "retrieve-era5-single-levels", "version": "0.1"},
             {"id": "retrieve-era5-pressure-levels", "version": "0.1"},
             {"id": "retrieve-era5-land", "version": "0.1"},
+            {"id": "retrieve-era5-monthly-means", "version": "0.1"},
+        ],
+        "links": [{"href": "http://127.0.0.1:8000/processes/", "rel": "self"}],
+    }
+
+
+def test_get_process_list_limit() -> None:
+    response = client.get("/processes?limit=1")
+    assert response.status_code == 200
+    assert response.json() == {
+        "processes": [
+            {"id": "retrieve-era5-single-levels", "version": "0.1"},
         ],
         "links": [{"href": "http://127.0.0.1:8000/processes/", "rel": "self"}],
     }
