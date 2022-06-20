@@ -12,7 +12,7 @@ class Metadata(BaseModel):
 
 class AdditionalParameter(BaseModel):
     name: str
-    value: List[Union[str, float, int, List, Dict[str, Any]]]
+    value: List[Union[str, float, int, List[Any], Dict[str, Any]]]
 
 
 class JobControlOptions(Enum):

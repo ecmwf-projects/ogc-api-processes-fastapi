@@ -5,7 +5,7 @@ from ogc_api_processes_fastapi.main import app
 client = TestClient(app)
 
 
-def test_get_process_list():
+def test_get_process_list() -> None:
     response = client.get("/processes")
     assert response.status_code == 200
     assert response.json() == {
