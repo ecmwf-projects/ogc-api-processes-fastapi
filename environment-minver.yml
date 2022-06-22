@@ -6,4 +6,3 @@ dependencies:
 - make
 - pytest
 - pytest-cov
-- requests
