@@ -10,10 +10,10 @@ def test_get_process_list() -> None:
     assert response.status_code == 200
     assert response.json() == {
         "processes": [
-            {"id": "retrieve-era5-single-levels", "version": "0.1"},
-            {"id": "retrieve-era5-pressure-levels", "version": "0.1"},
-            {"id": "retrieve-era5-land", "version": "0.1"},
-            {"id": "retrieve-era5-monthly-means", "version": "0.1"},
+            {"id": "retrieve-reanalysis-era5-single-levels", "version": "0.1"},
+            {"id": "retrieve-reanalysis-era5-pressure-levels", "version": "0.1"},
+            {"id": "retrieve-reanalysis-era5-land", "version": "0.1"},
+            {"id": "retrieve-reanalysis-era5-land-monthly-means", "version": "0.1"},
         ],
         "links": [{"href": "http://testserver/processes", "rel": "self"}],
     }
@@ -24,7 +24,7 @@ def test_get_process_list_limit() -> None:
     assert response.status_code == 200
     assert response.json() == {
         "processes": [
-            {"id": "retrieve-era5-single-levels", "version": "0.1"},
+            {"id": "retrieve-reanalysis-era5-single-levels", "version": "0.1"},
         ],
         "links": [{"href": "http://testserver/processes", "rel": "self"}],
     }

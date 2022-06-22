@@ -4,10 +4,10 @@ import urllib.parse
 from fastapi import Query, Request
 
 PROCESS_LIST: list[dict[str, str]] = [
-    {"id": "retrieve-era5-single-levels", "version": "0.1"},
-    {"id": "retrieve-era5-pressure-levels", "version": "0.1"},
-    {"id": "retrieve-era5-land", "version": "0.1"},
-    {"id": "retrieve-era5-monthly-means", "version": "0.1"},
+    {"id": "retrieve-reanalysis-era5-single-levels", "version": "0.1"},
+    {"id": "retrieve-reanalysis-era5-pressure-levels", "version": "0.1"},
+    {"id": "retrieve-reanalysis-era5-land", "version": "0.1"},
+    {"id": "retrieve-reanalysis-era5-land-monthly-means", "version": "0.1"},
 ]
 
 
