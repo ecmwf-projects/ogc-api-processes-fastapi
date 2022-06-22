@@ -15,12 +15,13 @@ def get_processes_links(request: Request) -> list[dict[str, T.Any]]:
     """
     Return links associated to the processes list request.
     """
-    return [
+    retval = [
         {
             "href": urllib.parse.urljoin(str(request.base_url), "processes"),
             "rel": "self",
         }
     ]
+    return retval
 
 
 def get_processes_list(
