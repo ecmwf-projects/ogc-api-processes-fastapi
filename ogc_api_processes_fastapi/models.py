@@ -1,18 +1,18 @@
+import typing as T
 from enum import Enum
-from typing import Any, Optional, Union
 
 from pydantic import BaseModel, Field
 
 
 class Metadata(BaseModel):
-    title: Optional[str] = None
-    role: Optional[str] = None
-    href: Optional[str] = None
+    title: T.Optional[str] = None
+    role: T.Optional[str] = None
+    href: T.Optional[str] = None
 
 
 class AdditionalParameter(BaseModel):
     name: str
-    value: list[Union[str, float, int, list[Any], dict[str, Any]]]
+    value: list[T.Union[str, float, int, list[T.Any], dict[str, T.Any]]]
 
 
 class JobControlOptions(Enum):
@@ -28,30 +28,30 @@ class TransmissionMode(Enum):
 
 class Link(BaseModel):
     href: str
-    rel: Optional[str] = Field(None, example="service")
-    type: Optional[str] = Field(None, example="application/json")
-    hreflang: Optional[str] = Field(None, example="en")
-    title: Optional[str] = None
+    rel: T.Optional[str] = Field(None, example="service")
+    type: T.Optional[str] = Field(None, example="application/json")
+    hreflang: T.Optional[str] = Field(None, example="en")
+    title: T.Optional[str] = None
 
 
 class AdditionalParameters(Metadata):
-    parameters: Optional[list[AdditionalParameter]] = None
+    parameters: T.Optional[list[AdditionalParameter]] = None
 
 
 class DescriptionType(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    keywords: Optional[list[str]] = None
-    metadata: Optional[list[Metadata]] = None
-    additionalParameters: Optional[AdditionalParameters] = None
+    title: T.Optional[str] = None
+    description: T.Optional[str] = None
+    keywords: T.Optional[list[str]] = None
+    metadata: T.Optional[list[Metadata]] = None
+    additionalParameters: T.Optional[AdditionalParameters] = None
 
 
 class ProcessSummary(DescriptionType):
     id: str
     version: str
-    jobControlOptions: Optional[list[JobControlOptions]] = None
-    outputTransmission: Optional[list[TransmissionMode]] = None
-    links: Optional[list[Link]] = None
+    jobControlOptions: T.Optional[list[JobControlOptions]] = None
+    outputTransmission: T.Optional[list[TransmissionMode]] = None
+    links: T.Optional[list[Link]] = None
 
 
 class ProcessesList(BaseModel):

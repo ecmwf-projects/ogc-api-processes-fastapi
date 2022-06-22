@@ -1,5 +1,5 @@
+import typing as T
 import urllib.parse
-from typing import Any
 
 from fastapi import Query, Request
 
@@ -11,7 +11,7 @@ PROCESS_LIST: list[dict[str, str]] = [
 ]
 
 
-def get_processes_links(request: Request) -> list[dict[str, Any]]:
+def get_processes_links(request: Request) -> list[dict[str, T.Any]]:
     """
     Return links associated to the processes list request.
     """
@@ -25,7 +25,7 @@ def get_processes_links(request: Request) -> list[dict[str, Any]]:
 
 def get_processes_list(
     limit: int = Query(default=10, ge=1, le=100)
-) -> list[dict[str, Any]]:
+) -> list[dict[str, T.Any]]:
     """
     Return the list of processes.
     """
