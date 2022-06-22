@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from .routers import processes_router
+from . import routers
 
 app = FastAPI()
 
-app.include_router(processes_router)
+app.include_router(routers.processes_router)

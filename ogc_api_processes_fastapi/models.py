@@ -1,36 +1,36 @@
+import enum
 import typing as T
-from enum import Enum
 
-from pydantic import BaseModel, Field
+import pydantic
 
 
-class Metadata(BaseModel):
+class Metadata(pydantic.BaseModel):
     title: T.Optional[str] = None
     role: T.Optional[str] = None
     href: T.Optional[str] = None
 
 
-class AdditionalParameter(BaseModel):
+class AdditionalParameter(pydantic.BaseModel):
     name: str
     value: list[T.Union[str, float, int, list[T.Any], dict[str, T.Any]]]
 
 
-class JobControlOptions(Enum):
+class JobControlOptions(enum.Enum):
     sync_execute: str = "sync-execute"
     async_execute: str = "async-execute"
     dismiss: str = "dismiss"
 
 
-class TransmissionMode(Enum):
+class TransmissionMode(enum.Enum):
     value: str = "value"
     reference: str = "reference"
 
 
-class Link(BaseModel):
+class Link(pydantic.BaseModel):
     href: str
-    rel: T.Optional[str] = Field(None, example="service")
-    type: T.Optional[str] = Field(None, example="application/json")
-    hreflang: T.Optional[str] = Field(None, example="en")
+    rel: T.Optional[str] = pydantic.Field(None, example="service")
+    type: T.Optional[str] = pydantic.Field(None, example="application/json")
+    hreflang: T.Optional[str] = pydantic.Field(None, example="en")
     title: T.Optional[str] = None
 
 
@@ -38,7 +38,7 @@ class AdditionalParameters(Metadata):
     parameters: T.Optional[list[AdditionalParameter]] = None
 
 
-class DescriptionType(BaseModel):
+class DescriptionType(pydantic.BaseModel):
     title: T.Optional[str] = None
     description: T.Optional[str] = None
     keywords: T.Optional[list[str]] = None
@@ -54,6 +54,6 @@ class ProcessSummary(DescriptionType):
     links: T.Optional[list[Link]] = None
 
 
-class ProcessesList(BaseModel):
+class ProcessesList(pydantic.BaseModel):
     processes: list[ProcessSummary]
     links: list[Link]
