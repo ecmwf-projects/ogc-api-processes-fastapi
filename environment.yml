@@ -8,4 +8,5 @@ dependencies:
 - pre-commit
 - pytest
 - pytest-cov
+- requests
 - uvicorn
