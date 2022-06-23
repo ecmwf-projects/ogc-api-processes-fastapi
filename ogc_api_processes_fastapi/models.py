@@ -1,18 +1,18 @@
 import enum
-import typing as T
+from typing import Any, Optional, Union
 
 import pydantic
 
 
 class Metadata(pydantic.BaseModel):
-    title: T.Optional[str] = None
-    role: T.Optional[str] = None
-    href: T.Optional[str] = None
+    title: Optional[str] = None
+    role: Optional[str] = None
+    href: Optional[str] = None
 
 
 class AdditionalParameter(pydantic.BaseModel):
     name: str
-    value: list[T.Union[str, float, int, list[T.Any], dict[str, T.Any]]]
+    value: list[Union[str, float, int, list[Any], dict[str, Any]]]
 
 
 class JobControlOptions(enum.Enum):
@@ -28,30 +28,30 @@ class TransmissionMode(enum.Enum):
 
 class Link(pydantic.BaseModel):
     href: str
-    rel: T.Optional[str] = pydantic.Field(None, example="service")
-    type: T.Optional[str] = pydantic.Field(None, example="application/json")
-    hreflang: T.Optional[str] = pydantic.Field(None, example="en")
-    title: T.Optional[str] = None
+    rel: Optional[str] = pydantic.Field(None, example="service")
+    type: Optional[str] = pydantic.Field(None, example="application/json")
+    hreflang: Optional[str] = pydantic.Field(None, example="en")
+    title: Optional[str] = None
 
 
 class AdditionalParameters(Metadata):
-    parameters: T.Optional[list[AdditionalParameter]] = None
+    parameters: Optional[list[AdditionalParameter]] = None
 
 
 class DescriptionType(pydantic.BaseModel):
-    title: T.Optional[str] = None
-    description: T.Optional[str] = None
-    keywords: T.Optional[list[str]] = None
-    metadata: T.Optional[list[Metadata]] = None
-    additionalParameters: T.Optional[AdditionalParameters] = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    keywords: Optional[list[str]] = None
+    metadata: Optional[list[Metadata]] = None
+    additionalParameters: Optional[AdditionalParameters] = None
 
 
 class ProcessSummary(DescriptionType):
     id: str
     version: str
-    jobControlOptions: T.Optional[list[JobControlOptions]] = None
-    outputTransmission: T.Optional[list[TransmissionMode]] = None
-    links: T.Optional[list[Link]] = None
+    jobControlOptions: Optional[list[JobControlOptions]] = None
+    outputTransmission: Optional[list[TransmissionMode]] = None
+    links: Optional[list[Link]] = None
 
 
 class ProcessesList(pydantic.BaseModel):

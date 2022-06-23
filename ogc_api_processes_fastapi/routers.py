@@ -1,4 +1,4 @@
-import typing as T
+from typing import Any
 
 import fastapi
 
@@ -19,7 +19,7 @@ processes_router = fastapi.APIRouter(
 )
 def get_processes_list(
     request: fastapi.Request, limit: int = fastapi.Query(default=10, ge=1, le=100)
-) -> dict[str, list[dict[str, T.Any]]]:
+) -> dict[str, list[dict[str, Any]]]:
     """
     The list of processes contains a summary of each process
     the OGC API - Processes offers, including the link to a
