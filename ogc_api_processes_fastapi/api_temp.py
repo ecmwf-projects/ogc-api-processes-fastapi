@@ -1,4 +1,3 @@
-import abc
 import urllib.parse
 from typing import Any
 
@@ -32,21 +31,3 @@ def get_processes_list(
     Return the list of processes.
     """
     return PROCESS_LIST[:limit]
-
-
-class BaseClient(abc.ABC):
-    """
-    Defines a pattern for implementing OGC API - Processes endpoints.
-    """
-
-    @abc.abstractmethod
-    def get_processes(self, **kwargs: Any) -> dict[str, list[dict[str, Any]]]:
-        """
-        Get all available processes.
-
-        Called with `GET /processes`.
-
-        Returns:
-            An object of type models.ProcessesList.
-        """
-        ...

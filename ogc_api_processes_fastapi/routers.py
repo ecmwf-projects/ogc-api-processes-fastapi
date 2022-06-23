@@ -2,7 +2,7 @@ from typing import Any
 
 import fastapi
 
-from . import api, models
+from . import api_temp, models
 
 processes_router = fastapi.APIRouter(
     prefix="/processes",
@@ -26,7 +26,7 @@ def get_processes_list(
     more detailed description of the process.
     """
     process_list = {
-        "processes": api.get_processes_list(limit=limit),
-        "links": api.get_processes_links(request),
+        "processes": api_temp.get_processes_list(limit=limit),
+        "links": api_temp.get_processes_links(request),
     }
     return process_list
