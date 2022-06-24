@@ -9,6 +9,3 @@ def instantiate_app() -> FastAPI:
     app.include_router(routers.processes_router)
 
     return app
-
-
-app = instantiate_app()
