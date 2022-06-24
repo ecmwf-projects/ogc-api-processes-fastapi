@@ -25,6 +25,17 @@ class BaseClient(abc.ABC):
 
 
 def instantiate_app(client: BaseClient) -> fastapi.FastAPI:
+    """
+    Create an in instance of an OGC API - Processing compliant FastAPI application.
+
+    Arguments:
+        client:
+            A subclass of `BaseClient`. Defines the application logic which is injected into the API.
+
+    Returns:
+        app:
+            The FastAPI application.
+    """
 
     app = fastapi.FastAPI()
 
