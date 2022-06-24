@@ -39,12 +39,10 @@ def register_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
         processes_router:
             Registered router.
     """
-
     processes_router = fastapi.APIRouter(
         prefix="/processes",
         tags=["Processes"],
     )
-
     _register_get_processes(router=processes_router, client=client)
 
     return processes_router

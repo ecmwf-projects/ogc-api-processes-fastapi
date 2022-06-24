@@ -17,9 +17,7 @@ def instantiate_app(client: clients.BaseClient) -> fastapi.FastAPI:
     """
 
     app = fastapi.FastAPI()
-
     processes_router = routers.register_processes_router(client=client)
-
     app.include_router(processes_router)
 
     return app
