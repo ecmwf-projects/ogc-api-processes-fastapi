@@ -28,6 +28,17 @@ def _register_get_processes(
 
 
 def register_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
+    """
+    Register the API router dedicated to the `/processes/...` endpoints.
+
+    Arguments:
+        client:
+            Defines the application logic which is injected into the API.
+
+    Return:
+        processes_router:
+            Registered router.
+    """
 
     processes_router = fastapi.APIRouter(
         prefix="/processes",
