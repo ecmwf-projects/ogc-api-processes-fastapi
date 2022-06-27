@@ -16,7 +16,9 @@ def _create_get_processes_endpoint(
         operation_id="getProcesses",
     )
     def get_processes(
-        request: fastapi.Request, limit: int = fastapi.Query(default=10, ge=1, le=100)
+        request: fastapi.Request,
+        limit: int = fastapi.Query(default=10, ge=1, le=100),
+        offset: int = fastapi.Query(default=0, ge=1),
     ) -> models.ProcessesList:
         """
         The list of processes contains a summary of each process
@@ -29,7 +31,7 @@ def _create_get_processes_endpoint(
                 rel="self",
             )
         ]
-        process_list = client.get_processes_list()
+        process_list = client.get_processes_list(limit=limit, offset=offset)
         retval = models.ProcessesList(processes=process_list, links=links)
 
         return retval

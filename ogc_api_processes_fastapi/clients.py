@@ -9,7 +9,9 @@ class BaseClient(abc.ABC):
     """
 
     @abc.abstractmethod
-    def get_processes_list(self) -> list[models.ProcessSummary]:
+    def get_processes_list(
+        self, limit: int, offset: int
+    ) -> list[models.ProcessSummary]:
         """
         Get all available processes.
 
