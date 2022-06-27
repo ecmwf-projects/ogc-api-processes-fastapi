@@ -8,7 +8,7 @@ class BaseClient(abc.ABC):
     """
 
     @abc.abstractmethod
-    def get_processes(self, **kwargs: Any) -> dict[str, list[dict[str, Any]]]:
+    def get_processes_list(self, **kwargs: Any) -> dict[str, list[dict[str, Any]]]:
         """
         Get all available processes.
 

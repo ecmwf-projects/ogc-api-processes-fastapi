@@ -5,7 +5,7 @@ import fastapi
 from . import clients, models
 
 
-def _register_get_processes(
+def _create_get_processes_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
     @router.get(
@@ -15,7 +15,7 @@ def _register_get_processes(
         summary="retrieve the list of available processes",
         operation_id="geProcesses",
     )
-    def get_processes_list(
+    def get_processes(
         request: fastapi.Request, limit: int = fastapi.Query(default=10, ge=1, le=100)
     ) -> dict[str, list[dict[str, Any]]]:
         """
@@ -23,11 +23,11 @@ def _register_get_processes(
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
-        process_list = client.get_processes(request=request)
+        process_list = client.get_processes_list(request=request)
         return process_list
 
 
-def register_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
+def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
     """
     Register the API router dedicated to the `/processes/...` endpoints.
 
@@ -43,6 +43,6 @@ def register_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
         prefix="/processes",
         tags=["Processes"],
     )
-    _register_get_processes(router=processes_router, client=client)
+    _create_get_processes_endpoint(router=processes_router, client=client)
 
     return processes_router
