@@ -1,5 +1,6 @@
 import abc
-from typing import Any
+
+from . import models
 
 
 class BaseClient(abc.ABC):
@@ -8,7 +9,7 @@ class BaseClient(abc.ABC):
     """
 
     @abc.abstractmethod
-    def get_processes_list(self, **kwargs: Any) -> dict[str, list[dict[str, Any]]]:
+    def get_processes_list(self) -> list[models.ProcessSummary]:
         """
         Get all available processes.
 

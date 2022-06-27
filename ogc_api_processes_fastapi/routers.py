@@ -1,4 +1,4 @@
-from typing import Any
+import urllib.parse
 
 import fastapi
 
@@ -13,18 +13,26 @@ def _create_get_processes_endpoint(
         response_model=models.ProcessesList,
         response_model_exclude_none=True,
         summary="retrieve the list of available processes",
-        operation_id="geProcesses",
+        operation_id="getProcesses",
     )
     def get_processes(
         request: fastapi.Request, limit: int = fastapi.Query(default=10, ge=1, le=100)
-    ) -> dict[str, list[dict[str, Any]]]:
+    ) -> models.ProcessesList:
         """
         The list of processes contains a summary of each process
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
-        process_list = client.get_processes_list(request=request)
-        return process_list
+        links = [
+            models.Link(
+                href=urllib.parse.urljoin(str(request.base_url), "processes"),
+                rel="self",
+            )
+        ]
+        process_list = client.get_processes_list()
+        retval = models.ProcessesList(processes=process_list, links=links)
+
+        return retval
 
 
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
