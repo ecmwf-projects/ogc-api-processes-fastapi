@@ -13,7 +13,7 @@
 # limitations under the License
 
 import enum
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, cast
 
 import pydantic
 
@@ -71,3 +71,77 @@ class ProcessSummary(DescriptionType):
 class ProcessesList(pydantic.BaseModel):
     processes: list[ProcessSummary]
     links: list[Link]
+
+
+class MaxOccur(enum.Enum):
+    unbounded = "unbounded"
+
+
+class Type(enum.Enum):
+    array = "array"
+    boolean = "boolean"
+    integer = "integer"
+    number = "number"
+    object = "object"
+    string = "string"
+
+
+class Reference(pydantic.BaseModel):
+    _ref: str = pydantic.Field(..., alias="$ref")
+
+
+class PositiveInt(pydantic.ConstrainedInt):
+    ge = 0
+
+
+class SchemaItem(pydantic.BaseModel):
+    class Config:
+        extra = pydantic.Extra.forbid
+
+    title: Optional[str] = None
+    multipleOf: Optional[pydantic.PositiveFloat] = None
+    maximum: Optional[float] = None
+    exclusiveMaximum: Optional[bool] = False
+    minimum: Optional[float] = None
+    exclusiveMinimum: Optional[bool] = False
+    maxLength: Optional[PositiveInt] = None
+    minLength: Optional[PositiveInt] = cast(PositiveInt, 0)
+    pattern: Optional[str] = None
+    maxItems: Optional[PositiveInt] = None
+    minItems: Optional[PositiveInt] = cast(PositiveInt, 0)
+    uniqueItems: Optional[bool] = False
+    maxProperties: Optional[PositiveInt] = None
+    minProperties: Optional[PositiveInt] = cast(PositiveInt, 0)
+    required: Optional[list[str]] = pydantic.Field(None, min_items=1)
+    enum: Optional[list[Any]] = pydantic.Field(None, min_items=1)
+    type: Optional[Type] = None
+    description: Optional[str] = None
+    format: Optional[str] = None
+    default: Optional[Any] = None
+    nullable: Optional[bool] = False
+    readOnly: Optional[bool] = False
+    writeOnly: Optional[bool] = False
+    example: Optional[Any] = None
+    deprecated: Optional[bool] = False
+    contentMediaType: Optional[str] = None
+    contentEncoding: Optional[str] = None
+    contentSchema: Optional[str] = None
+
+
+class Schema(pydantic.BaseModel):
+    __root__: Union[Reference, SchemaItem]
+
+
+class InputDescription(DescriptionType):
+    minOccurs: Optional[int] = 1
+    maxOccurs: Optional[Union[int, MaxOccur]] = None
+    schema_: Schema = pydantic.Field(..., alias="schema")
+
+
+class OutputDescription(DescriptionType):
+    schema_: Schema = pydantic.Field(..., alias="schema")
+
+
+class Process(ProcessSummary):
+    inputs: Optional[InputDescription]
+    outputs: Optional[OutputDescription]

@@ -35,3 +35,15 @@ class BaseClient(abc.ABC):
             An object of type models.ProcessesList.
         """
         ...
+
+    @abc.abstractmethod
+    def get_process_description(self, id: str) -> models.Process:
+        """
+        Get description of process `id`.
+
+        Called with `GET /processes/{processID}`.
+
+        Returns:
+            An object of type models.Process.
+        """
+        ...

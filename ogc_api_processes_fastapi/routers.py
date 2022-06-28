@@ -51,6 +51,30 @@ def _create_get_processes_endpoint(
         return retval
 
 
+def _create_get_process_description_endpoint(
+    router: fastapi.APIRouter, client: clients.BaseClient
+) -> None:
+    @router.get(
+        "/{processID}",
+        response_model=models.Process,
+        response_model_exclude_none=True,
+        summary="retrieve the description of a particular process",
+        operation_id="getProcessDescription",
+    )
+    def get_process_description(
+        processID: str,
+    ) -> models.Process:
+        """
+        The list of processes contains a summary of each process
+        the OGC API - Processes offers, including the link to a
+        more detailed description of the process.
+        """
+        process_description = client.get_process_description(id=processID)
+        # retval = models.ProcessesList(processes=process_list, links=links)
+
+        return process_description
+
+
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
     """
     Register the API router dedicated to the `/processes/...` endpoints.
