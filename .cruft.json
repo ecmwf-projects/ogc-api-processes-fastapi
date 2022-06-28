@@ -1,13 +1,13 @@
 {
   "template": "https://github.com/ecmwf-projects/cookiecutter-conda-package",
-  "commit": "2e5f6d990e8a5e0944a07f24b6524cd861053138",
+  "commit": "ef7425858ab4adb9fd1821ec045777acbdfaccd2",
   "checkout": null,
   "context": {
     "cookiecutter": {
       "project_name": "ogc-api-processes-fastapi",
       "project_slug": "ogc_api_processes_fastapi",
       "project_short_description": "OGC API Processes service based on FastAPI",
-      "copyright_holder": "European Centre for Medium-Range Weather Forecasts (ECMWF)",
+      "copyright_holder": "European Union",
       "copyright_year": "2022",
       "_template": "https://github.com/ecmwf-projects/cookiecutter-conda-package"
     }
