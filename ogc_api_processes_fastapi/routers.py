@@ -69,7 +69,7 @@ def _create_get_process_description_endpoint(
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
-        process_description = client.get_process_description(id=processID)
+        process_description = client.get_process_description(process_id=processID)
         # retval = models.ProcessesList(processes=process_list, links=links)
 
         return process_description
