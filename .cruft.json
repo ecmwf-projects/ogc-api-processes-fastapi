@@ -7,7 +7,7 @@
       "project_name": "ogc-api-processes-fastapi",
       "project_slug": "ogc_api_processes_fastapi",
       "project_short_description": "OGC API Processes service based on FastAPI",
-      "copyright_holder": "European Centre for Medium-Range Weather Forecasts (ECMWF)",
+      "copyright_holder": "European Union",
       "copyright_year": "2022",
       "_template": "https://github.com/ecmwf-projects/cookiecutter-conda-package"
     }
