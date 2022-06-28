@@ -92,5 +92,6 @@ def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
         tags=["Processes"],
     )
     _create_get_processes_endpoint(router=processes_router, client=client)
+    _create_get_process_description_endpoint(router=processes_router, client=client)
 
     return processes_router
