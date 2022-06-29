@@ -46,6 +46,17 @@ def _create_get_processes_endpoint(
             )
         ]
         process_list = client.get_processes_list(limit=limit, offset=offset)
+        for process_summary in process_list:
+            process_summary.links = [
+                models.Link(
+                    href=urllib.parse.urljoin(
+                        str(request.base_url), f"processes/{process_summary.id}"
+                    ),
+                    rel="self",
+                    type="application/json",
+                    title="process description",
+                )
+            ]
         retval = models.ProcessesList(processes=process_list, links=links)
 
         return retval
