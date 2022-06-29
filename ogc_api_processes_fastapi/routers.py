@@ -73,6 +73,7 @@ def _create_get_process_description_endpoint(
         operation_id="getProcessDescription",
     )
     def get_process_description(
+        request: fastapi.Request,
         processID: str,
     ) -> models.Process:
         """
@@ -81,7 +82,16 @@ def _create_get_process_description_endpoint(
         more detailed description of the process.
         """
         process_description = client.get_process_description(process_id=processID)
-        # retval = models.ProcessesList(processes=process_list, links=links)
+        process_description.links = [
+            models.Link(
+                href=urllib.parse.urljoin(
+                    str(request.base_url), f"processes/{process_description.id}"
+                ),
+                rel="self",
+                type="application/json",
+                title="process description",
+            )
+        ]
 
         return process_description
 
