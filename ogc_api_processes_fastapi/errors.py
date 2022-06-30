@@ -23,3 +23,9 @@ class DatabaseError(OGCProcessesApiError):
     """Generic database errors."""
 
     pass
+
+
+class NotFoundError(OGCProcessesApiError):
+    """Resource not found."""
+
+    pass
