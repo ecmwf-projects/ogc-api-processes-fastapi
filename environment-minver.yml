@@ -2,8 +2,8 @@ channels:
 - conda-forge
 - nodefaults
 dependencies:
-- fastapi
+- fastapi=0.75
 - make
 - pytest
 - pytest-cov
-- requests
+- requests=2.27
