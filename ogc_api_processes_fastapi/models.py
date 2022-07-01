@@ -145,5 +145,5 @@ class OutputDescription(DescriptionType):
 
 
 class Process(ProcessSummary):
-    inputs: InputDescription | None
-    outputs: OutputDescription | None
+    inputs: dict[str, InputDescription] | None
+    outputs: dict[str, OutputDescription] | None
