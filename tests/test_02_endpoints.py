@@ -28,20 +28,23 @@ def test_get_processes(test_client: ogc_api_processes_fastapi.BaseClient) -> Non
     )
     client = fastapi.testclient.TestClient(app)
 
-    exp_processes_all = test_client.PROCESSES_LIST.copy()
+    exp_processes_all = [
+        {
+            "id": f"retrieve-dataset-{i}",
+            "version": f"{i}.0",
+            "links": [
+                {
+                    "href": urllib.parse.urljoin(BASE_URL, f"retrieve-dataset-{i}"),
+                    "rel": "self",
+                    "title": "process description",
+                    "type": "application/json",
+                }
+            ],
+        }
+        for i in range(10)
+    ]
     for elem in exp_processes_all:
-        elem.update(
-            {
-                "links": [
-                    {
-                        "href": urllib.parse.urljoin(BASE_URL, elem["id"]),
-                        "rel": "self",
-                        "title": "process description",
-                        "type": "application/json",
-                    }
-                ]
-            }
-        )
+        elem.update()
 
     response = client.get("/processes")
     assert response.status_code == 200
