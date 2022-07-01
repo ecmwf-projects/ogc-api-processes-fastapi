@@ -41,7 +41,7 @@ def _create_get_processes_endpoint(
         """
         links = [
             models.Link(
-                href=urllib.parse.urljoin(str(request.base_url), "processes"),
+                href=urllib.parse.urljoin(str(request.base_url), "processes/"),
                 rel="self",
             )
         ]
