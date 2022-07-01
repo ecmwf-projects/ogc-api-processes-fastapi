@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-import attrs
+from typing import Iterator
+
+import pytest
 
 from ogc_api_processes_fastapi import clients, models
 
@@ -21,7 +23,6 @@ PROCESSES_LIST = [
 ]
 
 
-@attrs.define
 class TestClient(clients.BaseClient):
     """
     Test implementation of the OGC API - Processes endpoints.
@@ -32,7 +33,8 @@ class TestClient(clients.BaseClient):
     ) -> list[models.ProcessSummary]:
         processes_list = [
             models.ProcessSummary(
-                id=PROCESSES_LIST[i]["id"], version=PROCESSES_LIST[i]["version"]
+                id=PROCESSES_LIST[i]["id"],
+                version=PROCESSES_LIST[i]["version"],
             )
             for i in range(offset, offset + limit)
         ]
@@ -42,7 +44,13 @@ class TestClient(clients.BaseClient):
         for i, elem in enumerate(PROCESSES_LIST):
             if elem["id"] == process_id:
                 process = models.Process(
-                    id=PROCESSES_LIST[i]["id"], version=PROCESSES_LIST[i]["version"]
+                    id=PROCESSES_LIST[i]["id"],
+                    version=PROCESSES_LIST[i]["version"],
                 )
 
         return process
+
+
+@pytest.fixture
+def test_client() -> Iterator[clients.BaseClient]:
+    yield TestClient()
