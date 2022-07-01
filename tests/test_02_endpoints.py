@@ -12,12 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
+import urllib.parse
+
 import fastapi
 import fastapi.testclient
 
 from ogc_api_processes_fastapi import main
 
 from . import testing
+
+BASE_URL = "http://testserver/processes/"
+
+exp_processes_all = testing.PROCESSES_LIST.copy()
+for elem in exp_processes_all:
+    elem.update(
+        {
+            "links": [  # type: ignore
+                {
+                    "href": urllib.parse.urljoin(BASE_URL, elem["id"]),
+                    "rel": "self",
+                    "title": "process description",
+                    "type": "application/json",
+                }
+            ]
+        }
+    )
 
 
 def test_get_processes() -> None:
@@ -27,19 +46,18 @@ def test_get_processes() -> None:
     response = client.get("/processes")
     assert response.status_code == 200
 
-    expected_keys = ("processes", "links")
-    assert all([key in response.json() for key in expected_keys])
+    exp_keys = ("processes", "links")
+    assert all([key in response.json() for key in exp_keys])
 
-    expected_processes = testing.PROCESSES_LIST
-    assert response.json()["processes"] == expected_processes
+    assert response.json()["processes"] == exp_processes_all
 
-    expected_links = [{"href": "http://testserver/processes", "rel": "self"}]
-    assert response.json()["links"] == expected_links
+    exp_links = [{"href": BASE_URL, "rel": "self"}]
+    assert response.json()["links"] == exp_links
 
     offset = 5
     limit = 2
     response = client.get(f"/processes?offset={offset}&limit={limit}")
     assert response.status_code == 200
 
-    expected_processes = testing.PROCESSES_LIST[slice(offset, offset + limit)]
-    assert response.json()["processes"] == expected_processes
+    exp_processes = exp_processes_all[slice(offset, offset + limit)]
+    assert response.json()["processes"] == exp_processes
