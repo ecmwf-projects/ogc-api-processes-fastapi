@@ -15,15 +15,15 @@
 from __future__ import annotations
 
 import enum
-from typing import Any, Union, cast
+from typing import Any, Optional, Union, cast
 
 import pydantic
 
 
 class Metadata(pydantic.BaseModel):
-    title: str | None = None
-    role: str | None = None
-    href: str | None = None
+    title: Optional[str] = None
+    role: Optional[str] = None
+    href: Optional[str] = None
 
 
 class AdditionalParameter(pydantic.BaseModel):
@@ -44,30 +44,30 @@ class TransmissionMode(enum.Enum):
 
 class Link(pydantic.BaseModel):
     href: str
-    rel: str | None = pydantic.Field(None, example="service")
-    type: str | None = pydantic.Field(None, example="application/json")
-    hreflang: str | None = pydantic.Field(None, example="en")
-    title: str | None = None
+    rel: Optional[str] = pydantic.Field(None, example="service")
+    type: Optional[str] = pydantic.Field(None, example="application/json")
+    hreflang: Optional[str] = pydantic.Field(None, example="en")
+    title: Optional[str] = None
 
 
 class AdditionalParameters(Metadata):
-    parameters: list[AdditionalParameter] | None = None
+    parameters: Optional[list[AdditionalParameter]] = None
 
 
 class DescriptionType(pydantic.BaseModel):
-    title: str | None = None
-    description: str | None = None
-    keywords: list[str] | None = None
-    metadata: list[Metadata] | None = None
-    additionalParameters: AdditionalParameters | None = None
+    title: Optional[str] = None
+    description: Optional[str] = None
+    keywords: Optional[list[str]] = None
+    metadata: Optional[list[Metadata]] = None
+    additionalParameters: Optional[AdditionalParameters] = None
 
 
 class ProcessSummary(DescriptionType):
     id: str
     version: str
-    jobControlOptions: list[JobControlOptions] | None = None
-    outputTransmission: list[TransmissionMode] | None = None
-    links: list[Link] | None = None
+    jobControlOptions: Optional[list[JobControlOptions]] = None
+    outputTransmission: Optional[list[TransmissionMode]] = None
+    links: Optional[list[Link]] = None
 
 
 class ProcessesList(pydantic.BaseModel):
@@ -100,34 +100,34 @@ class SchemaItem(pydantic.BaseModel):
     class Config:
         extra = pydantic.Extra.forbid
 
-    title: str | None = None
-    multipleOf: pydantic.PositiveFloat | None = None
-    maximum: float | None = None
-    exclusiveMaximum: bool | None = False
-    minimum: float | None = None
-    exclusiveMinimum: bool | None = False
-    maxLength: PositiveInt | None = None
-    minLength: PositiveInt | None = cast(PositiveInt, 0)
-    pattern: str | None = None
-    maxItems: PositiveInt | None = None
-    minItems: PositiveInt | None = cast(PositiveInt, 0)
-    uniqueItems: bool | None = False
-    maxProperties: PositiveInt | None = None
-    minProperties: PositiveInt | None = cast(PositiveInt, 0)
-    required: list[str] | None = pydantic.Field(None, min_items=1)
-    enum: list[Any] | None = pydantic.Field(None, min_items=1)
-    type: Type | None = None
-    description: str | None = None
-    format: str | None = None
-    default: Any | None = None
-    nullable: bool | None = False
-    readOnly: bool | None = False
-    writeOnly: bool | None = False
-    example: Any | None = None
-    deprecated: bool | None = False
-    contentMediaType: str | None = None
-    contentEncoding: str | None = None
-    contentSchema: str | None = None
+    title: Optional[str] = None
+    multipleOf: Optional[pydantic.PositiveFloat] = None
+    maximum: Optional[float] = None
+    exclusiveMaximum: Optional[bool] = False
+    minimum: Optional[float] = None
+    exclusiveMinimum: Optional[bool] = False
+    maxLength: Optional[PositiveInt] = None
+    minLength: Optional[PositiveInt] = cast(PositiveInt, 0)
+    pattern: Optional[str] = None
+    maxItems: Optional[PositiveInt] = None
+    minItems: Optional[PositiveInt] = cast(PositiveInt, 0)
+    uniqueItems: Optional[bool] = False
+    maxProperties: Optional[PositiveInt] = None
+    minProperties: Optional[PositiveInt] = cast(PositiveInt, 0)
+    required: Optional[list[str]] = pydantic.Field(None, min_items=1)
+    enum: Optional[list[Any]] = pydantic.Field(None, min_items=1)
+    type: Optional[Type] = None
+    description: Optional[str] = None
+    format: Optional[str] = None
+    default: Optional[Any] = None
+    nullable: Optional[bool] = False
+    readOnly: Optional[bool] = False
+    writeOnly: Optional[bool] = False
+    example: Optional[Any] = None
+    deprecated: Optional[bool] = False
+    contentMediaType: Optional[str] = None
+    contentEncoding: Optional[str] = None
+    contentSchema: Optional[str] = None
 
 
 class Schema(pydantic.BaseModel):
@@ -135,8 +135,8 @@ class Schema(pydantic.BaseModel):
 
 
 class InputDescription(DescriptionType):
-    minOccurs: int | None = 1
-    maxOccurs: Union[int, MaxOccur] | None = None
+    minOccurs: Optional[int] = 1
+    maxOccurs: Optional[Union[int, MaxOccur]] = None
     schema_: Schema = pydantic.Field(..., alias="schema")
 
 
@@ -145,5 +145,5 @@ class OutputDescription(DescriptionType):
 
 
 class Process(ProcessSummary):
-    inputs: InputDescription | None
-    outputs: OutputDescription | None
+    inputs: Optional[InputDescription]
+    outputs: Optional[OutputDescription]
