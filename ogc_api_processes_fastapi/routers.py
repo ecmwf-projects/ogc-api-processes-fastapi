@@ -41,14 +41,59 @@ def _create_get_processes_endpoint(
         """
         links = [
             models.Link(
-                href=urllib.parse.urljoin(str(request.base_url), "processes"),
+                href=urllib.parse.urljoin(str(request.base_url), "processes/"),
                 rel="self",
             )
         ]
         process_list = client.get_processes_list(limit=limit, offset=offset)
+        for process_summary in process_list:
+            process_summary.links = [
+                models.Link(
+                    href=urllib.parse.urljoin(
+                        str(request.base_url), f"processes/{process_summary.id}"
+                    ),
+                    rel="self",
+                    type="application/json",
+                    title="process description",
+                )
+            ]
         retval = models.ProcessesList(processes=process_list, links=links)
 
         return retval
+
+
+def _create_get_process_description_endpoint(
+    router: fastapi.APIRouter, client: clients.BaseClient
+) -> None:
+    @router.get(
+        "/{processID}",
+        response_model=models.Process,
+        response_model_exclude_none=True,
+        summary="retrieve the description of a particular process",
+        operation_id="getProcessDescription",
+    )
+    def get_process_description(
+        request: fastapi.Request,
+        processID: str,
+    ) -> models.Process:
+        """
+        The list of processes contains a summary of each process
+        the OGC API - Processes offers, including the link to a
+        more detailed description of the process.
+        """
+        process_description = client.get_process_description(process_id=processID)
+        process_description.links = [
+            models.Link(
+                href=urllib.parse.urljoin(
+                    str(request.base_url), f"processes/{process_description.id}"
+                ),
+                rel="self",
+                type="application/json",
+                title="process description",
+            )
+        ]
+
+        return process_description
 
 
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
@@ -68,5 +113,6 @@ def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
         tags=["Processes"],
     )
     _create_get_processes_endpoint(router=processes_router, client=client)
+    _create_get_process_description_endpoint(router=processes_router, client=client)
 
     return processes_router

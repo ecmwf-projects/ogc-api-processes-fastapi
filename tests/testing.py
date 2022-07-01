@@ -37,3 +37,12 @@ class TestClient(clients.BaseClient):
             for i in range(offset, offset + limit)
         ]
         return processes_list
+
+    def get_process_description(self, process_id: str) -> models.Process:
+        for i, elem in enumerate(PROCESSES_LIST):
+            if elem["id"] == process_id:
+                process = models.Process(
+                    id=PROCESSES_LIST[i]["id"], version=PROCESSES_LIST[i]["version"]
+                )
+
+        return process
