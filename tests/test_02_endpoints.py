@@ -17,31 +17,31 @@ import urllib.parse
 import fastapi
 import fastapi.testclient
 
-from ogc_api_processes_fastapi import main
-
-from . import testing
+import ogc_api_processes_fastapi
 
 BASE_URL = "http://testserver/processes/"
 
-exp_processes_all = testing.PROCESSES_LIST.copy()
-for elem in exp_processes_all:
-    elem.update(
-        {
-            "links": [  # type: ignore
-                {
-                    "href": urllib.parse.urljoin(BASE_URL, elem["id"]),
-                    "rel": "self",
-                    "title": "process description",
-                    "type": "application/json",
-                }
-            ]
-        }
+
+def test_get_processes(test_client: ogc_api_processes_fastapi.BaseClient) -> None:
+    app = ogc_api_processes_fastapi.instantiate_ogc_api_processes_app(
+        client=test_client
     )
-
-
-def test_get_processes() -> None:
-    app = main.instantiate_ogc_api_processes_app(client=testing.TestClient())
     client = fastapi.testclient.TestClient(app)
+
+    exp_processes_all = test_client.PROCESSES_LIST.copy()
+    for elem in exp_processes_all:
+        elem.update(
+            {
+                "links": [
+                    {
+                        "href": urllib.parse.urljoin(BASE_URL, elem["id"]),
+                        "rel": "self",
+                        "title": "process description",
+                        "type": "application/json",
+                    }
+                ]
+            }
+        )
 
     response = client.get("/processes")
     assert response.status_code == 200
