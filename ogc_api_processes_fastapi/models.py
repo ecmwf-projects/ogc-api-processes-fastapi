@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 import enum
-from typing import Any, Optional, Union, cast
+from typing import Any, Dict, List, Optional, Union, cast
 
 import pydantic
 
@@ -28,7 +28,7 @@ class Metadata(pydantic.BaseModel):
 
 class AdditionalParameter(pydantic.BaseModel):
     name: str
-    value: list[Union[str, float, int, list[Any], dict[str, Any]]]
+    value: List[Union[str, float, int, List[Any], Dict[str, Any]]]
 
 
 class JobControlOptions(enum.Enum):
@@ -51,28 +51,28 @@ class Link(pydantic.BaseModel):
 
 
 class AdditionalParameters(Metadata):
-    parameters: Optional[list[AdditionalParameter]] = None
+    parameters: Optional[List[AdditionalParameter]] = None
 
 
 class DescriptionType(pydantic.BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
-    keywords: Optional[list[str]] = None
-    metadata: Optional[list[Metadata]] = None
+    keywords: Optional[List[str]] = None
+    metadata: Optional[List[Metadata]] = None
     additionalParameters: Optional[AdditionalParameters] = None
 
 
 class ProcessSummary(DescriptionType):
     id: str
     version: str
-    jobControlOptions: Optional[list[JobControlOptions]] = None
-    outputTransmission: Optional[list[TransmissionMode]] = None
-    links: Optional[list[Link]] = None
+    jobControlOptions: Optional[List[JobControlOptions]] = None
+    outputTransmission: Optional[List[TransmissionMode]] = None
+    links: Optional[List[Link]] = None
 
 
 class ProcessesList(pydantic.BaseModel):
-    processes: list[ProcessSummary]
-    links: list[Link]
+    processes: List[ProcessSummary]
+    links: List[Link]
 
 
 class MaxOccur(enum.Enum):
@@ -114,8 +114,8 @@ class SchemaItem(pydantic.BaseModel):
     uniqueItems: Optional[bool] = False
     maxProperties: Optional[PositiveInt] = None
     minProperties: Optional[PositiveInt] = cast(PositiveInt, 0)
-    required: Optional[list[str]] = pydantic.Field(None, min_items=1)
-    enum: Optional[list[Any]] = pydantic.Field(None, min_items=1)
+    required: Optional[List[str]] = pydantic.Field(None, min_items=1)
+    enum: Optional[List[Any]] = pydantic.Field(None, min_items=1)
     type: Optional[Type] = None
     description: Optional[str] = None
     format: Optional[str] = None
