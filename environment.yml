@@ -9,4 +9,3 @@ dependencies:
 - pytest
 - pytest-cov
 - requests
-- uvicorn

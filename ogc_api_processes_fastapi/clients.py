@@ -13,6 +13,7 @@
 # limitations under the License
 
 import abc
+from typing import List
 
 from . import models
 
@@ -25,7 +26,7 @@ class BaseClient(abc.ABC):
     @abc.abstractmethod
     def get_processes_list(
         self, limit: int, offset: int
-    ) -> list[models.ProcessSummary]:
+    ) -> List[models.ProcessSummary]:
         """
         Get all available processes.
 

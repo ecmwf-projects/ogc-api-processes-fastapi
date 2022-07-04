@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-from typing import Iterator
+from typing import Iterator, List
 
 import pytest
 
@@ -30,7 +30,7 @@ class TestClient(clients.BaseClient):
 
     def get_processes_list(
         self, limit: int, offset: int
-    ) -> list[models.ProcessSummary]:
+    ) -> List[models.ProcessSummary]:
         processes_list = [
             models.ProcessSummary(
                 id=PROCESSES_LIST[i]["id"],
