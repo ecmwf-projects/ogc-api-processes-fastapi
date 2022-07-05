@@ -38,7 +38,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_process_description(self, process_id: str) -> models.Process:
+    def get_process_description(self, process_id: str) -> models.ProcessDescription:
         """
         Get description of process `process_id`.
 
