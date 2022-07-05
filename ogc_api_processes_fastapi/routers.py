@@ -19,7 +19,7 @@ import fastapi
 from . import clients, models
 
 
-def _create_get_processes_endpoint(
+def create_get_processes_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
     @router.get(
@@ -62,7 +62,7 @@ def _create_get_processes_endpoint(
         return retval
 
 
-def _create_get_process_description_endpoint(
+def create_get_process_description_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
     @router.get(
@@ -112,7 +112,7 @@ def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
         prefix="/processes",
         tags=["Processes"],
     )
-    _create_get_processes_endpoint(router=processes_router, client=client)
-    _create_get_process_description_endpoint(router=processes_router, client=client)
+    create_get_processes_endpoint(router=processes_router, client=client)
+    create_get_process_description_endpoint(router=processes_router, client=client)
 
     return processes_router
