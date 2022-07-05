@@ -96,6 +96,24 @@ def create_get_process_description_endpoint(
         return process_description
 
 
+def create_post_process_execution_endpoint(
+    router: fastapi.APIRouter, client: clients.BaseClient
+) -> None:
+    @router.post(
+        "/{processID}/execute",
+        summary="execute a process",
+        operation_id="postProcessExecution",
+    )
+    def post_process_execution(
+        processID: str,
+    ) -> dict[str, str]:
+        """
+        Create a new job.
+        """
+
+        return {"message": f"requestion execution of process {processID}"}
+
+
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
     """
     Register the API router dedicated to the `/processes/...` endpoints.
@@ -114,5 +132,6 @@ def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
     )
     create_get_processes_endpoint(router=processes_router, client=client)
     create_get_process_description_endpoint(router=processes_router, client=client)
+    create_post_process_execution_endpoint(router=processes_router, client=client)
 
     return processes_router
