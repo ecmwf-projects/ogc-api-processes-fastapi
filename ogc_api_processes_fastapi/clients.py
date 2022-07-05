@@ -13,7 +13,7 @@
 # limitations under the License
 
 import abc
-from typing import List
+from typing import Any, List
 
 from . import models
 
@@ -40,11 +40,25 @@ class BaseClient(abc.ABC):
     @abc.abstractmethod
     def get_process_description(self, process_id: str) -> models.Process:
         """
-        Get description of process `id`.
+        Get description of process `process_id`.
 
         Called with `GET /processes/{processID}`.
 
         Returns:
             An object of type models.Process.
+        """
+        ...
+
+    @abc.abstractmethod
+    def post_process_execution(
+        self, process_id: str, execution_content: dict[str, Any]
+    ) -> Any:
+        """
+        Post request for execution of process `process_id`.
+
+        Called with `POST /processes/{processID}/execute`.
+
+        Returns:
+            TODO
         """
         ...
