@@ -145,3 +145,66 @@ class OutputDescription(DescriptionType):
 class Process(ProcessSummary):
     inputs: Optional[list[dict[str, InputDescription]]]
     outputs: Optional[list[dict[str, OutputDescription]]]
+
+
+class BinaryInputValue(pydantic.BaseModel):
+    __root__: str
+
+
+class Crs(enum.Enum):
+    http___www_opengis_net_def_crs_OGC_1_3_CRS84 = (
+        "http://www.opengis.net/def/crs/OGC/1.3/CRS84"
+    )
+    http___www_opengis_net_def_crs_OGC_0_CRS84h = (
+        "http://www.opengis.net/def/crs/OGC/0/CRS84h"
+    )
+
+
+class Bbox(pydantic.BaseModel):
+    bbox: List[float]
+    crs: Optional[Crs] = Crs.http___www_opengis_net_def_crs_OGC_1_3_CRS84
+
+
+class InputValueNoObject(pydantic.BaseModel):
+    __root__: Union[str, float, int, bool, List[Any], BinaryInputValue, Bbox]
+
+
+class Format(pydantic.BaseModel):
+    mediaType: Optional[str] = None
+    encoding: Optional[str] = None
+    schema_: Optional[Union[str, Dict[str, Any]]] = pydantic.Field(None, alias="schema")
+
+
+class InputValue(pydantic.BaseModel):
+    __root__: Union[InputValueNoObject, Dict[str, Any]]
+
+
+class QualifiedInputValue(Format):
+    value: InputValue
+
+
+class InlineOrRefData(pydantic.BaseModel):
+    __root__: Union[InputValueNoObject, QualifiedInputValue, Link]
+
+
+class Output(pydantic.BaseModel):
+    format: Optional[Format] = None
+    transmissionMode: Optional[TransmissionMode] = None
+
+
+class Response(enum.Enum):
+    raw = "raw"
+    document = "document"
+
+
+class Subscriber(pydantic.BaseModel):
+    successUri: Optional[pydantic.AnyUrl] = None
+    inProgressUri: Optional[pydantic.AnyUrl] = None
+    failedUri: Optional[pydantic.AnyUrl] = None
+
+
+class Execute(pydantic.BaseModel):
+    inputs: Optional[Union[InlineOrRefData, List[InlineOrRefData]]] = None
+    outputs: Optional[Output] = None
+    response: Optional[Response] = Response.raw
+    subscriber: Optional[Subscriber] = None
