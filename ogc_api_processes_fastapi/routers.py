@@ -13,6 +13,7 @@
 # limitations under the License
 
 import urllib.parse
+from typing import Any
 
 import fastapi
 
@@ -105,13 +106,22 @@ def create_post_process_execution_endpoint(
         operation_id="postProcessExecution",
     )
     def post_process_execution(
-        processID: str,
-    ) -> dict[str, str]:
+        processID: str, request_content: models.Execute
+    ) -> dict[str, Any]:
         """
         Create a new job.
         """
+        process_description = client.get_process_description(process_id=processID)
+        retval = {
+            "message": f"requestion execution of process {processID}",
+            "process_description": process_description,
+            "inputs_schema": client.post_process_execution(
+                process_id=processID, execution_content=request_content
+            ),
+            "request_content": request_content,
+        }
 
-        return {"message": f"requestion execution of process {processID}"}
+        return retval
 
 
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
