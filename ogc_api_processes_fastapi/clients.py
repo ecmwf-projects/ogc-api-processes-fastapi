@@ -51,7 +51,7 @@ class BaseClient(abc.ABC):
 
     @abc.abstractmethod
     def post_process_execution(
-        self, process_id: str, execution_content: dict[str, Any]
+        self, process_id: str, execution_content: models.Execute
     ) -> Any:
         """
         Post request for execution of process `process_id`.
