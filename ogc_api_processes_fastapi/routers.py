@@ -67,7 +67,7 @@ def _create_get_process_description_endpoint(
 ) -> None:
     @router.get(
         "/{processID}",
-        response_model=models.Process,
+        response_model=models.ProcessDescription,
         response_model_exclude_none=True,
         summary="retrieve the description of a particular process",
         operation_id="getProcessDescription",
@@ -75,7 +75,7 @@ def _create_get_process_description_endpoint(
     def get_process_description(
         request: fastapi.Request,
         processID: str,
-    ) -> models.Process:
+    ) -> models.ProcessDescription:
         """
         The list of processes contains a summary of each process
         the OGC API - Processes offers, including the link to a

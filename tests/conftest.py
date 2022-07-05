@@ -40,10 +40,10 @@ class TestClient(clients.BaseClient):
         ]
         return processes_list
 
-    def get_process_description(self, process_id: str) -> models.Process:
+    def get_process_description(self, process_id: str) -> models.ProcessDescription:
         for i, elem in enumerate(PROCESSES_LIST):
             if elem["id"] == process_id:
-                process = models.Process(
+                process = models.ProcessDescription(
                     id=PROCESSES_LIST[i]["id"],
                     version=PROCESSES_LIST[i]["version"],
                 )

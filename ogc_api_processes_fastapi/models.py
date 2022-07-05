@@ -142,6 +142,6 @@ class OutputDescription(DescriptionType):
     schema_: Schema = pydantic.Field(..., alias="schema")
 
 
-class Process(ProcessSummary):
-    inputs: Optional[list[dict[str, InputDescription]]]
-    outputs: Optional[list[dict[str, OutputDescription]]]
+class ProcessDescription(ProcessSummary):
+    inputs: Optional[List[Dict[str, InputDescription]]]
+    outputs: Optional[List[Dict[str, OutputDescription]]]
