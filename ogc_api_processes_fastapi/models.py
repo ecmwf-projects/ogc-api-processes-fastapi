@@ -143,5 +143,5 @@ class OutputDescription(DescriptionType):
 
 
 class Process(ProcessSummary):
-    inputs: Optional[InputDescription]
-    outputs: Optional[OutputDescription]
+    inputs: Optional[list[dict[str, InputDescription]]]
+    outputs: Optional[list[dict[str, OutputDescription]]]
