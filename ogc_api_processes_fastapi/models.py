@@ -133,12 +133,18 @@ class Schema(pydantic.BaseModel):
 
 
 class InputDescription(DescriptionType):
+    class Config:
+        allow_population_by_field_name = True
+
     minOccurs: Optional[int] = 1
     maxOccurs: Optional[Union[int, MaxOccur]] = None
     schema_: Schema = pydantic.Field(..., alias="schema")
 
 
 class OutputDescription(DescriptionType):
+    class Config:
+        allow_population_by_field_name = True
+
     schema_: Schema = pydantic.Field(..., alias="schema")
 
 
