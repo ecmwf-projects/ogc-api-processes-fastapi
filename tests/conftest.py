@@ -59,9 +59,16 @@ class TestClient(clients.BaseClient):
         return process
 
     def post_process_execution(
-        self, process_id: str, execution_content: models.Execute
+        self,
+        process_id: str,
+        execution_content: models.Execute,
     ) -> Any:
-        ...
+        retval = {
+            "message": f"requested execution of process {process_id}",
+            "request_content": execution_content,
+            "process_description": self.get_process_description(process_id),
+        }
+        return retval
 
 
 @pytest.fixture
