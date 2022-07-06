@@ -98,7 +98,7 @@ def create_get_process_description_endpoint(
         return process_description
 
 
-def create_post_process_execution_endpoint(
+def create_post_process_execute_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
     @router.post(
@@ -109,11 +109,11 @@ def create_post_process_execution_endpoint(
         summary="execute a process",
         operation_id="postProcessExecution",
     )
-    def post_process_execution(processID: str, request_content: models.Execute) -> Any:
+    def post_process_execute(processID: str, request_content: models.Execute) -> Any:
         """
         Create a new job.
         """
-        retval = client.post_process_execution(
+        retval = client.post_process_execute(
             process_id=processID, execution_content=request_content
         )
 
@@ -138,6 +138,6 @@ def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
     )
     create_get_processes_endpoint(router=processes_router, client=client)
     create_get_process_description_endpoint(router=processes_router, client=client)
-    create_post_process_execution_endpoint(router=processes_router, client=client)
+    create_post_process_execute_endpoint(router=processes_router, client=client)
 
     return processes_router

@@ -58,7 +58,7 @@ class TestClient(clients.BaseClient):
 
         return process
 
-    def post_process_execution(
+    def post_process_execute(
         self,
         process_id: str,
         execution_content: models.Execute,

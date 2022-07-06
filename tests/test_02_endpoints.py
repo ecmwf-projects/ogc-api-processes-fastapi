@@ -75,7 +75,7 @@ def test_get_process_description(
     assert all([key in response.json() for key in exp_keys])
 
 
-def test_post_process_execution(
+def test_post_process_execute(
     test_client: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
     app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
