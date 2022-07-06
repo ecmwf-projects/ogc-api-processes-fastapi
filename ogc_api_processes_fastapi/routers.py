@@ -82,6 +82,15 @@ def _create_get_process_description_endpoint(
         more detailed description of the process.
         """
         process_description = client.get_process_description(process_id=processID)
+        process_description.outputs = [
+            {
+                "download_url": models.OutputDescription(
+                    title="Download URL",
+                    description="URL to download process result",
+                    schema_=models.SchemaItem(type="string", format="url"),  # type: ignore
+                )
+            }
+        ]
         process_description.links = [
             models.Link(
                 href=urllib.parse.urljoin(
