@@ -42,7 +42,7 @@ class BaseClient(abc.ABC):
         """
         Get description of process `process_id`.
 
-        Called with `GET /processes/{processID}`.
+        Called with `GET /processes/{process_id}`.
 
         Returns:
             An object of type models.Process.
@@ -56,7 +56,7 @@ class BaseClient(abc.ABC):
         """
         Post request for execution of process `process_id`.
 
-        Called with `POST /processes/{processID}/execute`.
+        Called with `POST /processes/{process_id}/execute`.
 
         Returns:
             TODO
