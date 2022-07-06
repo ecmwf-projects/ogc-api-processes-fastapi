@@ -23,9 +23,7 @@ BASE_URL = "http://testserver/processes/"
 
 
 def test_get_processes(test_client: ogc_api_processes_fastapi.BaseClient) -> None:
-    app = ogc_api_processes_fastapi.instantiate_ogc_api_processes_app(
-        client=test_client
-    )
+    app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
     client = fastapi.testclient.TestClient(app)
 
     exp_processes_all = [
