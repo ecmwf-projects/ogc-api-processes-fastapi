@@ -21,11 +21,11 @@ except ImportError:  # pragma: no cover
     __version__ = "999"
 
 from .clients import BaseClient
-from .main import include_ogc_api_processes_routers, instantiate_ogc_api_processes_app
+from .main import include_routers, instantiate_app
 
 __all__ = [
     "__version__",
     "BaseClient",
-    "instantiate_ogc_api_processes_app",
-    "include_ogc_api_processes_routers",
+    "instantiate_app",
+    "include_routers",
 ]

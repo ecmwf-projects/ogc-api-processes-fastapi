@@ -13,7 +13,7 @@
 # limitations under the License
 
 import enum
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, Dict, ForwardRef, List, Optional, Union, cast
 
 import pydantic
 
@@ -87,6 +87,9 @@ class Type(enum.Enum):
 
 
 class Reference(pydantic.BaseModel):
+    class Config:
+        extra = pydantic.Extra.forbid
+
     _ref: str = pydantic.Field(..., alias="$ref")
 
 
@@ -94,7 +97,10 @@ class PositiveInt(pydantic.ConstrainedInt):
     ge = 0
 
 
-class SchemaItem(pydantic.BaseModel):
+SchemaItem = ForwardRef("SchemaItem")
+
+
+class SchemaItem(pydantic.BaseModel):  # type: ignore
     class Config:
         extra = pydantic.Extra.forbid
 
@@ -126,25 +132,26 @@ class SchemaItem(pydantic.BaseModel):
     contentMediaType: Optional[str] = None
     contentEncoding: Optional[str] = None
     contentSchema: Optional[str] = None
+    items: Optional[Union[Reference, SchemaItem]] = None  # type: ignore
 
 
-class Schema(pydantic.BaseModel):
-    __root__: Union[Reference, SchemaItem]
+SchemaItem.update_forward_refs()  # type: ignore
 
 
 class InputDescription(DescriptionType):
+    class Config:
+        allow_population_by_field_name = True
+
     minOccurs: Optional[int] = 1
     maxOccurs: Optional[Union[int, MaxOccur]] = None
-    schema_: Schema = pydantic.Field(..., alias="schema")
+    schema_: Union[Reference, SchemaItem] = pydantic.Field(..., alias="schema")  # type: ignore
 
 
 class OutputDescription(DescriptionType):
-    schema_: Schema = pydantic.Field(..., alias="schema")
+    class Config:
+        allow_population_by_field_name = True
 
-
-class ProcessDescription(ProcessSummary):
-    inputs: Optional[List[Dict[str, InputDescription]]]
-    outputs: Optional[List[Dict[str, OutputDescription]]]
+    schema_: Union[Reference, SchemaItem] = pydantic.Field(..., alias="schema")  # type: ignore
 
 
 class BinaryInputValue(pydantic.BaseModel):
@@ -208,3 +215,8 @@ class Execute(pydantic.BaseModel):
     outputs: Optional[Output] = None
     response: Optional[Response] = Response.raw
     subscriber: Optional[Subscriber] = None
+
+
+class ProcessDescription(ProcessSummary):
+    inputs: Optional[List[Dict[str, InputDescription]]] = None
+    outputs: Optional[List[Dict[str, OutputDescription]]] = None

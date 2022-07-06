@@ -17,7 +17,7 @@ import fastapi
 from . import clients, routers
 
 
-def include_ogc_api_processes_routers(
+def include_routers(
     app: fastapi.FastAPI, client: clients.BaseClient
 ) -> fastapi.FastAPI:
     """
@@ -39,7 +39,7 @@ def include_ogc_api_processes_routers(
     return app
 
 
-def instantiate_ogc_api_processes_app(client: clients.BaseClient) -> fastapi.FastAPI:
+def instantiate_app(client: clients.BaseClient) -> fastapi.FastAPI:
     """
     Create an instance of an OGC API - Processes compliant FastAPI application.
 
@@ -52,6 +52,6 @@ def instantiate_ogc_api_processes_app(client: clients.BaseClient) -> fastapi.Fas
             The FastAPI application.
     """
     app = fastapi.FastAPI()
-    app = include_ogc_api_processes_routers(app=app, client=client)
+    app = include_routers(app=app, client=client)
 
     return app

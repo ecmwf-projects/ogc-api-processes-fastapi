@@ -21,9 +21,7 @@ def test_include_ogc_api_processes_routers(
     test_client: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
     app = fastapi.FastAPI()
-    app = ogc_api_processes_fastapi.include_ogc_api_processes_routers(
-        app=app, client=test_client
-    )
+    app = ogc_api_processes_fastapi.include_routers(app=app, client=test_client)
     routes_path = [app.routes[i].path for i in range(len(app.routes))]
 
     assert "/processes/" in routes_path
@@ -32,9 +30,7 @@ def test_include_ogc_api_processes_routers(
 def test_instantiate_ogc_api_processes_app(
     test_client: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
-    app = ogc_api_processes_fastapi.instantiate_ogc_api_processes_app(
-        client=test_client
-    )
+    app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
     routes_path = [app.routes[i].path for i in range(len(app.routes))]
 
     assert "/processes/" in routes_path
