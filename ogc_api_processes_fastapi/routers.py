@@ -69,6 +69,7 @@ def _create_get_process_description_endpoint(
         "/{processID}",
         response_model=models.ProcessDescription,
         response_model_exclude_none=True,
+        response_model_exclude_unset=True,
         summary="retrieve the description of a particular process",
         operation_id="getProcessDescription",
     )
