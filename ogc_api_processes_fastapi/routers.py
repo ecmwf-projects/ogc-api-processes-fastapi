@@ -13,7 +13,7 @@
 # limitations under the License
 
 import urllib.parse
-from typing import Any, Dict
+from typing import Any, Dict, Union
 
 import fastapi
 
@@ -103,24 +103,19 @@ def create_post_process_execution_endpoint(
 ) -> None:
     @router.post(
         "/{processID}/execute",
+        response_model=Dict[str, Union[str, models.ProcessDescription, models.Execute]],
+        response_model_exclude_none=True,
+        response_model_exclude_unset=True,
         summary="execute a process",
         operation_id="postProcessExecution",
     )
-    def post_process_execution(
-        processID: str, request_content: models.Execute
-    ) -> Dict[str, Any]:
+    def post_process_execution(processID: str, request_content: models.Execute) -> Any:
         """
         Create a new job.
         """
-        process_description = client.get_process_description(process_id=processID)
-        retval = {
-            "message": f"requestion execution of process {processID}",
-            "process_description": process_description,
-            "inputs_schema": client.post_process_execution(
-                process_id=processID, execution_content=request_content
-            ),
-            "request_content": request_content,
-        }
+        retval = client.post_process_execution(
+            process_id=processID, execution_content=request_content
+        )
 
         return retval
 
