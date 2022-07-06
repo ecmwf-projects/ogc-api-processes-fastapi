@@ -13,7 +13,7 @@
 # limitations under the License
 
 import urllib.parse
-from typing import Any
+from typing import Any, Dict
 
 import fastapi
 
@@ -108,7 +108,7 @@ def create_post_process_execution_endpoint(
     )
     def post_process_execution(
         processID: str, request_content: models.Execute
-    ) -> dict[str, Any]:
+    ) -> Dict[str, Any]:
         """
         Create a new job.
         """
