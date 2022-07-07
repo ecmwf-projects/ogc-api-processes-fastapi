@@ -78,7 +78,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        Any
+        models.StatusInfo
             Information on the status of the job.
         """
         ...

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-from typing import Any, Iterator, List
+from typing import Iterator, List
 
 import pytest
 
@@ -62,13 +62,11 @@ class TestClient(clients.BaseClient):
         self,
         process_id: str,
         execution_content: models.Execute,
-    ) -> Any:
-        retval = {
-            "message": f"requested execution of process {process_id}",
-            "request_content": execution_content,
-            "process_description": self.get_process_description(process_id),
-        }
-        return retval
+    ) -> models.StatusInfo:
+        status_info = models.StatusInfo(
+            jobID=1, status=models.StatusCode.accepted, type=models.JobType.process
+        )
+        return status_info
 
 
 @pytest.fixture

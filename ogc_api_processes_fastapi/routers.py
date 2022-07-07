@@ -13,7 +13,7 @@
 # limitations under the License
 
 import urllib.parse
-from typing import Any, Dict, Union
+from typing import Any
 
 import fastapi
 
@@ -134,7 +134,8 @@ def create_post_process_execute_endpoint(
 
     @router.post(
         "/{process_id}/execute",
-        response_model=Dict[str, Union[str, models.ProcessDescription, models.Execute]],
+        status_code=201,
+        response_model=models.StatusInfo,
         response_model_exclude_none=True,
         response_model_exclude_unset=True,
         summary="execute a process",
