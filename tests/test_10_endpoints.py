@@ -41,8 +41,6 @@ def test_get_processes(test_client: ogc_api_processes_fastapi.BaseClient) -> Non
         }
         for i in range(10)
     ]
-    for elem in exp_processes_all:
-        elem.update()
 
     response = client.get("/processes")
     assert response.status_code == 200
@@ -62,3 +60,29 @@ def test_get_processes(test_client: ogc_api_processes_fastapi.BaseClient) -> Non
 
     exp_processes = exp_processes_all[slice(offset, offset + limit)]
     assert response.json()["processes"] == exp_processes
+
+
+def test_get_process_description(
+    test_client: ogc_api_processes_fastapi.BaseClient,
+) -> None:
+    app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
+    client = fastapi.testclient.TestClient(app)
+
+    response = client.get("/processes/retrieve-dataset-1")
+    assert response.status_code == 200
+
+    exp_keys = ("id", "version", "inputs", "outputs")
+    assert all([key in response.json() for key in exp_keys])
+
+
+def test_post_process_execute(
+    test_client: ogc_api_processes_fastapi.BaseClient,
+) -> None:
+    app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
+    client = fastapi.testclient.TestClient(app)
+
+    response = client.post("/processes/retrieve-dataset-1/execute", json={})
+    assert response.status_code == 200
+
+    exp_keys = ("message", "request_content", "process_description")
+    assert all([key in response.json() for key in exp_keys])

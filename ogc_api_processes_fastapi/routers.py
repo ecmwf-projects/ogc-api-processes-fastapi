@@ -13,13 +13,14 @@
 # limitations under the License
 
 import urllib.parse
+from typing import Any, Dict, Union
 
 import fastapi
 
 from . import clients, models
 
 
-def _create_get_processes_endpoint(
+def create_get_processes_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
     @router.get(
@@ -62,11 +63,11 @@ def _create_get_processes_endpoint(
         return retval
 
 
-def _create_get_process_description_endpoint(
+def create_get_process_description_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
     @router.get(
-        "/{processID}",
+        "/{process_id}",
         response_model=models.ProcessDescription,
         response_model_exclude_none=True,
         response_model_exclude_unset=True,
@@ -75,14 +76,14 @@ def _create_get_process_description_endpoint(
     )
     def get_process_description(
         request: fastapi.Request,
-        processID: str,
+        process_id: str,
     ) -> models.ProcessDescription:
         """
         The list of processes contains a summary of each process
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
-        process_description = client.get_process_description(process_id=processID)
+        process_description = client.get_process_description(process_id=process_id)
         process_description.links = [
             models.Link(
                 href=urllib.parse.urljoin(
@@ -95,6 +96,28 @@ def _create_get_process_description_endpoint(
         ]
 
         return process_description
+
+
+def create_post_process_execute_endpoint(
+    router: fastapi.APIRouter, client: clients.BaseClient
+) -> None:
+    @router.post(
+        "/{process_id}/execute",
+        response_model=Dict[str, Union[str, models.ProcessDescription, models.Execute]],
+        response_model_exclude_none=True,
+        response_model_exclude_unset=True,
+        summary="execute a process",
+        operation_id="postProcessExecution",
+    )
+    def post_process_execute(process_id: str, request_content: models.Execute) -> Any:
+        """
+        Create a new job.
+        """
+        retval = client.post_process_execute(
+            process_id=process_id, execution_content=request_content
+        )
+
+        return retval
 
 
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
@@ -113,7 +136,8 @@ def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
         prefix="/processes",
         tags=["Processes"],
     )
-    _create_get_processes_endpoint(router=processes_router, client=client)
-    _create_get_process_description_endpoint(router=processes_router, client=client)
+    create_get_processes_endpoint(router=processes_router, client=client)
+    create_get_process_description_endpoint(router=processes_router, client=client)
+    create_post_process_execute_endpoint(router=processes_router, client=client)
 
     return processes_router

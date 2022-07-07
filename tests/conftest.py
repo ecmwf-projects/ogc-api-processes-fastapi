@@ -12,14 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-from typing import Iterator, List
+from typing import Any, Iterator, List
 
 import pytest
 
 from ogc_api_processes_fastapi import clients, models
 
-PROCESSES_LIST = [
-    {"id": f"retrieve-dataset-{i}", "version": f"{i}.0"} for i in range(10)
+PROCESSES_DB = [
+    {
+        "id": f"retrieve-dataset-{i}",
+        "version": f"{i}.0",
+        "inputs": [{f"input-{i}": {"schema": {"type": "string"}}}],
+        "outputs": [{f"output-{i}": {"schema": {"type": "object"}}}],
+    }
+    for i in range(10)
 ]
 
 
@@ -33,22 +39,36 @@ class TestClient(clients.BaseClient):
     ) -> List[models.ProcessSummary]:
         processes_list = [
             models.ProcessSummary(
-                id=PROCESSES_LIST[i]["id"],
-                version=PROCESSES_LIST[i]["version"],
+                id=PROCESSES_DB[i]["id"],
+                version=PROCESSES_DB[i]["version"],
             )
             for i in range(offset, offset + limit)
         ]
         return processes_list
 
     def get_process_description(self, process_id: str) -> models.ProcessDescription:
-        for i, elem in enumerate(PROCESSES_LIST):
+        for i, elem in enumerate(PROCESSES_DB):
             if elem["id"] == process_id:
                 process = models.ProcessDescription(
-                    id=PROCESSES_LIST[i]["id"],
-                    version=PROCESSES_LIST[i]["version"],
+                    id=PROCESSES_DB[i]["id"],
+                    version=PROCESSES_DB[i]["version"],
+                    inputs=PROCESSES_DB[i]["inputs"],
+                    outputs=PROCESSES_DB[i]["outputs"],
                 )
 
         return process
+
+    def post_process_execute(
+        self,
+        process_id: str,
+        execution_content: models.Execute,
+    ) -> Any:
+        retval = {
+            "message": f"requested execution of process {process_id}",
+            "request_content": execution_content,
+            "process_description": self.get_process_description(process_id),
+        }
+        return retval
 
 
 @pytest.fixture
