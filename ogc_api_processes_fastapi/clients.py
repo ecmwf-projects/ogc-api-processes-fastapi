@@ -19,33 +19,45 @@ from . import models
 
 
 class BaseClient(abc.ABC):
-    """
-    Defines a pattern for implementing OGC API - Processes endpoints.
-    """
+    """Defines a pattern for implementing OGC API - Processes endpoints."""
 
     @abc.abstractmethod
     def get_processes_list(
         self, limit: int, offset: int
     ) -> List[models.ProcessSummary]:
-        """
-        Get all available processes.
+        """Get all available processes.
 
         Called with `GET /processes`.
 
-        Returns:
-            An object of type models.ProcessesList.
+        Parameters
+        ----------
+        limit : int
+            Number of processes summaries to be returned.
+        offset : int
+            Index (starting from 0) of the first process summary to be returned.
+
+        Returns
+        -------
+        List[models.ProcessSummary]
+            List of available processes summaries.
         """
         ...
 
     @abc.abstractmethod
     def get_process_description(self, process_id: str) -> models.ProcessDescription:
-        """
-        Get description of process `process_id`.
+        """Get description of process `process_id`.
 
         Called with `GET /processes/{process_id}`.
 
-        Returns:
-            An object of type models.Process.
+        Parameters
+        ----------
+        process_id : str
+            Identifier of the process.
+
+        Returns
+        -------
+        models.ProcessDescription
+            Description of the process identfied by `process_id`.
         """
         ...
 
@@ -53,12 +65,20 @@ class BaseClient(abc.ABC):
     def post_process_execute(
         self, process_id: str, execution_content: models.Execute
     ) -> Any:
-        """
-        Post request for execution of process `process_id`.
+        """Post request for execution of process `process_id`.
 
         Called with `POST /processes/{process_id}/execute`.
 
-        Returns:
-            TODO
+        Parameters
+        ----------
+        process_id : str
+            Identifier of the process.
+        execution_content : models.Execute
+            Request body containing details for the process execution (e.g. inputs values)
+
+        Returns
+        -------
+        Any
+            _description_
         """
         ...
