@@ -50,12 +50,6 @@ def create_get_processes_endpoint(
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
-        links = [
-            models.Link(
-                href=urllib.parse.urljoin(str(request.base_url), "processes/"),
-                rel="self",
-            )
-        ]
         process_list = client.get_processes_list(limit=limit, offset=offset)
         for process_summary in process_list:
             process_summary.links = [
@@ -68,9 +62,15 @@ def create_get_processes_endpoint(
                     title="process description",
                 )
             ]
-        retval = models.ProcessesList(processes=process_list, links=links)
+        links = [
+            models.Link(
+                href=urllib.parse.urljoin(str(request.base_url), "processes/"),
+                rel="self",
+            )
+        ]
+        processes_list = models.ProcessesList(processes=process_list, links=links)
 
-        return retval
+        return processes_list
 
 
 def create_get_process_description_endpoint(
@@ -141,13 +141,16 @@ def create_post_process_execute_endpoint(
         summary="execute a process",
         operation_id="postProcessExecution",
     )
-    def post_process_execute(process_id: str, request_content: models.Execute) -> Any:
+    def post_process_execute(
+        process_id: str, request_content: models.Execute, response: fastapi.Response
+    ) -> Any:
         """Create a new job."""
-        retval = client.post_process_execute(
+        status_info = client.post_process_execute(
             process_id=process_id, execution_content=request_content
         )
+        response.headers["Location"] = f"/jobs/{status_info.jobID}"
 
-        return retval
+        return status_info
 
 
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:

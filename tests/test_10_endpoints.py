@@ -86,3 +86,8 @@ def test_post_process_execute(
 
     exp_keys = ("jobID", "status", "type")
     assert all([key in response.json() for key in exp_keys])
+
+    exp_headers_key = "Location"
+    exp_headers_value = "/jobs/1"
+    assert exp_headers_key in response.headers
+    assert response.headers[exp_headers_key] == exp_headers_value
