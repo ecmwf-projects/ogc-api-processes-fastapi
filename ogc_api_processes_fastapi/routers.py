@@ -153,6 +153,37 @@ def create_post_process_execute_endpoint(
         return status_info
 
 
+def create_get_job_status_endpoint(
+    router: fastapi.APIRouter, client: clients.BaseClient
+) -> None:
+    """Add to the provided `router` the `GET /jobs/{job_id}` endpoint
+    as implemented by `client`.
+
+    Parameters
+    ----------
+    router : fastapi.APIRouter
+        Router to which the endpoint should be added.
+    client : clients.BaseClient
+        Client implementing the `GET /jobs/{job_id}` endpoint.
+    """
+
+    @router.get(
+        "/{job_id}",
+        response_model=models.StatusInfo,
+        response_model_exclude_none=True,
+        response_model_exclude_unset=True,
+        summary="retrieve status information of a job",
+        operation_id="getJobStatus",
+    )
+    def get_job_status(
+        job_id: str,
+    ) -> models.StatusInfo:
+        """Shows the status of a job."""
+        job_status = client.get_job_status(job_id=job_id)
+
+        return job_status
+
+
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
     """Register the API router collecting the `/processes/...` endpoints.
 
@@ -167,12 +198,35 @@ def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
     fastapi.APIRouter
         Router collecting the `/processes/...` API endpoints.
     """
-    processes_router = fastapi.APIRouter(
+    router = fastapi.APIRouter(
         prefix="/processes",
         tags=["Processes"],
     )
-    create_get_processes_endpoint(router=processes_router, client=client)
-    create_get_process_description_endpoint(router=processes_router, client=client)
-    create_post_process_execute_endpoint(router=processes_router, client=client)
+    create_get_processes_endpoint(router=router, client=client)
+    create_get_process_description_endpoint(router=router, client=client)
+    create_post_process_execute_endpoint(router=router, client=client)
 
-    return processes_router
+    return router
+
+
+def create_jobs_router(client: clients.BaseClient) -> fastapi.APIRouter:
+    """Register the API router collecting the `/jobs/...` endpoints.
+
+
+    Parameters
+    ----------
+    client : clients.BaseClient
+        Client implementing the API endpoints.
+
+    Returns
+    -------
+    fastapi.APIRouter
+        Router collecting the `/jobs/...` API endpoints.
+    """
+    router = fastapi.APIRouter(
+        prefix="/jobs",
+        tags=["Jobs"],
+    )
+    create_get_job_status_endpoint(router=router, client=client)
+
+    return router
