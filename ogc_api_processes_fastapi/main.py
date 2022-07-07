@@ -20,18 +20,20 @@ from . import clients, routers
 def include_routers(
     app: fastapi.FastAPI, client: clients.BaseClient
 ) -> fastapi.FastAPI:
-    """
-    Add OGC API - Processes compliant routers to a FastAPI application.
+    """Add OGC API - Processes compliant routers to a FastAPI application.
 
-    Arguments:
-        app:
-            A FastAPI application.
-        client:
-            Defines the application logic which is injected into the API.
+    Parameters
+    ----------
+    app : fastapi.FastAPI
+        FastAPI application to which OGC API - Processes compliant routers
+        should be added.
+    client : clients.BaseClient
+        Client implementing the API endpoints.
 
-    Returns:
-        app:
-            A FastAPI application with OGC API - Processes routes added.
+    Returns
+    -------
+    fastapi.FastAPI
+        FastAPI application including OGC API - Processes compliant routes.
     """
     processes_router = routers.create_processes_router(client=client)
     app.include_router(processes_router)
@@ -40,16 +42,18 @@ def include_routers(
 
 
 def instantiate_app(client: clients.BaseClient) -> fastapi.FastAPI:
-    """
-    Create an instance of an OGC API - Processes compliant FastAPI application.
+    """Create an instance of an OGC API - Processes compliant FastAPI
+    application.
 
-    Arguments:
-        client:
-            Defines the application logic which is injected into the API.
+    Parameters
+    ----------
+    client : clients.BaseClient
+        Client implementing the API endpoints.
 
-    Returns:
-        app:
-            The FastAPI application.
+    Returns
+    -------
+    fastapi.FastAPI
+        OGC API - Processes compliant FastAPI application.
     """
     app = fastapi.FastAPI()
     app = include_routers(app=app, client=client)
