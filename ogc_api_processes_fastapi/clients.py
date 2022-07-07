@@ -88,16 +88,35 @@ class BaseClient(abc.ABC):
     def get_job_status(self, job_id: str) -> models.StatusInfo:
         """Get status information of the job identified by `job_id`.
 
-        Called with `POST /processes/{process_id}/execute`.
+        Called with `GET /jobs/{job_id}`.
 
         Parameters
         ----------
-        process_id : str
-            Identifier of the process.
+        job_id : str
+            Identifier of the job.
 
         Returns
         -------
         models.StatusInfo
             Information on the status of the job.
+        """
+        ...
+
+    # NOTE: this is tailored for the specific CADS implementation.
+    @abc.abstractmethod
+    def get_job_results(self, job_id: str) -> models.Link:
+        """Get results of the job identified by `job_id`.
+
+        Called with `GET /jobs/{job_id}/results`.
+
+        Parameters
+        ----------
+        job_id : str
+            Identifier of the job.
+
+        Returns
+        -------
+        models.Link
+            Link to download the job results.
         """
         ...

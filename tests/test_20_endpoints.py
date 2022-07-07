@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
+import json
 import urllib.parse
+from typing import Any
 
 import fastapi
 import fastapi.testclient
@@ -104,3 +106,24 @@ def test_get_job_status(
 
     exp_keys = ("jobID", "status", "type")
     assert all([key in response.json() for key in exp_keys])
+
+
+def test_get_job_results(
+    test_client: ogc_api_processes_fastapi.BaseClient,
+) -> None:
+    app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
+    client = fastapi.testclient.TestClient(app)
+
+    response = client.get("/jobs/job-1/results")
+    assert response.status_code == 204
+
+    exp_content: dict[Any, Any] = {}
+    assert response.json() == exp_content
+
+    exp_headers_key = "Link"
+    exp_headers_value = {
+        "href": "https://example.org/job-1-results.nc",
+        "title": "Download link for the result of job job-1",
+    }
+    assert exp_headers_key in response.headers
+    assert response.headers[exp_headers_key] == json.dumps(exp_headers_value)

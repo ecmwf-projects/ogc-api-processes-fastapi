@@ -184,6 +184,32 @@ def create_get_job_status_endpoint(
         return job_status
 
 
+def create_get_job_results_endpoint(
+    router: fastapi.APIRouter, client: clients.BaseClient
+) -> None:
+    """Add to the provided `router` the `GET /jobs/{job_id}/results`
+    endpoint as implemented by `client`.
+
+    Parameters
+    ----------
+    router : fastapi.APIRouter
+        Router to which the endpoint should be added.
+    client : clients.BaseClient
+        Client implementing the `GET /jobs/{job_id}/results` endpoint.
+    """
+
+    @router.get(
+        "/{job_id}/results",
+        status_code=204,
+        operation_id="getJobResults",
+    )
+    def get_job_results(job_id: str, response: fastapi.Response) -> dict[Any, Any]:
+        """Shows results of a job."""
+        results_link = client.get_job_results(job_id=job_id)
+        response.headers["Link"] = results_link.json(exclude_unset=True)
+        return {}
+
+
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
     """Register the API router collecting the `/processes/...` endpoints.
 
@@ -228,5 +254,6 @@ def create_jobs_router(client: clients.BaseClient) -> fastapi.APIRouter:
         tags=["Jobs"],
     )
     create_get_job_status_endpoint(router=router, client=client)
+    create_get_job_results_endpoint(router=router, client=client)
 
     return router
