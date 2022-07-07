@@ -13,7 +13,7 @@
 # limitations under the License
 
 import urllib.parse
-from typing import Any
+from typing import Any, Dict
 
 import fastapi
 
@@ -203,7 +203,7 @@ def create_get_job_results_endpoint(
         status_code=204,
         operation_id="getJobResults",
     )
-    def get_job_results(job_id: str, response: fastapi.Response) -> dict[Any, Any]:
+    def get_job_results(job_id: str, response: fastapi.Response) -> Dict[Any, Any]:
         """Shows results of a job."""
         results_link = client.get_job_results(job_id=job_id)
         response.headers["Link"] = results_link.json(exclude_unset=True)
