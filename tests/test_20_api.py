@@ -25,6 +25,9 @@ def test_include_ogc_api_processes_routers(
     routes_path = [app.routes[i].path for i in range(len(app.routes))]
 
     assert "/processes/" in routes_path
+    assert "/processes/{process_id}" in routes_path
+    assert "/processes/{process_id}/execute" in routes_path
+    assert "/jobs/{job_id}" in routes_path
 
 
 def test_instantiate_ogc_api_processes_app(
@@ -34,3 +37,6 @@ def test_instantiate_ogc_api_processes_app(
     routes_path = [app.routes[i].path for i in range(len(app.routes))]
 
     assert "/processes/" in routes_path
+    assert "/processes/{process_id}" in routes_path
+    assert "/processes/{process_id}/execute" in routes_path
+    assert "/jobs/{job_id}" in routes_path

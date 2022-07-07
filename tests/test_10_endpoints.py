@@ -91,3 +91,16 @@ def test_post_process_execute(
     exp_headers_value = "/jobs/1"
     assert exp_headers_key in response.headers
     assert response.headers[exp_headers_key] == exp_headers_value
+
+
+def test_get_job_status(
+    test_client: ogc_api_processes_fastapi.BaseClient,
+) -> None:
+    app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
+    client = fastapi.testclient.TestClient(app)
+
+    response = client.get("/jobs/job-1")
+    assert response.status_code == 200
+
+    exp_keys = ("jobID", "status", "type")
+    assert all([key in response.json() for key in exp_keys])

@@ -68,6 +68,15 @@ class TestClient(clients.BaseClient):
         )
         return status_info
 
+    def get_job_status(
+        self,
+        job_id: str,
+    ) -> models.StatusInfo:
+        status_info = models.StatusInfo(
+            jobID=1, status=models.StatusCode.running, type=models.JobType.process
+        )
+        return status_info
+
 
 @pytest.fixture
 def test_client() -> Iterator[clients.BaseClient]:
