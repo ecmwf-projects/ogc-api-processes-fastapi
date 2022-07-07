@@ -82,7 +82,12 @@ def test_post_process_execute(
     client = fastapi.testclient.TestClient(app)
 
     response = client.post("/processes/retrieve-dataset-1/execute", json={})
-    assert response.status_code == 200
+    assert response.status_code == 201
 
-    exp_keys = ("message", "request_content", "process_description")
+    exp_keys = ("jobID", "status", "type")
     assert all([key in response.json() for key in exp_keys])
+
+    exp_headers_key = "Location"
+    exp_headers_value = "/jobs/1"
+    assert exp_headers_key in response.headers
+    assert response.headers[exp_headers_key] == exp_headers_value

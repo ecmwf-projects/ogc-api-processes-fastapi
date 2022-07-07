@@ -13,7 +13,7 @@
 # limitations under the License
 
 import abc
-from typing import Any, List
+from typing import List
 
 from . import models
 
@@ -64,7 +64,7 @@ class BaseClient(abc.ABC):
     @abc.abstractmethod
     def post_process_execute(
         self, process_id: str, execution_content: models.Execute
-    ) -> Any:
+    ) -> models.StatusInfo:
         """Post request for execution of process `process_id`.
 
         Called with `POST /processes/{process_id}/execute`.
@@ -78,7 +78,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        Any
-            _description_
+        models.StatusInfo
+            Information on the status of the job.
         """
         ...
