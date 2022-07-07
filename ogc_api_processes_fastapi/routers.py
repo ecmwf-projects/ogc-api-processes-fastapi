@@ -76,7 +76,7 @@ def create_get_processes_endpoint(
 def create_get_process_description_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
-    """Add to the provided `router` the `GET /processes/{processID}` endpoint
+    """Add to the provided `router` the `GET /processes/{process_id}` endpoint
     as implemented by `client`.
 
     Parameters
@@ -84,7 +84,7 @@ def create_get_process_description_endpoint(
     router : fastapi.APIRouter
         Router to which the endpoint should be added.
     client : clients.BaseClient
-        Client implementing the `GET /processes/{processID}` endpoint.
+        Client implementing the `GET /processes/{process_id}` endpoint.
     """
 
     @router.get(
@@ -121,7 +121,7 @@ def create_get_process_description_endpoint(
 def create_post_process_execute_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
-    """Add to the provided `router` the `POST /processes/{processID}/execute`
+    """Add to the provided `router` the `POST /processes/{process_id}/execute`
     endpoint as implemented by `client`.
 
     Parameters
@@ -129,7 +129,7 @@ def create_post_process_execute_endpoint(
     router : fastapi.APIRouter
         Router to which the endpoint should be added.
     client : clients.BaseClient
-        Client implementing the `POST /processes/{processID}/execute` endpoint.
+        Client implementing the `POST /processes/{process_id}/execute` endpoint.
     """
 
     @router.post(
