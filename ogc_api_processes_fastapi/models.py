@@ -13,6 +13,7 @@
 # limitations under the License
 
 import enum
+from datetime import datetime
 from typing import Any, Dict, ForwardRef, List, Optional, Union, cast
 
 import pydantic
@@ -77,7 +78,7 @@ class MaxOccur(enum.Enum):
     unbounded = "unbounded"
 
 
-class Type(enum.Enum):
+class ObjectType(enum.Enum):
     array = "array"
     boolean = "boolean"
     integer = "integer"
@@ -120,7 +121,7 @@ class SchemaItem(pydantic.BaseModel):  # type: ignore
     minProperties: Optional[PositiveInt] = cast(PositiveInt, 0)
     required: Optional[List[str]] = pydantic.Field(None, min_items=1)
     enum: Optional[List[Any]] = pydantic.Field(None, min_items=1)
-    type: Optional[Type] = None
+    type: Optional[ObjectType] = None
     description: Optional[str] = None
     format: Optional[str] = None
     default: Optional[Any] = None
@@ -220,3 +221,34 @@ class Execute(pydantic.BaseModel):
 class ProcessDescription(ProcessSummary):
     inputs: Optional[List[Dict[str, InputDescription]]] = None
     outputs: Optional[List[Dict[str, OutputDescription]]] = None
+
+
+class ConInt(pydantic.ConstrainedInt):
+    ge = 0
+    le = 100
+
+
+class StatusCode(enum.Enum):
+    accepted = "accepted"
+    running = "running"
+    successful = "successful"
+    failed = "failed"
+    dismissed = "dismissed"
+
+
+class JobType(enum.Enum):
+    process = "process"
+
+
+class StatusInfo(pydantic.BaseModel):
+    processID: Optional[str] = None
+    type: JobType
+    jobID: str
+    status: StatusCode
+    message: Optional[str] = None
+    created: Optional[datetime] = None
+    started: Optional[datetime] = None
+    finished: Optional[datetime] = None
+    updated: Optional[datetime] = None
+    progress: Optional[ConInt] = None
+    links: Optional[List[Link]] = None
