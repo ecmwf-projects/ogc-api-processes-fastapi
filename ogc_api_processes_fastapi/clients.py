@@ -45,7 +45,7 @@ class BaseClient(abc.ABC):
 
     @abc.abstractmethod
     def get_process_description(self, process_id: str) -> models.ProcessDescription:
-        """Get description of process `process_id`.
+        """Get description of the process identified by `process_id`.
 
         Called with `GET /processes/{process_id}`.
 
@@ -57,7 +57,7 @@ class BaseClient(abc.ABC):
         Returns
         -------
         models.ProcessDescription
-            Description of the process identfied by `process_id`.
+            Description of the process.
         """
         ...
 
@@ -65,7 +65,7 @@ class BaseClient(abc.ABC):
     def post_process_execute(
         self, process_id: str, execution_content: models.Execute
     ) -> models.StatusInfo:
-        """Post request for execution of process `process_id`.
+        """Post request for execution of the process identified by `process_id`.
 
         Called with `POST /processes/{process_id}/execute`.
 
@@ -74,7 +74,26 @@ class BaseClient(abc.ABC):
         process_id : str
             Identifier of the process.
         execution_content : models.Execute
-            Request body containing details for the process execution (e.g. inputs values)
+            Request body containing details for the process execution
+            (e.g. inputs values)
+
+        Returns
+        -------
+        models.StatusInfo
+            Information on the status of the submitted job.
+        """
+        ...
+
+    @abc.abstractmethod
+    def get_job_status(self, job_id: str) -> models.StatusInfo:
+        """Get status information of the job identified by `job_id`.
+
+        Called with `POST /processes/{process_id}/execute`.
+
+        Parameters
+        ----------
+        process_id : str
+            Identifier of the process.
 
         Returns
         -------
