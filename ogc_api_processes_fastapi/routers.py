@@ -53,7 +53,7 @@ def create_get_processes_endpoint(
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
-        process_list = client.get_processes_list(limit=limit, offset=offset)
+        process_list = client.get_processes(limit=limit, offset=offset)
         for process_summary in process_list:
             process_summary.links = [
                 models.Link(
@@ -76,7 +76,7 @@ def create_get_processes_endpoint(
         return processes_list
 
 
-def create_get_process_description_endpoint(
+def create_get_process_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
     """Add to the provided `router` the `GET /processes/{process_id}` endpoint.
@@ -97,7 +97,7 @@ def create_get_process_description_endpoint(
         summary="retrieve the description of a particular process",
         operation_id="getProcessDescription",
     )
-    def get_process_description(
+    def get_process(
         request: fastapi.Request,
         process_id: str,
     ) -> models.ProcessDescription:
@@ -107,7 +107,7 @@ def create_get_process_description_endpoint(
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
-        process_description = client.get_process_description(process_id=process_id)
+        process_description = client.get_process(process_id=process_id)
         process_description.links = [
             models.Link(
                 href=urllib.parse.urljoin(
@@ -156,7 +156,7 @@ def create_post_process_execute_endpoint(
         return status_info
 
 
-def create_get_job_status_endpoint(
+def create_get_job_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
     """Add to the provided `router` the `GET /jobs/{job_id}` endpoint.
@@ -177,11 +177,11 @@ def create_get_job_status_endpoint(
         summary="retrieve status information of a job",
         operation_id="getJobStatus",
     )
-    def get_job_status(
+    def get_job(
         job_id: str,
     ) -> models.StatusInfo:
         """Show the status of a job."""
-        job_status = client.get_job_status(job_id=job_id)
+        job_status = client.get_job(job_id=job_id)
 
         return job_status
 
@@ -229,7 +229,7 @@ def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
         tags=["Processes"],
     )
     create_get_processes_endpoint(router=router, client=client)
-    create_get_process_description_endpoint(router=router, client=client)
+    create_get_process_endpoint(router=router, client=client)
     create_post_process_execute_endpoint(router=router, client=client)
 
     return router
@@ -252,7 +252,7 @@ def create_jobs_router(client: clients.BaseClient) -> fastapi.APIRouter:
         prefix="/jobs",
         tags=["Jobs"],
     )
-    create_get_job_status_endpoint(router=router, client=client)
+    create_get_job_endpoint(router=router, client=client)
     create_get_job_results_endpoint(router=router, client=client)
 
     return router

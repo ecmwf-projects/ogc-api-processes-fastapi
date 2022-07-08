@@ -64,7 +64,7 @@ def test_get_processes(test_client: ogc_api_processes_fastapi.BaseClient) -> Non
     assert response.json()["processes"] == exp_processes
 
 
-def test_get_process_description(
+def test_get_process(
     test_client: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
     app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
@@ -95,7 +95,7 @@ def test_post_process_execute(
     assert response.headers[exp_headers_key] == exp_headers_value
 
 
-def test_get_job_status(
+def test_get_job(
     test_client: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
     app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
