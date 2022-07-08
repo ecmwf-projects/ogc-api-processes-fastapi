@@ -28,6 +28,7 @@ def test_include_ogc_api_processes_routers(
     assert "/processes/{process_id}" in routes_path
     assert "/processes/{process_id}/execute" in routes_path
     assert "/jobs/{job_id}" in routes_path
+    assert "/jobs/{job_id}/results" in routes_path
 
 
 def test_instantiate_ogc_api_processes_app(
@@ -40,3 +41,4 @@ def test_instantiate_ogc_api_processes_app(
     assert "/processes/{process_id}" in routes_path
     assert "/processes/{process_id}/execute" in routes_path
     assert "/jobs/{job_id}" in routes_path
+    assert "/jobs/{job_id}/results" in routes_path

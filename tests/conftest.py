@@ -77,6 +77,16 @@ class TestClient(clients.BaseClient):
         )
         return status_info
 
+    def get_job_results(
+        self,
+        job_id: str,
+    ) -> models.Link:
+        results_link = models.Link(
+            href="https://example.org/job-1-results.nc",
+            title="Download link for the result of job job-1",
+        )
+        return results_link
+
 
 @pytest.fixture
 def test_client() -> Iterator[clients.BaseClient]:
