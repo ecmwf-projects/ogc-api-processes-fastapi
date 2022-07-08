@@ -34,9 +34,7 @@ class TestClient(clients.BaseClient):
     Test implementation of the OGC API - Processes endpoints.
     """
 
-    def get_processes_list(
-        self, limit: int, offset: int
-    ) -> List[models.ProcessSummary]:
+    def get_processes(self, limit: int, offset: int) -> List[models.ProcessSummary]:
         processes_list = [
             models.ProcessSummary(
                 id=PROCESSES_DB[i]["id"],
@@ -46,7 +44,7 @@ class TestClient(clients.BaseClient):
         ]
         return processes_list
 
-    def get_process_description(self, process_id: str) -> models.ProcessDescription:
+    def get_process(self, process_id: str) -> models.ProcessDescription:
         for i, elem in enumerate(PROCESSES_DB):
             if elem["id"] == process_id:
                 process = models.ProcessDescription(
@@ -68,7 +66,7 @@ class TestClient(clients.BaseClient):
         )
         return status_info
 
-    def get_job_status(
+    def get_job(
         self,
         job_id: str,
     ) -> models.StatusInfo:

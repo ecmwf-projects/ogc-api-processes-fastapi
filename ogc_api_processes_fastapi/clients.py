@@ -24,9 +24,7 @@ class BaseClient(abc.ABC):
     """Defines a pattern for implementing OGC API - Processes endpoints."""
 
     @abc.abstractmethod
-    def get_processes_list(
-        self, limit: int, offset: int
-    ) -> List[models.ProcessSummary]:
+    def get_processes(self, limit: int, offset: int) -> List[models.ProcessSummary]:
         """Get all available processes.
 
         Called with `GET /processes`.
@@ -46,7 +44,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_process_description(self, process_id: str) -> models.ProcessDescription:
+    def get_process(self, process_id: str) -> models.ProcessDescription:
         """Get description of the process identified by `process_id`.
 
         Called with `GET /processes/{process_id}`.
@@ -87,7 +85,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_job_status(self, job_id: str) -> models.StatusInfo:
+    def get_job(self, job_id: str) -> models.StatusInfo:
         """Get status information of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}`.
