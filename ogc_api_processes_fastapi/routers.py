@@ -45,7 +45,7 @@ def create_get_processes_endpoint(
     def get_processes(
         request: fastapi.Request,
         limit: int = fastapi.Query(default=10, ge=1, le=100),
-        offset: int = fastapi.Query(default=0, ge=1),
+        offset: int = fastapi.Query(default=0, ge=0),
     ) -> models.ProcessesList:
         """Get the list of available processes.
 
