@@ -189,8 +189,7 @@ def create_get_job_status_endpoint(
 def create_get_job_results_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
-    """Add to the provided `router` the `GET /jobs/{job_id}/results`
-    endpoint as implemented by `client`.
+    """Add to the provided `router` the `GET /jobs/{job_id}/results` endpoint.
 
     Parameters
     ----------
@@ -206,7 +205,7 @@ def create_get_job_results_endpoint(
         operation_id="getJobResults",
     )
     def get_job_results(job_id: str, response: fastapi.Response) -> Dict[Any, Any]:
-        """Shows results of a job."""
+        """Show results of a job."""
         results_link = client.get_job_results(job_id=job_id)
         response.headers["Link"] = results_link.json(exclude_unset=True)
         return {}
