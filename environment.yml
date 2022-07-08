@@ -5,7 +5,11 @@ dependencies:
 - fastapi
 - make
 - mypy
+- myst-parser
 - pre-commit
+- pydata-sphinx-theme
 - pytest
 - pytest-cov
 - requests
+- sphinx
+- sphinxcontrib-apidoc
