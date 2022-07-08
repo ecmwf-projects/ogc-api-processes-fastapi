@@ -1,3 +1,5 @@
+"""Instantiation methods for an OGC API Processes compliant FastAPI application."""
+
 # Copyright 2022, European Union.
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,8 +46,7 @@ def include_routers(
 
 
 def instantiate_app(client: clients.BaseClient) -> fastapi.FastAPI:
-    """Create an instance of an OGC API - Processes compliant FastAPI
-    application.
+    """Create an instance of an OGC API - Processes compliant FastAPI application.
 
     Parameters
     ----------

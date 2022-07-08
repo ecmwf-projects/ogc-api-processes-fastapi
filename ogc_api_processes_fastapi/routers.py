@@ -1,3 +1,5 @@
+"""OGC API Processes routes definition."""
+
 # Copyright 2022, European Union.
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,8 +25,7 @@ from . import clients, models
 def create_get_processes_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
-    """Add to the provided `router` the `GET /processes` endpoint
-    as implemented by `client`.
+    """Add to the provided `router` the `GET /processes` endpoint.
 
     Parameters
     ----------
@@ -46,7 +47,9 @@ def create_get_processes_endpoint(
         limit: int = fastapi.Query(default=10, ge=1, le=100),
         offset: int = fastapi.Query(default=0, ge=1),
     ) -> models.ProcessesList:
-        """The list of processes contains a summary of each process
+        """Get the list of available processes.
+
+        The list of processes contains a summary of each process
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
@@ -76,8 +79,7 @@ def create_get_processes_endpoint(
 def create_get_process_description_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
-    """Add to the provided `router` the `GET /processes/{process_id}` endpoint
-    as implemented by `client`.
+    """Add to the provided `router` the `GET /processes/{process_id}` endpoint.
 
     Parameters
     ----------
@@ -99,7 +101,9 @@ def create_get_process_description_endpoint(
         request: fastapi.Request,
         process_id: str,
     ) -> models.ProcessDescription:
-        """The list of processes contains a summary of each process
+        """Get the description of a specific process.
+
+        The list of processes contains a summary of each process
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
@@ -121,8 +125,7 @@ def create_get_process_description_endpoint(
 def create_post_process_execute_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
-    """Add to the provided `router` the `POST /processes/{process_id}/execute`
-    endpoint as implemented by `client`.
+    """Add to the provided `router` the `POST /processes/{process_id}/execute` endpoint.
 
     Parameters
     ----------
@@ -156,8 +159,7 @@ def create_post_process_execute_endpoint(
 def create_get_job_status_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
-    """Add to the provided `router` the `GET /jobs/{job_id}` endpoint
-    as implemented by `client`.
+    """Add to the provided `router` the `GET /jobs/{job_id}` endpoint.
 
     Parameters
     ----------
@@ -178,7 +180,7 @@ def create_get_job_status_endpoint(
     def get_job_status(
         job_id: str,
     ) -> models.StatusInfo:
-        """Shows the status of a job."""
+        """Show the status of a job."""
         job_status = client.get_job_status(job_id=job_id)
 
         return job_status
@@ -186,7 +188,6 @@ def create_get_job_status_endpoint(
 
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
     """Register the API router collecting the `/processes/...` endpoints.
-
 
     Parameters
     ----------
@@ -211,7 +212,6 @@ def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
 
 def create_jobs_router(client: clients.BaseClient) -> fastapi.APIRouter:
     """Register the API router collecting the `/jobs/...` endpoints.
-
 
     Parameters
     ----------
