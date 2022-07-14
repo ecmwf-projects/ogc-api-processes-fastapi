@@ -254,3 +254,8 @@ class StatusInfo(pydantic.BaseModel):
     updated: Optional[datetime] = None
     progress: Optional[ConInt] = None
     links: Optional[List[Link]] = None
+
+
+class JobsList(pydantic.BaseModel):
+    jobs: List[StatusInfo]
+    links: List[Link]
