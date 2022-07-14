@@ -186,7 +186,7 @@ def create_get_jobs_endpoint(
                     href=urllib.parse.urljoin(str(request.base_url), "jobs"),
                     rel="self",
                     type="application/json",
-                    title="process description",
+                    title="list of submitted jobs",
                 )
             ],
         )
