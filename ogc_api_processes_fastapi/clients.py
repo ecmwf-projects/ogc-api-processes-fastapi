@@ -85,6 +85,22 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
+    def get_jobs(self) -> models.JobsList:
+        """Get the list of submitted jobs.
+
+        Called with `GET /jobs`.
+
+        Parameters
+        ----------
+        ...
+
+        Returns
+        -------
+        models.JobsList
+            List of jobs.
+        """
+
+    @abc.abstractmethod
     def get_job(self, job_id: str) -> models.StatusInfo:
         """Get status information of the job identified by `job_id`.
 
@@ -120,19 +136,3 @@ class BaseClient(abc.ABC):
             Link to download the job results.
         """
         ...
-
-    @abc.abstractmethod
-    def get_jobs(self) -> models.JobsList:
-        """Get the list of submitted jobs.
-
-        Called with `GET /jobs`.
-
-        Parameters
-        ----------
-        ...
-
-        Returns
-        -------
-        models.JobsList
-            List of jobs.
-        """
