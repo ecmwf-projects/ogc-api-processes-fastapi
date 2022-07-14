@@ -120,3 +120,19 @@ class BaseClient(abc.ABC):
             Link to download the job results.
         """
         ...
+
+    @abc.abstractmethod
+    def get_jobs(self) -> models.JobsList:
+        """Get the list of submitted jobs.
+
+        Called with `GET /jobs`.
+
+        Parameters
+        ----------
+        ...
+
+        Returns
+        -------
+        models.JobsList
+            List of jobs.
+        """
