@@ -85,7 +85,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_jobs(self) -> models.JobsList:
+    def get_jobs(self) -> List[models.StatusInfo]:
         """Get the list of submitted jobs.
 
         Called with `GET /jobs`.

@@ -66,6 +66,14 @@ class TestClient(clients.BaseClient):
         )
         return status_info
 
+    def get_jobs(self) -> List[models.StatusInfo]:
+        jobs_list = [
+            models.StatusInfo(
+                jobID=1, status=models.StatusCode.accepted, type=models.JobType.process
+            )
+        ]
+        return jobs_list
+
     def get_job(
         self,
         job_id: str,

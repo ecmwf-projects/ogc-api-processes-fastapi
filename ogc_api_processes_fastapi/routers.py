@@ -36,7 +36,7 @@ def create_get_processes_endpoint(
     """
 
     @router.get(
-        "/",
+        "",
         response_model=models.ProcessesList,
         response_model_exclude_none=True,
         summary="retrieve the list of available processes",
@@ -170,18 +170,28 @@ def create_get_jobs_endpoint(
     """
 
     @router.get(
-        "/",
+        "",
         response_model=models.JobsList,
         response_model_exclude_none=True,
         response_model_exclude_unset=True,
         summary="retrieve the list of submitted jobs",
         operation_id="getJobs",
     )
-    def get_jobs() -> models.JobsList:
+    def get_jobs(request: fastapi.Request) -> models.JobsList:
         """Show the list of submitted jobs."""
-        jobs_list = client.get_jobs()
+        jobs = models.JobsList(
+            jobs=client.get_jobs(),
+            links=[
+                models.Link(
+                    href=urllib.parse.urljoin(str(request.base_url), "jobs"),
+                    rel="self",
+                    type="application/json",
+                    title="process description",
+                )
+            ],
+        )
 
-        return jobs_list
+        return jobs
 
 
 def create_get_job_endpoint(
