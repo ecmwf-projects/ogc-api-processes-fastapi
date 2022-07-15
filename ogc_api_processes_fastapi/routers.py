@@ -53,14 +53,14 @@ def create_get_processes_endpoint(
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
-        process_list = client.get_processes(limit=limit, offset=offset)
-        for process_summary in process_list:
-            process_summary.links = [
+        processes = client.get_processes(limit=limit, offset=offset)
+        for process in processes:
+            process.links = [
                 models.Link(
                     href=urllib.parse.urljoin(
-                        str(request.base_url), f"processes/{process_summary.id}"
+                        str(request.base_url), f"processes/{process.id}"
                     ),
-                    rel="self",
+                    rel="process",
                     type="application/json",
                     title="process description",
                 )
@@ -69,9 +69,10 @@ def create_get_processes_endpoint(
             models.Link(
                 href=urllib.parse.urljoin(str(request.base_url), "processes/"),
                 rel="self",
+                type="application/json",
             )
         ]
-        processes_list = models.ProcessesList(processes=process_list, links=links)
+        processes_list = models.ProcessesList(processes=processes, links=links)
 
         return processes_list
 
@@ -115,8 +116,15 @@ def create_get_process_endpoint(
                 ),
                 rel="self",
                 type="application/json",
-                title="process description",
-            )
+            ),
+            models.Link(
+                href=urllib.parse.urljoin(
+                    str(request.base_url), f"processes/{process_description.id}/execute"
+                ),
+                rel="execute",
+                type="application/json",
+                title="process execution",
+            ),
         ]
 
         return process_description
