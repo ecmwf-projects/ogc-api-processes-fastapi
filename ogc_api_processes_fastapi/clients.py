@@ -85,6 +85,22 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
+    def get_jobs(self) -> List[models.StatusInfo]:
+        """Get the list of submitted jobs.
+
+        Called with `GET /jobs`.
+
+        Parameters
+        ----------
+        ...
+
+        Returns
+        -------
+        models.JobsList
+            List of jobs.
+        """
+
+    @abc.abstractmethod
     def get_job(self, job_id: str) -> models.StatusInfo:
         """Get status information of the job identified by `job_id`.
 

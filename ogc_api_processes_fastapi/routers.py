@@ -36,7 +36,7 @@ def create_get_processes_endpoint(
     """
 
     @router.get(
-        "/",
+        "",
         response_model=models.ProcessesList,
         response_model_exclude_none=True,
         summary="retrieve the list of available processes",
@@ -156,6 +156,44 @@ def create_post_process_execute_endpoint(
         return status_info
 
 
+def create_get_jobs_endpoint(
+    router: fastapi.APIRouter, client: clients.BaseClient
+) -> None:
+    """Add to the provided `router` the `GET /jobs` endpoint.
+
+    Parameters
+    ----------
+    router : fastapi.APIRouter
+        Router to which the endpoint should be added.
+    client : clients.BaseClient
+        Client implementing the `GET /jobs` endpoint.
+    """
+
+    @router.get(
+        "",
+        response_model=models.JobsList,
+        response_model_exclude_none=True,
+        response_model_exclude_unset=True,
+        summary="retrieve the list of submitted jobs",
+        operation_id="getJobs",
+    )
+    def get_jobs(request: fastapi.Request) -> models.JobsList:
+        """Show the list of submitted jobs."""
+        jobs = models.JobsList(
+            jobs=client.get_jobs(),
+            links=[
+                models.Link(
+                    href=urllib.parse.urljoin(str(request.base_url), "jobs"),
+                    rel="self",
+                    type="application/json",
+                    title="list of submitted jobs",
+                )
+            ],
+        )
+
+        return jobs
+
+
 def create_get_job_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
@@ -253,6 +291,7 @@ def create_jobs_router(client: clients.BaseClient) -> fastapi.APIRouter:
         tags=["Jobs"],
     )
     create_get_job_endpoint(router=router, client=client)
+    create_get_jobs_endpoint(router=router, client=client)
     create_get_job_results_endpoint(router=router, client=client)
 
     return router
