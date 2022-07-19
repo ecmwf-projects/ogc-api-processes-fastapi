@@ -14,7 +14,6 @@
 
 import json
 import urllib.parse
-from typing import Any
 
 import fastapi
 import fastapi.testclient
@@ -129,9 +128,6 @@ def test_get_job_results(
 
     response = client.get("/jobs/job-1/results")
     assert response.status_code == 204
-
-    exp_content: dict[Any, Any] = {}
-    assert response.json() == exp_content
 
     exp_headers_key = "Link"
     exp_headers_value = {
