@@ -2,7 +2,6 @@ channels:
 - conda-forge
 - nodefaults
 dependencies:
-- fastapi
 - make
 - mypy
 - myst-parser
@@ -10,6 +9,8 @@ dependencies:
 - pydata-sphinx-theme
 - pytest
 - pytest-cov
-- requests
 - sphinx
 - sphinxcontrib-apidoc
+# DO NOT EDIT ABOVE THIS LINE, ADD DEPENDENCIES BELOW
+- fastapi
+- requests
