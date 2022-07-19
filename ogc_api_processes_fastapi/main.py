@@ -16,7 +16,7 @@
 
 import fastapi
 
-from . import clients, routers
+from . import clients, exceptions, routers
 
 
 def include_routers(
@@ -42,6 +42,13 @@ def include_routers(
     jobs_router = routers.create_jobs_router(client=client)
     app.include_router(jobs_router)
 
+    return app
+
+
+def include_exception_handlers(app: fastapi.FastAPI) -> fastapi.FastAPI:
+    app.add_exception_handler(
+        exceptions.ProcessNotFound, exceptions.process_not_found_exception_handler
+    )
     return app
 
 

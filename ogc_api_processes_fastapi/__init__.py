@@ -23,11 +23,12 @@ except ImportError:  # pragma: no cover
     __version__ = "999"
 
 from .clients import BaseClient
-from .main import include_routers, instantiate_app
+from .main import include_exception_handlers, include_routers, instantiate_app
 
 __all__ = [
     "__version__",
     "BaseClient",
     "instantiate_app",
     "include_routers",
+    "include_exception_handlers",
 ]
