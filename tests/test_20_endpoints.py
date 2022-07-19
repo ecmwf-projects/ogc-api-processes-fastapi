@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-import json
 import urllib.parse
 
 import fastapi
@@ -34,7 +33,7 @@ def test_get_processes(test_client: ogc_api_processes_fastapi.BaseClient) -> Non
             "links": [
                 {
                     "href": urllib.parse.urljoin(BASE_URL, f"retrieve-dataset-{i}"),
-                    "rel": "self",
+                    "rel": "process",
                     "title": "process description",
                     "type": "application/json",
                 }
@@ -51,7 +50,7 @@ def test_get_processes(test_client: ogc_api_processes_fastapi.BaseClient) -> Non
 
     assert response.json()["processes"] == exp_processes_all
 
-    exp_links = [{"href": BASE_URL, "rel": "self"}]
+    exp_links = [{"href": BASE_URL, "rel": "self", "type": "application/json"}]
     assert response.json()["links"] == exp_links
 
     offset = 5
@@ -130,9 +129,6 @@ def test_get_job_results(
     assert response.status_code == 204
 
     exp_headers_key = "Link"
-    exp_headers_value = {
-        "href": "https://example.org/job-1-results.nc",
-        "title": "Download link for the result of job job-1",
-    }
+    exp_headers_value = "https://example.org/job-1-results.nc"
     assert exp_headers_key in response.headers
-    assert response.headers[exp_headers_key] == json.dumps(exp_headers_value)
+    assert response.headers[exp_headers_key] == exp_headers_value
