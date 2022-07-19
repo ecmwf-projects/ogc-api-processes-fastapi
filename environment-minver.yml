@@ -6,5 +6,5 @@ dependencies:
 - make
 - pytest
 - pytest-cov
-- requests=2.27
 # DO NOT EDIT ABOVE THIS LINE, ADD DEPENDENCIES BELOW
+- requests=2.27
