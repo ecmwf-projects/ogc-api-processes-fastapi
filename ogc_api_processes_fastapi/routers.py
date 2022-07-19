@@ -15,11 +15,51 @@
 # limitations under the License
 
 import urllib.parse
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import fastapi
 
 from . import clients, models
+
+
+def make_links_to_job(
+    job: models.StatusInfo, request: fastapi.Request
+) -> List[models.Link]:
+    """Create links to attach to provided the job.
+
+    Parameters
+    ----------
+    job : models.StatusInfo
+        Job to create links for.
+
+    Returns
+    -------
+    List[models.Link]
+        Links to attach to jon
+    """
+    rel_job_link = "self"
+    title_job_link = None
+    if not request.path_params:
+        rel_job_link = "job"
+        title_job_link = "job status info"
+    links = [
+        models.Link(
+            href=urllib.parse.urljoin(str(request.base_url), f"jobs/{job.jobID}"),
+            rel=rel_job_link,
+            type="application/json",
+            title=title_job_link,
+        )
+    ]
+    if job.status == models.StatusCode.successful:
+        links.append(
+            models.Link(
+                href=urllib.parse.urljoin(
+                    str(request.base_url), f"jobs/{job.jobID}/results"
+                ),
+                rel="results",
+            )
+        )
+    return links
 
 
 def create_get_processes_endpoint(
@@ -153,12 +193,32 @@ def create_post_process_execute_endpoint(
         operation_id="postProcessExecution",
     )
     def post_process_execute(
-        process_id: str, request_content: models.Execute, response: fastapi.Response
+        request: fastapi.Request,
+        process_id: str,
+        request_content: models.Execute,
+        response: fastapi.Response,
     ) -> Any:
         """Create a new job."""
         status_info = client.post_process_execute(
             process_id=process_id, execution_content=request_content
         )
+        status_info.links = [
+            models.Link(
+                href=urllib.parse.urljoin(
+                    str(request.base_url), f"processes/{process_id}/execute"
+                ),
+                rel="self",
+                type="application/json",
+            ),
+            models.Link(
+                href=urllib.parse.urljoin(
+                    str(request.base_url), f"jobs/{status_info.jobID}"
+                ),
+                rel="job",
+                type="application/json",
+                title="job status info",
+            ),
+        ]
         response.headers["Location"] = f"/jobs/{status_info.jobID}"
 
         return status_info
@@ -187,8 +247,11 @@ def create_get_jobs_endpoint(
     )
     def get_jobs(request: fastapi.Request) -> models.JobsList:
         """Show the list of submitted jobs."""
+        jobs_list = client.get_jobs()
+        for job in jobs_list:
+            job.links = make_links_to_job(job=job, request=request)
         jobs = models.JobsList(
-            jobs=client.get_jobs(),
+            jobs=jobs_list,
             links=[
                 models.Link(
                     href=urllib.parse.urljoin(str(request.base_url), "jobs"),
@@ -224,12 +287,14 @@ def create_get_job_endpoint(
         operation_id="getJobStatus",
     )
     def get_job(
+        request: fastapi.Request,
         job_id: str,
     ) -> models.StatusInfo:
         """Show the status of a job."""
-        job_status = client.get_job(job_id=job_id)
+        job = client.get_job(job_id=job_id)
+        job.links = make_links_to_job(job=job, request=request)
 
-        return job_status
+        return job
 
 
 def create_get_job_results_endpoint(
@@ -253,7 +318,7 @@ def create_get_job_results_endpoint(
     def get_job_results(job_id: str, response: fastapi.Response) -> Dict[Any, Any]:
         """Show results of a job."""
         results_link = client.get_job_results(job_id=job_id)
-        response.headers["Link"] = results_link.json(exclude_unset=True)
+        response.headers["Link"] = results_link.href
         return {}
 
 
