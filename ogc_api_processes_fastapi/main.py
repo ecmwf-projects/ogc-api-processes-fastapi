@@ -46,6 +46,19 @@ def include_routers(
 
 
 def include_exception_handlers(app: fastapi.FastAPI) -> fastapi.FastAPI:
+    """Add OGC API - Processes compliatn exceptions handlers to a FastAPI application.
+
+    Parameters
+    ----------
+    app : fastapi.FastAPI
+        FastAPI application to which OGC API - Processes compliant exceptions handlers.
+        should be added.
+
+    Returns
+    -------
+    fastapi.FastAPI
+        FastAPI application including OGC API - Processes compliant exceptions handlers.
+    """
     app.add_exception_handler(
         exceptions.ProcessNotFound, exceptions.process_not_found_exception_handler
     )
