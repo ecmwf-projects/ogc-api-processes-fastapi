@@ -259,3 +259,14 @@ class StatusInfo(pydantic.BaseModel):
 class JobsList(pydantic.BaseModel):
     jobs: List[StatusInfo]
     links: List[Link]
+
+
+class Exception(pydantic.BaseModel):
+    class Config:
+        extra = pydantic.Extra.allow
+
+    type: str
+    title: Optional[str] = None
+    status: Optional[int] = None
+    detail: Optional[str] = None
+    instance: Optional[str] = None
