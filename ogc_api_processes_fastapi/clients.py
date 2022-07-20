@@ -154,5 +154,8 @@ class BaseClient(abc.ABC):
         ------
         exceptions.NoSuchJob
             If the job `job_id` is not found.
+
+        exceptions.ResultsNotReady
+            If job `job_id` results are not yet ready.
         """
         ...

@@ -27,6 +27,10 @@ class NoSuchJob(Exception):
     pass
 
 
+class ResultsNotReady(Exception):
+    pass
+
+
 def no_such_process_exception_handler(
     request: fastapi.Request, exc: Exception
 ) -> fastapi.responses.JSONResponse:
@@ -50,6 +54,20 @@ def no_such_job_exception_handler(
             type="http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-job",
             title="job not found",
             detail=f"job {request.path_params['job_id']} has not been found",
+            instance=str(request.url),
+        ).dict(exclude_unset=True),
+    )
+
+
+def results_not_ready_exception_handler(
+    request: fastapi.Request, exc: Exception
+) -> fastapi.responses.JSONResponse:
+    return fastapi.responses.JSONResponse(
+        status_code=fastapi.status.HTTP_404_NOT_FOUND,
+        content=models.Exception(
+            type="http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/result-not-ready",
+            title="job results not ready",
+            detail=f"job {request.path_params['job_id']} results are not yet ready",
             instance=str(request.url),
         ).dict(exclude_unset=True),
     )
