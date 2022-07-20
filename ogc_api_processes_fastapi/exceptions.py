@@ -14,21 +14,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
+from typing import Optional
+
+import attrs
 import fastapi
 
 from . import models
 
 
 class NoSuchProcess(Exception):
-    pass
+    ...
 
 
 class NoSuchJob(Exception):
-    pass
+    ...
 
 
 class ResultsNotReady(Exception):
-    pass
+    ...
+
+
+@attrs.define
+class JobResultsFailed(Exception):
+
+    type: str = "generic error"
+    status_code: int = fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR
+    title: str = "job results failed"
+    detail: Optional[str] = None
 
 
 def no_such_process_exception_handler(
@@ -70,4 +82,18 @@ def results_not_ready_exception_handler(
             detail=f"job {request.path_params['job_id']} results are not yet ready",
             instance=str(request.url),
         ).dict(exclude_unset=True),
+    )
+
+
+def job_results_failed_exception_handler(
+    request: fastapi.Request, exc: JobResultsFailed
+) -> fastapi.responses.JSONResponse:
+    return fastapi.responses.JSONResponse(
+        status_code=exc.status_code,
+        content=models.Exception(
+            type=exc.type,
+            title=exc.title,
+            detail=exc.detail,
+            instance=str(request.url),
+        ).dict(exclude_unset=True, exclude_none=True),
     )

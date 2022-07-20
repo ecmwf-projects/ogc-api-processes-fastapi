@@ -68,6 +68,9 @@ def include_exception_handlers(app: fastapi.FastAPI) -> fastapi.FastAPI:
     app.add_exception_handler(
         exceptions.ResultsNotReady, exceptions.results_not_ready_exception_handler
     )
+    app.add_exception_handler(
+        exceptions.JobResultsFailed, exceptions.job_results_failed_exception_handler
+    )
     return app
 
 

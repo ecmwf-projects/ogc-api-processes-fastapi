@@ -157,5 +157,8 @@ class BaseClient(abc.ABC):
 
         exceptions.ResultsNotReady
             If job `job_id` results are not yet ready.
+
+        exceptions.JobResultsFailed
+            If job `job_id` results preparation failed.
         """
         ...
