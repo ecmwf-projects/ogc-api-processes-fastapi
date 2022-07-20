@@ -86,6 +86,11 @@ class BaseClient(abc.ABC):
         -------
         models.StatusInfo
             Information on the status of the submitted job.
+
+        Raises
+        ------
+        exceptions.ProcessNotFound
+            If the process `process_id` is not found.
         """
         ...
 
