@@ -16,7 +16,7 @@
 
 import fastapi
 
-from . import clients, routers
+from . import clients, exceptions, routers
 
 
 def include_routers(
@@ -42,6 +42,35 @@ def include_routers(
     jobs_router = routers.create_jobs_router(client=client)
     app.include_router(jobs_router)
 
+    return app
+
+
+def include_exception_handlers(app: fastapi.FastAPI) -> fastapi.FastAPI:
+    """Add OGC API - Processes compliatn exceptions handlers to a FastAPI application.
+
+    Parameters
+    ----------
+    app : fastapi.FastAPI
+        FastAPI application to which OGC API - Processes compliant exceptions handlers.
+        should be added.
+
+    Returns
+    -------
+    fastapi.FastAPI
+        FastAPI application including OGC API - Processes compliant exceptions handlers.
+    """
+    app.add_exception_handler(
+        exceptions.NoSuchProcess, exceptions.no_such_process_exception_handler
+    )
+    app.add_exception_handler(
+        exceptions.NoSuchJob, exceptions.no_such_job_exception_handler
+    )
+    app.add_exception_handler(
+        exceptions.ResultsNotReady, exceptions.results_not_ready_exception_handler
+    )
+    app.add_exception_handler(
+        exceptions.JobResultsFailed, exceptions.job_results_failed_exception_handler
+    )
     return app
 
 

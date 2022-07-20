@@ -58,6 +58,11 @@ class BaseClient(abc.ABC):
         -------
         models.ProcessDescription
             Description of the process.
+
+        Raises
+        ------
+        exceptions.NoSuchProcess
+            If the process `process_id` is not found.
         """
         ...
 
@@ -81,6 +86,11 @@ class BaseClient(abc.ABC):
         -------
         models.StatusInfo
             Information on the status of the submitted job.
+
+        Raises
+        ------
+        exceptions.NoSuchProcess
+            If the process `process_id` is not found.
         """
         ...
 
@@ -115,6 +125,11 @@ class BaseClient(abc.ABC):
         -------
         models.StatusInfo
             Information on the status of the job.
+
+        Raises
+        ------
+        exceptions.NoSuchJob
+            If the job `job_id` is not found.
         """
         ...
 
@@ -134,5 +149,16 @@ class BaseClient(abc.ABC):
         -------
         models.Link
             Link to download the job results.
+
+        Raises
+        ------
+        exceptions.NoSuchJob
+            If the job `job_id` is not found.
+
+        exceptions.ResultsNotReady
+            If job `job_id` results are not yet ready.
+
+        exceptions.JobResultsFailed
+            If job `job_id` results preparation failed.
         """
         ...
