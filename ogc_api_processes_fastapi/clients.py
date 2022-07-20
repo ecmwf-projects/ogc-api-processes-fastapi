@@ -58,6 +58,11 @@ class BaseClient(abc.ABC):
         -------
         models.ProcessDescription
             Description of the process.
+
+        Raises
+        ------
+        exceptions.ProcessNotFound
+            If the process `process_id` is not found.
         """
         ...
 
