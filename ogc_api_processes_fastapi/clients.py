@@ -61,7 +61,7 @@ class BaseClient(abc.ABC):
 
         Raises
         ------
-        exceptions.ProcessNotFound
+        exceptions.NoSuchProcess
             If the process `process_id` is not found.
         """
         ...
@@ -89,7 +89,7 @@ class BaseClient(abc.ABC):
 
         Raises
         ------
-        exceptions.ProcessNotFound
+        exceptions.NoSuchProcess
             If the process `process_id` is not found.
         """
         ...
@@ -125,6 +125,11 @@ class BaseClient(abc.ABC):
         -------
         models.StatusInfo
             Information on the status of the job.
+
+        Raises
+        ------
+        exceptions.NoSuchJob
+            If the job `job_id` is not found.
         """
         ...
 
@@ -144,5 +149,10 @@ class BaseClient(abc.ABC):
         -------
         models.Link
             Link to download the job results.
+
+        Raises
+        ------
+        exceptions.NoSuchJob
+            If the job `job_id` is not found.
         """
         ...

@@ -60,7 +60,10 @@ def include_exception_handlers(app: fastapi.FastAPI) -> fastapi.FastAPI:
         FastAPI application including OGC API - Processes compliant exceptions handlers.
     """
     app.add_exception_handler(
-        exceptions.ProcessNotFound, exceptions.process_not_found_exception_handler
+        exceptions.NoSuchProcess, exceptions.no_such_process_exception_handler
+    )
+    app.add_exception_handler(
+        exceptions.NoSuchJob, exceptions.no_such_job_exception_handler
     )
     return app
 

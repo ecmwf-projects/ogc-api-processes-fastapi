@@ -19,11 +19,15 @@ import fastapi
 from . import models
 
 
-class ProcessNotFound(Exception):
+class NoSuchProcess(Exception):
     pass
 
 
-def process_not_found_exception_handler(
+class NoSuchJob(Exception):
+    pass
+
+
+def no_such_process_exception_handler(
     request: fastapi.Request, exc: Exception
 ) -> fastapi.responses.JSONResponse:
     return fastapi.responses.JSONResponse(
@@ -32,6 +36,20 @@ def process_not_found_exception_handler(
             type="http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-process",
             title="process not found",
             detail=f"process {request.path_params['process_id']} has not been found",
+            instance=str(request.url),
+        ).dict(exclude_unset=True),
+    )
+
+
+def no_such_job_exception_handler(
+    request: fastapi.Request, exc: Exception
+) -> fastapi.responses.JSONResponse:
+    return fastapi.responses.JSONResponse(
+        status_code=fastapi.status.HTTP_404_NOT_FOUND,
+        content=models.Exception(
+            type="http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-job",
+            title="job not found",
+            detail=f"job {request.path_params['job_id']} has not been found",
             instance=str(request.url),
         ).dict(exclude_unset=True),
     )
