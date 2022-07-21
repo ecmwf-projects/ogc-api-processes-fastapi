@@ -88,7 +88,7 @@ def test_post_process_execute(
     assert all([key in response.json() for key in exp_keys])
 
     exp_headers_key = "Location"
-    exp_headers_value = "/jobs/1"
+    exp_headers_value = "http://testserver/jobs/1"
     assert exp_headers_key in response.headers
     assert response.headers[exp_headers_key] == exp_headers_value
 
@@ -129,6 +129,6 @@ def test_get_job_results(
     assert response.status_code == 204
 
     exp_headers_key = "Link"
-    exp_headers_value = "https://example.org/job-1-results.nc"
+    exp_headers_value = "<https://example.org/job-1-results.nc>"
     assert exp_headers_key in response.headers
     assert response.headers[exp_headers_key] == exp_headers_value

@@ -38,7 +38,7 @@ class ResultsNotReady(Exception):
 class JobResultsFailed(Exception):
 
     type: str = "generic error"
-    status_code: int = fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR
+    status_code: int = fastapi.status.HTTP_200_OK
     title: str = "job results failed"
     detail: Optional[str] = None
 
