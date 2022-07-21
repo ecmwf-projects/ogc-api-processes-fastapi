@@ -219,7 +219,9 @@ def create_post_process_execute_endpoint(
                 title="job status info",
             ),
         ]
-        response.headers["Location"] = f"/jobs/{status_info.jobID}"
+        response.headers["Location"] = urllib.parse.urljoin(
+            str(request.base_url), f"jobs/{status_info.jobID}"
+        )
 
         return status_info
 
