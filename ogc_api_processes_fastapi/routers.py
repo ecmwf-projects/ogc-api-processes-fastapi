@@ -40,7 +40,7 @@ def make_links_to_job(
     rel_job_link = "self"
     title_job_link = None
     if not request.path_params:
-        rel_job_link = "job"
+        rel_job_link = "monitor"
         title_job_link = "job status info"
     links = [
         models.Link(
@@ -214,7 +214,7 @@ def create_post_process_execute_endpoint(
                 href=urllib.parse.urljoin(
                     str(request.base_url), f"jobs/{status_info.jobID}"
                 ),
-                rel="job",
+                rel="monitor",
                 type="application/json",
                 title="job status info",
             ),
@@ -320,7 +320,7 @@ def create_get_job_results_endpoint(
     def get_job_results(job_id: str, response: fastapi.Response) -> Dict[Any, Any]:
         """Show results of a job."""
         results_link = client.get_job_results(job_id=job_id)
-        response.headers["Link"] = results_link.href
+        response.headers["Link"] = f"<{results_link.href}>"
         return {}
 
 
