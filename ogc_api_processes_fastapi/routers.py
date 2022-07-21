@@ -50,7 +50,7 @@ def make_links_to_job(
             title=title_job_link,
         )
     ]
-    if job.status == models.StatusCode.successful:
+    if job.status in (models.StatusCode.successful, models.StatusCode.failed):
         links.append(
             models.Link(
                 href=urllib.parse.urljoin(
