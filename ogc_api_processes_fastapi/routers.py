@@ -93,7 +93,8 @@ def create_get_processes_endpoint(
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
-        processes = client.get_processes(limit=limit, offset=offset)
+        processes_all = client.get_processes()
+        processes = processes_all[offset : (offset + limit)]
         for process in processes:
             process.links = [
                 models.Link(
@@ -107,11 +108,35 @@ def create_get_processes_endpoint(
             ]
         links = [
             models.Link(
-                href=urllib.parse.urljoin(str(request.base_url), "processes/"),
+                href=urllib.parse.urljoin(str(request.base_url), "processes"),
                 rel="self",
                 type="application/json",
             )
         ]
+        if offset > 0:
+            prev_offset = max(0, offset - limit)
+            prev_limit = min(limit, offset - prev_offset)
+            prev_link = models.Link(
+                href=urllib.parse.urljoin(
+                    str(request.base_url),
+                    f"processes?offset={prev_offset}&limit={prev_limit}",
+                ),
+                rel="prev",
+                type="application/json",
+            )
+            links.append(prev_link)
+        if (offset + limit) < len(processes_all):
+            next_offset = offset + limit
+            next_limit = min(limit, len(processes_all) - next_offset)
+            next_link = models.Link(
+                href=urllib.parse.urljoin(
+                    str(request.base_url),
+                    f"processes?offset={next_offset}&limit={next_limit}",
+                ),
+                rel="next",
+                type="application/json",
+            )
+            links.append(next_link)
         processes_list = models.ProcessesList(processes=processes, links=links)
 
         return processes_list
