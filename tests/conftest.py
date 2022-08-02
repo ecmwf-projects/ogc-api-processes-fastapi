@@ -22,8 +22,8 @@ PROCESSES_DB = [
     {
         "id": f"retrieve-dataset-{i}",
         "version": f"{i}.0",
-        "inputs": [{f"input-{i}": {"schema": {"type": "string"}}}],
-        "outputs": [{f"output-{i}": {"schema": {"type": "object"}}}],
+        "inputs": {f"input-{i}": {"schema": {"type": "string"}}},
+        "outputs": {f"output-{i}": {"schema": {"type": "object"}}},
     }
     for i in range(10)
 ]
