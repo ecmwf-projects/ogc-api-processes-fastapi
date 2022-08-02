@@ -28,11 +28,11 @@ def test_get_processes(test_client: ogc_api_processes_fastapi.BaseClient) -> Non
 
     exp_processes_all = [
         {
-            "id": f"retrieve-dataset-{i}",
+            "id": f"dataset-{i}",
             "version": f"{i}.0",
             "links": [
                 {
-                    "href": urllib.parse.urljoin(BASE_URL, f"retrieve-dataset-{i}"),
+                    "href": urllib.parse.urljoin(BASE_URL, f"dataset-{i}"),
                     "rel": "process",
                     "title": "process description",
                     "type": "application/json",
@@ -68,7 +68,7 @@ def test_get_process(
     app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
     client = fastapi.testclient.TestClient(app)
 
-    response = client.get("/processes/retrieve-dataset-1")
+    response = client.get("/processes/dataset-1")
     assert response.status_code == 200
 
     exp_keys = ("id", "version", "inputs", "outputs")
@@ -81,7 +81,7 @@ def test_post_process_execute(
     app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
     client = fastapi.testclient.TestClient(app)
 
-    response = client.post("/processes/retrieve-dataset-1/execute", json={})
+    response = client.post("/processes/dataset-1/execute", json={})
     assert response.status_code == 201
 
     exp_keys = ("jobID", "status", "type")
