@@ -20,7 +20,7 @@ from ogc_api_processes_fastapi import clients, models
 
 PROCESSES_DB = [
     {
-        "id": f"retrieve-dataset-{i}",
+        "id": f"dataset-{i}",
         "version": f"{i}.0",
         "inputs": {f"input-{i}": {"schema": {"type": "string"}}},
         "outputs": {f"output-{i}": {"schema": {"type": "object"}}},
