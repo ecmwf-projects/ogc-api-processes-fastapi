@@ -214,15 +214,15 @@ class Subscriber(pydantic.BaseModel):
 
 
 class Execute(pydantic.BaseModel):
-    inputs: Optional[Union[InlineOrRefData, List[InlineOrRefData]]] = None
-    outputs: Optional[Output] = None
+    inputs: Optional[Dict[str, Union[InlineOrRefData, List[InlineOrRefData]]]] = None
+    outputs: Optional[Dict[str, Output]] = None
     response: Optional[Response] = Response.raw
     subscriber: Optional[Subscriber] = None
 
 
 class ProcessDescription(ProcessSummary):
-    inputs: Optional[List[Dict[str, InputDescription]]] = None
-    outputs: Optional[List[Dict[str, OutputDescription]]] = None
+    inputs: Optional[Dict[str, InputDescription]] = None
+    outputs: Optional[Dict[str, OutputDescription]] = None
 
 
 class ConInt(pydantic.ConstrainedInt):
