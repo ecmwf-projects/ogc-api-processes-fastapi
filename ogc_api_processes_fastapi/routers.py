@@ -241,18 +241,18 @@ def create_get_jobs_endpoint(
 
     @router.get(
         "",
-        response_model=models.JobsList,
+        response_model=models.JobList,
         response_model_exclude_none=True,
         response_model_exclude_unset=True,
         summary="retrieve the list of submitted jobs",
         operation_id="getJobs",
     )
-    def get_jobs(request: fastapi.Request) -> models.JobsList:
+    def get_jobs(request: fastapi.Request) -> models.JobList:
         """Show the list of submitted jobs."""
         jobs_list = client.get_jobs()
         for job in jobs_list:
             job.links = make_links_to_job(job=job, request=request)
-        jobs = models.JobsList(
+        jobs = models.JobList(
             jobs=jobs_list,
             links=[
                 models.Link(

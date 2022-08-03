@@ -256,7 +256,7 @@ class StatusInfo(pydantic.BaseModel):
     links: Optional[List[Link]] = None
 
 
-class JobsList(pydantic.BaseModel):
+class JobList(pydantic.BaseModel):
     jobs: List[StatusInfo]
     links: List[Link]
 

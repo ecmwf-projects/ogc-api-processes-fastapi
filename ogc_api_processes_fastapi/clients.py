@@ -106,7 +106,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        models.JobsList
+        List[models.StatusInfo]
             List of jobs.
         """
 
