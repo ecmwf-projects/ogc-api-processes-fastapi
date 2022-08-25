@@ -15,7 +15,7 @@
 # limitations under the License
 
 import urllib.parse
-from typing import Any, Dict, List
+from typing import Any, List
 
 import fastapi
 
@@ -314,14 +314,18 @@ def create_get_job_results_endpoint(
 
     @router.get(
         "/{job_id}/results",
-        status_code=204,
         operation_id="getJobResults",
     )
-    def get_job_results(job_id: str, response: fastapi.Response) -> Dict[Any, Any]:
+    def get_job_results(job_id: str, response: fastapi.Response) -> Any:
         """Show results of a job."""
-        results_link = client.get_job_results(job_id=job_id)
-        response.headers["Link"] = f"<{results_link.href}>"
-        return {}
+        results = client.get_job_results(job_id=job_id)
+        if isinstance(results, models.Link):
+            response.status_code = 204
+            response.headers["Link"] = f"<{results.href}>"
+            response.body = {}
+        else:
+            response.body = results
+        return response.body
 
 
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
