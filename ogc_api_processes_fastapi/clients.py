@@ -15,7 +15,7 @@
 # limitations under the License
 
 import abc
-from typing import List
+from typing import Any, Dict, List, Union
 
 from . import models
 
@@ -133,9 +133,8 @@ class BaseClient(abc.ABC):
         """
         ...
 
-    # NOTE: this is tailored for the specific CADS implementation.
     @abc.abstractmethod
-    def get_job_results(self, job_id: str) -> models.Link:
+    def get_job_results(self, job_id: str) -> Union[Dict[str, Any], models.Link]:
         """Get results of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}/results`.
@@ -147,8 +146,8 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        models.Link
-            Link to download the job results.
+        Union[Dict[str, Any], models.Link]
+            Job results.
 
         Raises
         ------
