@@ -314,18 +314,25 @@ def create_get_job_results_endpoint(
 
     @router.get(
         "/{job_id}/results",
+        responses={
+            204: {"description": "Results of a job for async/raw/reference request"},
+            200: {
+                "description": "Results of a job for async/raw/value request",
+                "content": {"application/json": {"example": "no example available"}},
+            },
+            404: {"description": "Job not found", "model": models.Exception},
+        },
         operation_id="getJobResults",
     )
-    def get_job_results(job_id: str, response: fastapi.Response) -> Any:
+    def get_job_results(job_id: str) -> Any:
         """Show results of a job."""
         results = client.get_job_results(job_id=job_id)
         if isinstance(results, models.Link):
-            response.status_code = 204
-            response.headers["Link"] = f"<{results.href}>"
-            response.body = {}
+            return fastapi.Response(
+                status_code=204, headers={"Link": f"<{results.href}>"}
+            )
         else:
-            response.body = results
-        return response.body
+            return results
 
 
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
