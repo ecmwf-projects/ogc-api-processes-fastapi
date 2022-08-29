@@ -326,13 +326,13 @@ def create_get_job_results_endpoint(
     )
     def get_job_results(job_id: str) -> Any:
         """Show results of a job."""
-        results = client.get_job_results(job_id=job_id)
-        if isinstance(results, models.Link):
-            return fastapi.Response(
-                status_code=204, headers={"Link": f"<{results.href}>"}
+        response = client.get_job_results(job_id=job_id)
+        if isinstance(response, models.Link):
+            response = fastapi.Response(
+                status_code=204, headers={"Link": f"<{response.href}>"}
             )
-        else:
-            return results
+
+        return response
 
 
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
