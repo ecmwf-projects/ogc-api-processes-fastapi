@@ -314,11 +314,9 @@ def create_get_job_results_endpoint(
 
     @router.get(
         "/{job_id}/results",
+        response_model=models.Results,
+        response_model_exclude_unset=True,
         responses={
-            200: {
-                "description": "Results of a job for async/document/value request",
-                "model": models.Response,
-            },
             404: {"description": "Job not found", "model": models.Exception},
         },
         operation_id="getJobResults",
