@@ -15,7 +15,7 @@
 # limitations under the License
 
 import urllib.parse
-from typing import Any, List
+from typing import Any, Dict, List
 
 import fastapi
 
@@ -321,7 +321,7 @@ def create_get_job_results_endpoint(
         },
         operation_id="getJobResults",
     )
-    def get_job_results(job_id: str) -> models.Results:
+    def get_job_results(job_id: str) -> Dict[str, Any]:
         """Show results of a job."""
         response = client.get_job_results(job_id=job_id)
 
