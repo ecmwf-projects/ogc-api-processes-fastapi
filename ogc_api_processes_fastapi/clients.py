@@ -15,7 +15,7 @@
 # limitations under the License
 
 import abc
-from typing import List
+from typing import Any, Dict, List
 
 from . import models
 
@@ -134,7 +134,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_job_results(self, job_id: str) -> models.Results:
+    def get_job_results(self, job_id: str) -> Dict[str, Any]:
         """Get results of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}/results`.
@@ -146,7 +146,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        models.Results
+        Dict[str, Any]
             Job results.
 
         Raises
