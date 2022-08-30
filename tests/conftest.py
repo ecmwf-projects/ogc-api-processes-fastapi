@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-from typing import Iterator, List
+from typing import Any, Dict, Iterator, List
 
 import pytest
 
@@ -86,12 +86,11 @@ class TestClient(clients.BaseClient):
     def get_job_results(
         self,
         job_id: str,
-    ) -> models.Link:
-        results_link = models.Link(
-            href="https://example.org/job-1-results.nc",
-            title="Download link for the result of job job-1",
-        )
-        return results_link
+    ) -> Dict[str, Any]:
+        results = {
+            "result": f"https://example.org/{job_id}-results.nc",
+        }
+        return results
 
 
 @pytest.fixture

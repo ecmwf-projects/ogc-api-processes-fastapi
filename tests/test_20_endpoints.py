@@ -124,11 +124,11 @@ def test_get_job_results(
 ) -> None:
     app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
     client = fastapi.testclient.TestClient(app)
+    job_id = "job-1"
+    response = client.get(f"/jobs/{job_id}/results")
 
-    response = client.get("/jobs/job-1/results")
-    assert response.status_code == 204
+    assert response.status_code == 200
 
-    exp_headers_key = "Link"
-    exp_headers_value = "<https://example.org/job-1-results.nc>"
-    assert exp_headers_key in response.headers
-    assert response.headers[exp_headers_key] == exp_headers_value
+    exp_body = {"result": f"https://example.org/{job_id}-results.nc"}
+    body = response.json()
+    assert body == exp_body
