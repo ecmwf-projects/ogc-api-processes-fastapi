@@ -262,7 +262,7 @@ class JobList(pydantic.BaseModel):
 
 
 class Results(pydantic.BaseModel):
-    _root_: Optional[Dict[str, InlineOrRefData]] = None
+    __root__: Optional[Dict[str, InlineOrRefData]] = None
 
 
 class Exception(pydantic.BaseModel):
