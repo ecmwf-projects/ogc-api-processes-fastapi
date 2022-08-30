@@ -261,6 +261,10 @@ class JobList(pydantic.BaseModel):
     links: List[Link]
 
 
+class Results(pydantic.BaseModel):
+    _root_: Optional[Dict[str, InlineOrRefData]] = None
+
+
 class Exception(pydantic.BaseModel):
     class Config:
         extra = pydantic.Extra.allow
