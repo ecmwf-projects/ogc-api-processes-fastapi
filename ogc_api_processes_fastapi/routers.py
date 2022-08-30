@@ -315,22 +315,17 @@ def create_get_job_results_endpoint(
     @router.get(
         "/{job_id}/results",
         responses={
-            204: {"description": "Results of a job for async/raw/reference request"},
             200: {
-                "description": "Results of a job for async/raw/value request",
-                "content": {"application/json": {"example": "no example available"}},
+                "description": "Results of a job for async/document/value request",
+                "model": models.Response,
             },
             404: {"description": "Job not found", "model": models.Exception},
         },
         operation_id="getJobResults",
     )
-    def get_job_results(job_id: str) -> Any:
+    def get_job_results(job_id: str) -> models.Results:
         """Show results of a job."""
         response = client.get_job_results(job_id=job_id)
-        if isinstance(response, models.Link):
-            response = fastapi.Response(
-                status_code=204, headers={"Link": f"<{response.href}>"}
-            )
 
         return response
 
