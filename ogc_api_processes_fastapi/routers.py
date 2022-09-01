@@ -15,7 +15,7 @@
 # limitations under the License
 
 import urllib.parse
-from typing import Any, List
+from typing import Any, Dict, List
 
 import fastapi
 
@@ -314,23 +314,16 @@ def create_get_job_results_endpoint(
 
     @router.get(
         "/{job_id}/results",
+        response_model=models.Results,
+        response_model_exclude_unset=True,
         responses={
-            204: {"description": "Results of a job for async/raw/reference request"},
-            200: {
-                "description": "Results of a job for async/raw/value request",
-                "content": {"application/json": {"example": "no example available"}},
-            },
             404: {"description": "Job not found", "model": models.Exception},
         },
         operation_id="getJobResults",
     )
-    def get_job_results(job_id: str) -> Any:
+    def get_job_results(job_id: str) -> Dict[str, Any]:
         """Show results of a job."""
         response = client.get_job_results(job_id=job_id)
-        if isinstance(response, models.Link):
-            response = fastapi.Response(
-                status_code=204, headers={"Link": f"<{response.href}>"}
-            )
 
         return response
 
