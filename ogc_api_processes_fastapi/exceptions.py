@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-from typing import Optional
-
 import attrs
 import fastapi
 
@@ -39,8 +37,8 @@ class JobResultsFailed(Exception):
 
     type: str = "generic error"
     status_code: int = fastapi.status.HTTP_200_OK
-    title: str = "job results failed"
-    detail: Optional[str] = None
+    title: str = "job failed"
+    detail: str = "job failed"
 
 
 def no_such_process_exception_handler(
