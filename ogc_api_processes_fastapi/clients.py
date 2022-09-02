@@ -17,6 +17,8 @@
 import abc
 from typing import Any, Dict, List
 
+import fastapi
+
 from . import models
 
 
@@ -68,7 +70,10 @@ class BaseClient(abc.ABC):
 
     @abc.abstractmethod
     def post_process_execute(
-        self, process_id: str, execution_content: models.Execute
+        self,
+        process_id: str,
+        execution_content: models.Execute,
+        request: fastapi.Request,
     ) -> models.StatusInfo:
         """Post request for execution of the process identified by `process_id`.
 
@@ -81,6 +86,8 @@ class BaseClient(abc.ABC):
         execution_content : models.Execute
             Request body containing details for the process execution
             (e.g. inputs values)
+        request: fastapi.Request
+            Request
 
         Returns
         -------
