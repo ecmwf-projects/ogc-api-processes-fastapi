@@ -14,6 +14,7 @@
 
 from typing import Any, Dict, Iterator, List
 
+import fastapi
 import pytest
 
 from ogc_api_processes_fastapi import clients, models
@@ -60,8 +61,10 @@ class TestClient(clients.BaseClient):
         self,
         process_id: str,
         execution_content: models.Execute,
-    ) -> models.StatusInfo:
-        status_info = models.StatusInfo(
+        request: fastapi.Request,
+        response: fastapi.Response,
+    ) -> dict[str, Any]:
+        status_info = dict(
             jobID=1, status=models.StatusCode.accepted, type=models.JobType.process
         )
         return status_info
