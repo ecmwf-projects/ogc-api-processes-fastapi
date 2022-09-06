@@ -74,6 +74,7 @@ class BaseClient(abc.ABC):
         process_id: str,
         execution_content: models.Execute,
         request: fastapi.Request,
+        response: fastapi.Response,
     ) -> Dict[str, Any]:
         """Post request for execution of the process identified by `process_id`.
 
@@ -85,9 +86,11 @@ class BaseClient(abc.ABC):
             Identifier of the process.
         execution_content : models.Execute
             Request body containing details for the process execution
-            (e.g. inputs values)
+            (e.g. inputs values).
         request: fastapi.Request
-            Request
+            Request.
+        response: fastapi.Response
+            Response.
 
         Returns
         -------

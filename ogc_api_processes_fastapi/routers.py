@@ -200,7 +200,10 @@ def create_post_process_execute_endpoint(
     ) -> Any:
         """Create a new job."""
         status_info = client.post_process_execute(
-            process_id=process_id, execution_content=request_content, request=request
+            process_id=process_id,
+            execution_content=request_content,
+            request=request,
+            response=response,
         )
         status_info["links"] = [
             models.Link(
