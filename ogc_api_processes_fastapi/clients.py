@@ -121,7 +121,7 @@ class BaseClient(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_job(self, job_id: str) -> models.StatusInfo:
+    def get_job(self, job_id: str, response: fastapi.Response) -> models.StatusInfo:
         """Get status information of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}`.
@@ -130,6 +130,8 @@ class BaseClient(abc.ABC):
         ----------
         job_id : str
             Identifier of the job.
+        response: fastapi.Response
+            Response.
 
         Returns
         -------
