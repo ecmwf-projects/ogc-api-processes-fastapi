@@ -35,7 +35,7 @@ def make_links_to_job(
     Returns
     -------
     List[models.Link]
-        Links to attach to jon
+        Links to attach to job.
     """
     rel_job_link = "self"
     title_job_link = None
