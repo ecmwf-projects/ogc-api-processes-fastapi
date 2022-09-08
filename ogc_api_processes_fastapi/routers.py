@@ -320,6 +320,7 @@ def create_get_job_results_endpoint(
         "/{job_id}/results",
         response_model=models.Results,
         response_model_exclude_unset=True,
+        response_model_exclude_none=True,
         responses={
             404: {"description": "Job not found", "model": models.Exception},
         },
@@ -328,7 +329,6 @@ def create_get_job_results_endpoint(
     def get_job_results(job_id: str) -> models.Results:
         """Show results of a job."""
         response = client.get_job_results(job_id=job_id)
-
         return response
 
 
