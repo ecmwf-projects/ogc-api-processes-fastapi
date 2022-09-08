@@ -245,6 +245,9 @@ class JobType(enum.Enum):
 class GenericObject(pydantic.BaseModel):
     __root__: Dict[str, Any]
 
+    def pop(self, key: str) -> Any:
+        return self.__root__.pop(key)
+
 
 class StatusInfo(pydantic.BaseModel):
     processID: Optional[str] = None
@@ -257,7 +260,7 @@ class StatusInfo(pydantic.BaseModel):
     finished: Optional[datetime] = None
     updated: Optional[datetime] = None
     progress: Optional[ConInt] = None
-    metadata: Optional[GenericObject] = None
+    metadata: GenericObject = GenericObject(__root__={})
     links: Optional[List[Link]] = None
 
 

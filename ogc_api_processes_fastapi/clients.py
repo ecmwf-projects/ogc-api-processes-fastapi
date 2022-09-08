@@ -15,7 +15,7 @@
 # limitations under the License
 
 import abc
-from typing import Any, Dict, List
+from typing import List
 
 import fastapi
 
@@ -75,7 +75,7 @@ class BaseClient(abc.ABC):
         execution_content: models.Execute,
         request: fastapi.Request,
         response: fastapi.Response,
-    ) -> Dict[str, Any]:
+    ) -> models.StatusInfo:
         """Post request for execution of the process identified by `process_id`.
 
         Called with `POST /processes/{process_id}/execute`.
@@ -146,7 +146,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_job_results(self, job_id: str) -> Dict[str, Any]:
+    def get_job_results(self, job_id: str) -> models.Results:
         """Get results of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}/results`.
@@ -158,7 +158,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        Dict[str, Any]
+        models.StatusInfo
             Job results.
 
         Raises

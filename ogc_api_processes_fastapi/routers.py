@@ -15,7 +15,7 @@
 # limitations under the License
 
 import urllib.parse
-from typing import Any, Dict, List
+from typing import Any, List
 
 import fastapi
 
@@ -205,7 +205,7 @@ def create_post_process_execute_endpoint(
             request=request,
             response=response,
         )
-        status_info["links"] = [
+        status_info.links = [
             models.Link(
                 href=urllib.parse.urljoin(
                     str(request.base_url), f"processes/{process_id}/execute"
@@ -215,7 +215,7 @@ def create_post_process_execute_endpoint(
             ),
             models.Link(
                 href=urllib.parse.urljoin(
-                    str(request.base_url), f"jobs/{status_info['jobID']}"
+                    str(request.base_url), f"jobs/{status_info.jobID}"
                 ),
                 rel="monitor",
                 type="application/json",
@@ -223,7 +223,7 @@ def create_post_process_execute_endpoint(
             ),
         ]
         response.headers["Location"] = urllib.parse.urljoin(
-            str(request.base_url), f"jobs/{status_info['jobID']}"
+            str(request.base_url), f"jobs/{status_info.jobID}"
         )
 
         return status_info
@@ -325,7 +325,7 @@ def create_get_job_results_endpoint(
         },
         operation_id="getJobResults",
     )
-    def get_job_results(job_id: str) -> Dict[str, Any]:
+    def get_job_results(job_id: str) -> models.Results:
         """Show results of a job."""
         response = client.get_job_results(job_id=job_id)
 
