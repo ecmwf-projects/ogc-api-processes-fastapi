@@ -242,6 +242,10 @@ class JobType(enum.Enum):
     process = "process"
 
 
+class GenericObject(pydantic.BaseModel):
+    __root__: Dict[str, Any]
+
+
 class StatusInfo(pydantic.BaseModel):
     processID: Optional[str] = None
     type: JobType
@@ -253,6 +257,7 @@ class StatusInfo(pydantic.BaseModel):
     finished: Optional[datetime] = None
     updated: Optional[datetime] = None
     progress: Optional[ConInt] = None
+    metadata: Optional[GenericObject] = None
     links: Optional[List[Link]] = None
 
 
