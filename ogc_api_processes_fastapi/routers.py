@@ -35,7 +35,7 @@ def make_links_to_job(
     Returns
     -------
     List[models.Link]
-        Links to attach to jon
+        Links to attach to job.
     """
     rel_job_link = "self"
     title_job_link = None
@@ -292,11 +292,12 @@ def create_get_job_endpoint(
         operation_id="getJobStatus",
     )
     def get_job(
-        request: fastapi.Request,
         job_id: str,
+        request: fastapi.Request,
+        response: fastapi.Response,
     ) -> models.StatusInfo:
         """Show the status of a job."""
-        job = client.get_job(job_id=job_id)
+        job = client.get_job(job_id=job_id, response=response)
         job.links = make_links_to_job(job=job, request=request)
 
         return job
