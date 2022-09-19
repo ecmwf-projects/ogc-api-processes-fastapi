@@ -63,8 +63,8 @@ class TestClient(clients.BaseClient):
         execution_content: models.Execute,
         request: fastapi.Request,
         response: fastapi.Response,
-    ) -> Dict[str, Any]:
-        status_info = dict(
+    ) -> models.StatusInfo:
+        status_info = models.StatusInfo(
             jobID=1, status=models.StatusCode.accepted, type=models.JobType.process
         )
         return status_info
