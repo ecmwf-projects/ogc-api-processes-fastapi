@@ -75,7 +75,7 @@ class BaseClient(abc.ABC):
         execution_content: models.Execute,
         request: fastapi.Request,
         response: fastapi.Response,
-    ) -> Dict[str, Any]:
+    ) -> models.StatusInfo:
         """Post request for execution of the process identified by `process_id`.
 
         Called with `POST /processes/{process_id}/execute`.
@@ -158,7 +158,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        Dict[str, Any]
+        dict[str, Any]
             Job results.
 
         Raises
