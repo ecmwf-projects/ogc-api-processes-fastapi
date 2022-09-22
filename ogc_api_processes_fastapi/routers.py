@@ -200,10 +200,7 @@ def create_post_process_execute_endpoint(
     ) -> Any:
         """Create a new job."""
         status_info = client.post_process_execute(
-            process_id=process_id,
-            execution_content=request_content,
-            request=request,
-            response=response,
+            process_id=process_id, execution_content=request_content, request=request
         )
         status_info.links = [
             models.Link(
@@ -294,10 +291,9 @@ def create_get_job_endpoint(
     def get_job(
         job_id: str,
         request: fastapi.Request,
-        response: fastapi.Response,
     ) -> models.StatusInfo:
         """Show the status of a job."""
-        job = client.get_job(job_id=job_id, response=response)
+        job = client.get_job(job_id=job_id)
         job.links = make_links_to_job(job=job, request=request)
 
         return job
