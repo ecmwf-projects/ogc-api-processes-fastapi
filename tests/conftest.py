@@ -62,7 +62,6 @@ class TestClient(clients.BaseClient):
         process_id: str,
         execution_content: models.Execute,
         request: fastapi.Request,
-        response: fastapi.Response,
     ) -> models.StatusInfo:
         status_info = models.StatusInfo(
             jobID=1, status=models.StatusCode.accepted, type=models.JobType.process
@@ -77,7 +76,7 @@ class TestClient(clients.BaseClient):
         ]
         return jobs_list
 
-    def get_job(self, job_id: str, response: fastapi.Response) -> models.StatusInfo:
+    def get_job(self, job_id: str) -> models.StatusInfo:
         status_info = models.StatusInfo(
             jobID=1, status=models.StatusCode.running, type=models.JobType.process
         )

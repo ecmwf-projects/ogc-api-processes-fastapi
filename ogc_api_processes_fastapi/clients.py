@@ -74,7 +74,6 @@ class BaseClient(abc.ABC):
         process_id: str,
         execution_content: models.Execute,
         request: fastapi.Request,
-        response: fastapi.Response,
     ) -> models.StatusInfo:
         """Post request for execution of the process identified by `process_id`.
 
@@ -89,8 +88,6 @@ class BaseClient(abc.ABC):
             (e.g. inputs values).
         request: fastapi.Request
             Request.
-        response: fastapi.Response
-            Response.
 
         Returns
         -------
@@ -121,7 +118,7 @@ class BaseClient(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_job(self, job_id: str, response: fastapi.Response) -> models.StatusInfo:
+    def get_job(self, job_id: str) -> models.StatusInfo:
         """Get status information of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}`.
@@ -130,8 +127,6 @@ class BaseClient(abc.ABC):
         ----------
         job_id : str
             Identifier of the job.
-        response: fastapi.Response
-            Response.
 
         Returns
         -------
