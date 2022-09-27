@@ -37,6 +37,12 @@ def include_routers(
     fastapi.FastAPI
         FastAPI application including OGC API - Processes compliant routes.
     """
+    landing_page_router = routers.create_landing_page_router(client=client)
+    app.include_router(landing_page_router)
+    conformance_declaration_router = routers.create_conformance_declaration_router(
+        client=client
+    )
+    app.include_router(conformance_declaration_router)
     processes_router = routers.create_processes_router(client=client)
     app.include_router(processes_router)
     jobs_router = routers.create_jobs_router(client=client)

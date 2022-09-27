@@ -51,6 +51,23 @@ class Link(pydantic.BaseModel):
     title: Optional[str] = None
 
 
+class LandingPage(pydantic.BaseModel):
+    title: Optional[str] = pydantic.Field(
+        default=None, example="Example processing server"
+    )
+    description: Optional[str] = pydantic.Field(
+        default=None,
+        example="Example server implementing the OGC API - Processes 1.0 Standard",
+    )
+    links: List[Link]
+
+
+class ConfClass(pydantic.BaseModel):
+    conformsTo: List[str] = pydantic.Field(
+        example="http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/core"
+    )
+
+
 class AdditionalParameters(Metadata):
     parameters: Optional[List[AdditionalParameter]] = None
 

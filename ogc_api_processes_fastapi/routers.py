@@ -62,6 +62,84 @@ def make_links_to_job(
     return links
 
 
+def create_get_landing_page_endpoint(
+    router: fastapi.APIRouter, client: clients.BaseClient
+) -> None:
+    """Add the `GET /` endpoint.
+
+    Parameters
+    ----------
+    router : fastapi.APIRouter
+        Router to which the endpoint should be added.
+    client : clients.BaseClient
+        Client implementing the `GET /processes` endpoint.
+    """
+
+    @router.get(
+        "/",
+        response_model=models.LandingPage,
+        response_model_exclude_none=True,
+    )
+    def get_landing_page(request: fastapi.Request) -> models.LandingPage:
+        """Get the API landing page."""
+        links = [
+            models.Link(
+                href=urllib.parse.urljoin(str(request.base_url), "openapi.json"),
+                rel="service-desc",
+                type="application/vnd.oai.openapi+json;version=3.0",
+                title="OpenAPI service description",
+            ),
+            models.Link(
+                href=urllib.parse.urljoin(str(request.base_url), "conformance"),
+                rel="http://www.opengis.net/def/rel/ogc/1.0/conformance",
+                type="application/json",
+                title="Conformance declaration",
+            ),
+            models.Link(
+                href=urllib.parse.urljoin(str(request.base_url), "processes"),
+                rel="http://www.opengis.net/def/rel/ogc/1.0/processes",
+                type="application/json",
+                title="Metadata about the processes",
+            ),
+        ]
+        landing_page = models.LandingPage(links=links)
+
+        return landing_page
+
+
+def create_get_conformance_endpoint(
+    router: fastapi.APIRouter, client: clients.BaseClient
+) -> None:
+    """Add the `GET /conformance` endpoint.
+
+    Parameters
+    ----------
+    router : fastapi.APIRouter
+        Router to which the endpoint should be added.
+    client : clients.BaseClient
+        Client implementing the `GET /conformance` endpoint.
+    """
+
+    @router.get(
+        "",
+        response_model=models.ConfClass,
+        response_model_exclude_none=True,
+    )
+    def get_conformance(request: fastapi.Request) -> models.ConfClass:
+        """Get the API conformance declaration page."""
+        conformance = models.ConfClass(
+            conformsTo=[
+                "http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/core",
+                "http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/ogc-process-description",
+                "http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/job-list",
+                "http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/json",
+                "http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/oas30",
+            ]
+        )
+
+        return conformance
+
+
 def create_get_processes_endpoint(
     router: fastapi.APIRouter, client: clients.BaseClient
 ) -> None:
@@ -326,6 +404,52 @@ def create_get_job_results_endpoint(
         """Show results of a job."""
         response = client.get_job_results(job_id=job_id)
         return response
+
+
+def create_landing_page_router(client: clients.BaseClient) -> fastapi.APIRouter:
+    """Register the API router exposing the `/` endpoint.
+
+    Parameters
+    ----------
+    client : clients.BaseClient
+        Client implementing the API endpoints.
+
+    Returns
+    -------
+    fastapi.APIRouter
+        Router exposing the `/` API endpoint.
+    """
+    router = fastapi.APIRouter(
+        prefix="",
+        tags=["Capabilities"],
+    )
+    create_get_landing_page_endpoint(router=router, client=client)
+
+    return router
+
+
+def create_conformance_declaration_router(
+    client: clients.BaseClient,
+) -> fastapi.APIRouter:
+    """Register the API router exposing the `/conformance` endpoint.
+
+    Parameters
+    ----------
+    client : clients.BaseClient
+        Client implementing the API endpoints.
+
+    Returns
+    -------
+    fastapi.APIRouter
+        Router exposing the `/conformance` API endpoint.
+    """
+    router = fastapi.APIRouter(
+        prefix="/conformance",
+        tags=["ConformanceDeclaration"],
+    )
+    create_get_conformance_endpoint(router=router, client=client)
+
+    return router
 
 
 def create_processes_router(client: clients.BaseClient) -> fastapi.APIRouter:
