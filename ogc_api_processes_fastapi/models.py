@@ -153,6 +153,7 @@ class SchemaItem(pydantic.BaseModel):  # type: ignore
     contentEncoding: Optional[str] = None
     contentSchema: Optional[str] = None
     items: Optional[Union[Reference, SchemaItem]] = None  # type: ignore
+    properties: Optional[Dict[str, Union[Reference, SchemaItem]]] = None  # type: ignore
 
 
 SchemaItem.update_forward_refs()  # type: ignore
@@ -259,13 +260,6 @@ class JobType(enum.Enum):
     process = "process"
 
 
-class GenericObject(pydantic.BaseModel):
-    __root__: Dict[str, Any]
-
-    def pop(self, key: str) -> Any:
-        return self.__root__.pop(key)
-
-
 class StatusInfo(pydantic.BaseModel):
     processID: Optional[str] = None
     type: JobType
@@ -277,7 +271,6 @@ class StatusInfo(pydantic.BaseModel):
     finished: Optional[datetime] = None
     updated: Optional[datetime] = None
     progress: Optional[ConInt] = None
-    metadata: GenericObject = GenericObject(__root__={})
     links: Optional[List[Link]] = None
 
 
