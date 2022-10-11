@@ -152,8 +152,8 @@ class SchemaItem(pydantic.BaseModel):  # type: ignore
     contentMediaType: Optional[str] = None
     contentEncoding: Optional[str] = None
     contentSchema: Optional[str] = None
-    items: Optional[Union[Reference, SchemaItem]] = None
-    properties: Optional[Dict[str, Union[Reference, SchemaItem]]] = None
+    items: Optional[Union[Reference, SchemaItem]] = None  # type: ignore
+    properties: Optional[Dict[str, Union[Reference, SchemaItem]]] = None  # type: ignore
 
 
 SchemaItem.update_forward_refs()  # type: ignore
