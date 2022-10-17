@@ -22,7 +22,7 @@ class BaseClient(abc.ABC):
     """Defines a pattern for implementing OGC API - Processes endpoints."""
 
     @abc.abstractmethod
-    def get_processes(self, limit: int, offset: int) -> List[Dict[str, Any]]:
+    def get_processes(self, limit: int) -> List[Dict[str, Any]]:
         """Get all available processes.
 
         Called with `GET /processes`.
@@ -31,8 +31,6 @@ class BaseClient(abc.ABC):
         ----------
         limit : int
             Number of processes summaries to be returned.
-        offset : int
-            Index (starting from 0) of the first process summary to be returned.
 
         Returns
         -------
