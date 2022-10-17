@@ -15,14 +15,18 @@
 # limitations under the License
 
 import abc
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
+
+import fastapi
 
 
 class BaseClient(abc.ABC):
     """Defines a pattern for implementing OGC API - Processes endpoints."""
 
     @abc.abstractmethod
-    def get_processes(self, limit: int) -> List[Dict[str, Any]]:
+    def get_processes(
+        self, limit: Optional[int] = fastapi.Query(None)
+    ) -> List[Dict[str, Any]]:
         """Get all available processes.
 
         Called with `GET /processes`.
@@ -40,7 +44,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_process(self, process_id: str) -> Dict[str, Any]:
+    def get_process(self, process_id: str = fastapi.Path(...)) -> Dict[str, Any]:
         """Get description of the process identified by `process_id`.
 
         Called with `GET /processes/{process_id}`.
@@ -65,8 +69,8 @@ class BaseClient(abc.ABC):
     @abc.abstractmethod
     def post_process_execute(
         self,
-        process_id: str,
-        execution_content: Dict[str, Any],
+        process_id: str = fastapi.Path(...),
+        execution_content: Dict[str, Any] = fastapi.Body(...),
     ) -> Dict[str, Any]:
         """Post request for execution of the process identified by `process_id`.
 
@@ -109,7 +113,7 @@ class BaseClient(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_job(self, job_id: str) -> Dict[str, Any]:
+    def get_job(self, job_id: str = fastapi.Path(...)) -> Dict[str, Any]:
         """Get status information of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}`.
@@ -132,7 +136,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_job_results(self, job_id: str) -> Dict[str, Any]:
+    def get_job_results(self, job_id: str = fastapi.Path(...)) -> Dict[str, Any]:
         """Get results of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}/results`.
