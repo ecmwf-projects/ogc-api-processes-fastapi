@@ -238,18 +238,20 @@ def generate_schema(add_params: Dict[str, Dict[str, Tuple[Type, Any]]] = None):
     class JobType(enum.Enum):
         process = "process"
 
-    class StatusInfo(pydantic.BaseModel):
-        processID: Optional[str] = None
-        type: JobType
-        jobID: str
-        status: StatusCode
-        message: Optional[str] = None
-        created: Optional[datetime] = None
-        started: Optional[datetime] = None
-        finished: Optional[datetime] = None
-        updated: Optional[datetime] = None
-        progress: Optional[ConInt] = None
-        links: Optional[List[Link]] = None
+    StatusInfo = pydantic.create_model(
+        "StatusInfo",
+        processID=(Optional[str], None),
+        type=(JobType, ...),
+        jobID=(str, ...),
+        message=(Optional[str], None),
+        created=(Optional[datetime], None),
+        started=(Optional[datetime], None),
+        finished=(Optional[datetime], None),
+        updated=(Optional[datetime], None),
+        progress=(Optional[ConInt], None),
+        links=(Optional[List[Link]], None),
+        **add_params.get("StatusInfo", {})
+    )
 
     class JobList(pydantic.BaseModel):
         jobs: List[StatusInfo]
