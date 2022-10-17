@@ -17,8 +17,6 @@
 import attrs
 import fastapi
 
-from . import models
-
 
 class NoSuchProcess(Exception):
     ...
@@ -46,12 +44,12 @@ def no_such_process_exception_handler(
 ) -> fastapi.responses.JSONResponse:
     return fastapi.responses.JSONResponse(
         status_code=fastapi.status.HTTP_404_NOT_FOUND,
-        content=models.Exception(
-            type="http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-process",
-            title="process not found",
-            detail=f"process {request.path_params['process_id']} has not been found",
-            instance=str(request.url),
-        ).dict(exclude_unset=True),
+        content={
+            "type": "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-process",
+            "title": "process not found",
+            "detail": f"process {request.path_params['process_id']} has not been found",
+            "instance": str(request.url),
+        },
     )
 
 
@@ -60,12 +58,12 @@ def no_such_job_exception_handler(
 ) -> fastapi.responses.JSONResponse:
     return fastapi.responses.JSONResponse(
         status_code=fastapi.status.HTTP_404_NOT_FOUND,
-        content=models.Exception(
-            type="http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-job",
-            title="job not found",
-            detail=f"job {request.path_params['job_id']} has not been found",
-            instance=str(request.url),
-        ).dict(exclude_unset=True),
+        content={
+            "type": "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-job",
+            "title": "job not found",
+            "detail": f"job {request.path_params['job_id']} has not been found",
+            "instance": str(request.url),
+        },
     )
 
 
@@ -74,12 +72,12 @@ def results_not_ready_exception_handler(
 ) -> fastapi.responses.JSONResponse:
     return fastapi.responses.JSONResponse(
         status_code=fastapi.status.HTTP_404_NOT_FOUND,
-        content=models.Exception(
-            type="http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/result-not-ready",
-            title="job results not ready",
-            detail=f"job {request.path_params['job_id']} results are not yet ready",
-            instance=str(request.url),
-        ).dict(exclude_unset=True),
+        content={
+            "type": "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/result-not-ready",
+            "title": "job results not ready",
+            "detail": f"job {request.path_params['job_id']} results are not yet ready",
+            "instance": str(request.url),
+        },
     )
 
 
@@ -88,10 +86,31 @@ def job_results_failed_exception_handler(
 ) -> fastapi.responses.JSONResponse:
     return fastapi.responses.JSONResponse(
         status_code=exc.status_code,
-        content=models.Exception(
-            type=exc.type,
-            title=exc.title,
-            detail=exc.detail,
-            instance=str(request.url),
-        ).dict(exclude_unset=True, exclude_none=True),
+        content={
+            "type": exc.type,
+            "title": exc.title,
+            "detail": exc.detail,
+            "instance": str(request.url),
+        },
     )
+
+
+def include_exception_handlers(app: fastapi.FastAPI) -> fastapi.FastAPI:
+    """Add OGC API - Processes compliatn exceptions handlers to a FastAPI application.
+
+    Parameters
+    ----------
+    app : fastapi.FastAPI
+        FastAPI application to which OGC API - Processes compliant exceptions handlers.
+        should be added.
+
+    Returns
+    -------
+    fastapi.FastAPI
+        FastAPI application including OGC API - Processes compliant exceptions handlers.
+    """
+    app.add_exception_handler(NoSuchProcess, no_such_process_exception_handler)
+    app.add_exception_handler(NoSuchJob, no_such_job_exception_handler)
+    app.add_exception_handler(ResultsNotReady, results_not_ready_exception_handler)
+    app.add_exception_handler(JobResultsFailed, job_results_failed_exception_handler)
+    return app

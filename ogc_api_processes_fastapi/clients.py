@@ -17,14 +17,12 @@
 import abc
 from typing import Any, Dict, List
 
-from . import models
-
 
 class BaseClient(abc.ABC):
     """Defines a pattern for implementing OGC API - Processes endpoints."""
 
     @abc.abstractmethod
-    def get_processes(self, limit: int, offset: int) -> List[models.ProcessSummary]:
+    def get_processes(self, limit: int, offset: int) -> List[Dict[str, Any]]:
         """Get all available processes.
 
         Called with `GET /processes`.
@@ -44,7 +42,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_process(self, process_id: str) -> models.ProcessDescription:
+    def get_process(self, process_id: str) -> Dict[str, Any]:
         """Get description of the process identified by `process_id`.
 
         Called with `GET /processes/{process_id}`.
@@ -70,8 +68,8 @@ class BaseClient(abc.ABC):
     def post_process_execute(
         self,
         process_id: str,
-        execution_content: models.Execute,
-    ) -> models.StatusInfo:
+        execution_content: Dict[str, Any],
+    ) -> Dict[str, Any]:
         """Post request for execution of the process identified by `process_id`.
 
         Called with `POST /processes/{process_id}/execute`.
@@ -97,7 +95,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_jobs(self) -> List[models.StatusInfo]:
+    def get_jobs(self) -> List[Dict[str, Any]]:
         """Get the list of submitted jobs.
 
         Called with `GET /jobs`.
@@ -113,7 +111,7 @@ class BaseClient(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_job(self, job_id: str) -> models.StatusInfo:
+    def get_job(self, job_id: str) -> Dict[str, Any]:
         """Get status information of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}`.
@@ -155,10 +153,8 @@ class BaseClient(abc.ABC):
         ------
         exceptions.NoSuchJob
             If the job `job_id` is not found.
-
         exceptions.ResultsNotReady
             If job `job_id` results are not yet ready.
-
         exceptions.JobResultsFailed
             If job `job_id` results preparation failed.
         """
