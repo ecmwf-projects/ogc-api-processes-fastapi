@@ -28,7 +28,7 @@ class BaseClient(abc.ABC):
     @abc.abstractmethod
     def get_processes(
         self, limit: Optional[int] = fastapi.Query(None)
-    ) -> List[responses.schema["ProcessSummary"]]:  # noqa
+    ) -> responses.ProcessSummary:
         """Get all available processes.
 
         Called with `GET /processes`.
@@ -48,7 +48,7 @@ class BaseClient(abc.ABC):
     @abc.abstractmethod
     def get_process(
         self, process_id: str = fastapi.Path(...)
-    ) -> responses.schema["ProcessDescription"]:  # noqa
+    ) -> responses.ProcessDescription:
         """Get description of the process identified by `process_id`.
 
         Called with `GET /processes/{process_id}`.
@@ -75,7 +75,7 @@ class BaseClient(abc.ABC):
         self,
         process_id: str = fastapi.Path(...),
         execution_content: Dict[str, Any] = fastapi.Body(...),
-    ) -> responses.schema["StatusInfo"]:  # noqa
+    ) -> responses.StatusInfo:
         """Post request for execution of the process identified by `process_id`.
 
         Called with `POST /processes/{process_id}/execute`.
@@ -101,7 +101,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_jobs(self) -> List[responses.schema["StatusInfo"]]:  # noqa
+    def get_jobs(self) -> List[responses.StatusInfo]:
         """Get the list of submitted jobs.
 
         Called with `GET /jobs`.
@@ -117,9 +117,7 @@ class BaseClient(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_job(
-        self, job_id: str = fastapi.Path(...)
-    ) -> responses.schema["StatusInfo"]:  # noqa
+    def get_job(self, job_id: str = fastapi.Path(...)) -> responses.StatusInfo:
         """Get status information of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}`.
@@ -142,9 +140,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_job_results(
-        self, job_id: str = fastapi.Path(...)
-    ) -> responses.schema["Results"]:  # noqa
+    def get_job_results(self, job_id: str = fastapi.Path(...)) -> responses.Results:
         """Get results of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}/results`.
