@@ -19,6 +19,8 @@ from typing import Any, Dict, List, Optional
 
 import fastapi
 
+from . import responses
+
 
 class BaseClient(abc.ABC):
     """Defines a pattern for implementing OGC API - Processes endpoints."""
@@ -26,37 +28,39 @@ class BaseClient(abc.ABC):
     @abc.abstractmethod
     def get_processes(
         self, limit: Optional[int] = fastapi.Query(None)
-    ) -> List[Dict[str, Any]]:
+    ) -> List[responses.schema["ProcessSummary"]]:  # noqa
         """Get all available processes.
 
         Called with `GET /processes`.
 
         Parameters
         ----------
-        limit : int
+        limit : Optional[int] = fastapi.Query(None)
             Number of processes summaries to be returned.
 
         Returns
         -------
-        List[models.ProcessSummary]
+        List[responses.schema["ProcessSummary"]]
             List of available processes summaries.
         """
         ...
 
     @abc.abstractmethod
-    def get_process(self, process_id: str = fastapi.Path(...)) -> Dict[str, Any]:
+    def get_process(
+        self, process_id: str = fastapi.Path(...)
+    ) -> responses.schema["ProcessDescription"]:  # noqa
         """Get description of the process identified by `process_id`.
 
         Called with `GET /processes/{process_id}`.
 
         Parameters
         ----------
-        process_id : str
+        process_id : str = fastapi.Path(...)
             Identifier of the process.
 
         Returns
         -------
-        models.ProcessDescription
+        responses.schema["ProcessDescription"]
             Description of the process.
 
         Raises
@@ -71,22 +75,22 @@ class BaseClient(abc.ABC):
         self,
         process_id: str = fastapi.Path(...),
         execution_content: Dict[str, Any] = fastapi.Body(...),
-    ) -> Dict[str, Any]:
+    ) -> responses.schema["StatusInfo"]:  # noqa
         """Post request for execution of the process identified by `process_id`.
 
         Called with `POST /processes/{process_id}/execute`.
 
         Parameters
         ----------
-        process_id : str
+        process_id : str = fastapi.Path(...)
             Identifier of the process.
-        execution_content : models.Execute
+        execution_content : Dict[str, Any] = fastapi.Body(...)
             Request body containing details for the process execution
             (e.g. inputs values).
 
         Returns
         -------
-        Dict[str, Any]
+        responses.schema["StatusInfo"]
             Information on the status of the submitted job.
 
         Raises
@@ -97,7 +101,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_jobs(self) -> List[Dict[str, Any]]:
+    def get_jobs(self) -> List[responses.schema["StatusInfo"]]:  # noqa
         """Get the list of submitted jobs.
 
         Called with `GET /jobs`.
@@ -108,24 +112,26 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        List[models.StatusInfo]
+        List[responses.schema["StatusInfo"]]
             List of jobs.
         """
 
     @abc.abstractmethod
-    def get_job(self, job_id: str = fastapi.Path(...)) -> Dict[str, Any]:
+    def get_job(
+        self, job_id: str = fastapi.Path(...)
+    ) -> responses.schema["StatusInfo"]:  # noqa
         """Get status information of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}`.
 
         Parameters
         ----------
-        job_id : str
+        job_id: str = fastapi.Path(...)
             Identifier of the job.
 
         Returns
         -------
-        models.StatusInfo
+        responses.schema["StatusInfo"]
             Information on the status of the job.
 
         Raises
@@ -136,19 +142,21 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_job_results(self, job_id: str = fastapi.Path(...)) -> Dict[str, Any]:
+    def get_job_results(
+        self, job_id: str = fastapi.Path(...)
+    ) -> responses.schema["Results"]:  # noqa
         """Get results of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}/results`.
 
         Parameters
         ----------
-        job_id : str
+        job_id: str = fastapi.Path(...)
             Identifier of the job.
 
         Returns
         -------
-        dict[str, Any]
+        responses.schema["Results"]
             Job results.
 
         Raises
