@@ -12,30 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-import fastapi.testclient
-
 import ogc_api_processes_fastapi
 
 
-def test_include_ogc_api_processes_routers(
+def test_api_default(
     test_client: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
-    app = fastapi.FastAPI()
-    app = ogc_api_processes_fastapi.include_routers(app=app, client=test_client)
-    routes_path = [app.routes[i].path for i in range(len(app.routes))]
-
-    assert "/processes" in routes_path
-    assert "/processes/{process_id}" in routes_path
-    assert "/processes/{process_id}/execute" in routes_path
-    assert "/jobs" in routes_path
-    assert "/jobs/{job_id}" in routes_path
-    assert "/jobs/{job_id}/results" in routes_path
-
-
-def test_instantiate_ogc_api_processes_app(
-    test_client: ogc_api_processes_fastapi.BaseClient,
-) -> None:
-    app = ogc_api_processes_fastapi.instantiate_app(client=test_client)
+    api = ogc_api_processes_fastapi.api.OGCProcessesAPI(client=test_client)
+    app = api.app
     routes_path = [app.routes[i].path for i in range(len(app.routes))]
 
     assert "/processes" in routes_path

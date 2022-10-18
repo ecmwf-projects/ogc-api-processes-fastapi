@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-from typing import Any, Dict, Iterator, List
+from typing import Any, Dict, Iterator, List, Optional
 
+import fastapi
 import pytest
 
-from ogc_api_processes_fastapi import clients, models
+from ogc_api_processes_fastapi import clients, responses
 
 PROCESSES_DB = [
     {
@@ -34,20 +35,26 @@ class TestClient(clients.BaseClient):
     Test implementation of the OGC API - Processes endpoints.
     """
 
-    def get_processes(self, limit: int, offset: int) -> List[models.ProcessSummary]:
+    def get_processes(
+        self, limit: Optional[int] = fastapi.Query(None)
+    ) -> List[responses.schema["ProcessSummary"]]:  # noqa
+        if not limit:
+            limit = len(PROCESSES_DB)
         processes_list = [
-            models.ProcessSummary(
+            responses.schema["ProcessSummary"](
                 id=PROCESSES_DB[i]["id"],
                 version=PROCESSES_DB[i]["version"],
             )
-            for i in range(offset, offset + limit)
+            for i in range(0, limit)
         ]
         return processes_list
 
-    def get_process(self, process_id: str) -> models.ProcessDescription:
+    def get_process(
+        self, process_id: str = fastapi.Path(...)
+    ) -> responses.schema["ProcessDescription"]:  # noqa
         for i, elem in enumerate(PROCESSES_DB):
             if elem["id"] == process_id:
-                process = models.ProcessDescription(
+                process = responses.schema["ProcessDescription"](
                     id=PROCESSES_DB[i]["id"],
                     version=PROCESSES_DB[i]["version"],
                     inputs=PROCESSES_DB[i]["inputs"],
@@ -58,31 +65,31 @@ class TestClient(clients.BaseClient):
 
     def post_process_execute(
         self,
-        process_id: str,
-        execution_content: models.Execute,
-    ) -> models.StatusInfo:
-        status_info = models.StatusInfo(
-            jobID=1, status=models.StatusCode.accepted, type=models.JobType.process
+        process_id: str = fastapi.Path(...),
+        execution_content: Dict[str, Any] = fastapi.Body(...),
+    ) -> responses.schema["StatusInfo"]:  # noqa
+        status_info = responses.schema["StatusInfo"](
+            jobID=1, status="accepted", type="process"
         )
         return status_info
 
-    def get_jobs(self) -> List[models.StatusInfo]:
+    def get_jobs(self) -> List[responses.schema["StatusInfo"]]:  # noqa
         jobs_list = [
-            models.StatusInfo(
-                jobID=1, status=models.StatusCode.accepted, type=models.JobType.process
-            )
+            responses.schema["StatusInfo"](jobID=1, status="accepted", type="process")
         ]
         return jobs_list
 
-    def get_job(self, job_id: str) -> models.StatusInfo:
-        status_info = models.StatusInfo(
-            jobID=1, status=models.StatusCode.running, type=models.JobType.process
+    def get_job(
+        self, job_id: str = fastapi.Path(...)
+    ) -> responses.schema["StatusInfo"]:  # noqa
+        status_info = responses.schema["StatusInfo"](
+            jobID=1, status="running", type="process"
         )
         return status_info
 
     def get_job_results(
         self,
-        job_id: str,
+        job_id: str = fastapi.Path(...),
     ) -> Dict[str, Any]:
         results = {
             "result": f"https://example.org/{job_id}-results.nc",
