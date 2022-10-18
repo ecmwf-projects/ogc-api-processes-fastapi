@@ -14,7 +14,7 @@ class OGCProcessesAPI:
     client: clients.BaseClient
     router: fastapi.APIRouter = attrs.field(default=attrs.Factory(fastapi.APIRouter))
     app: fastapi.FastAPI = attrs.field(default=attrs.Factory(fastapi.FastAPI))
-    add_resp_params: Dict[str, Any] = attrs.field(default={"Posts": {}})
+    add_resp_params: Dict[str, Any] = attrs.field(default=None)
 
     def register_route(self, route_name, schema):
         route_endpoint = endpoints.create_endpoint(route_name, client=self.client)
@@ -36,6 +36,8 @@ class OGCProcessesAPI:
             )
 
     def __attrs_post_init__(self):
+        if not self.add_resp_params:
+            self.add_resp_params = {}
         schema = responses.generate_schema(self.add_resp_params)
         self.register_core(schema)
         self.app.include_router(self.router)
