@@ -12,18 +12,19 @@ def set_response_model(
     client: clients.BaseClient, route_name: str
 ) -> pydantic.BaseModel:
     if route_name == "GetLandingPage":
-        response_model = responses.LandingPage
+        base_model = responses.LandingPage
     elif route_name == "GetConformance":
-        response_model = responses.ConfClass
+        base_model = responses.ConfClass
     else:
-        response_model = pydantic.create_model(
-            route_name,
-            __base__=typing.get_type_hints(
-                getattr(client, config.ROUTES[route_name]["client_method"])
-            )["return"],
-        )
-        if route_name in ("GetProcesses", "GetJobs"):
-            response_model.__fields__["links"].required = True
+        base_model = typing.get_type_hints(
+            getattr(client, config.ROUTES[route_name]["client_method"])
+        )["return"]
+    response_model = pydantic.create_model(
+        route_name,
+        __base__=base_model,
+    )
+    if route_name in ("GetProcesses", "GetJobs"):
+        response_model.__fields__["links"].required = True
 
     return response_model
 
