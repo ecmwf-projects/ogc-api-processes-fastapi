@@ -204,7 +204,7 @@ class Format(pydantic.BaseModel):
 
 
 class InputValue(pydantic.BaseModel):
-    __root__: Union[InputValueNoObject, Dict[str, Any]]
+    __root__: Union[Dict[str, Any], InputValueNoObject]
 
 
 class QualifiedInputValue(Format):
