@@ -8,7 +8,9 @@ import pydantic
 from . import clients, config, endpoints, responses
 
 
-def set_response_model(client: clients.BaseClient, route_name):
+def set_response_model(
+    client: clients.BaseClient, route_name: str
+) -> pydantic.BaseModel:
     if route_name == "GetLandingPage":
         response_model = responses.LandingPage
     elif route_name == "GetConformance":
@@ -28,7 +30,7 @@ def set_response_model(client: clients.BaseClient, route_name):
 
 def register_route(
     client: clients.BaseClient, router: fastapi.APIRouter, route_name: str
-):
+) -> None:
     response_model = set_response_model(client, route_name)
     route_endpoint = endpoints.create_endpoint(route_name, client=client)
     router.add_api_route(
@@ -43,7 +45,7 @@ def register_route(
     )
 
 
-def register_core_routes(router: fastapi.APIRouter, client: clients.BaseClient):
+def register_core_routes(router: fastapi.APIRouter, client: clients.BaseClient) -> None:
     for route_name in config.ROUTES.keys():
         register_route(client, router, route_name)
 
