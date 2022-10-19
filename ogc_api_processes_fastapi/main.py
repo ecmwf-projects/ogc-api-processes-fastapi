@@ -1,99 +1,64 @@
-"""Instantiation methods for an OGC API Processes compliant FastAPI application."""
+"""API routes registration and initialization."""
 
-# Copyright 2022, European Union.
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     http://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License
+import typing
 
 import fastapi
+import pydantic
 
-from . import clients, exceptions, routers
+from . import clients, config, endpoints, responses
 
 
-def include_routers(
-    app: fastapi.FastAPI, client: clients.BaseClient
-) -> fastapi.FastAPI:
-    """Add OGC API - Processes compliant routers to a FastAPI application.
-
-    Parameters
-    ----------
-    app : fastapi.FastAPI
-        FastAPI application to which OGC API - Processes compliant routers
-        should be added.
-    client : clients.BaseClient
-        Client implementing the API endpoints.
-
-    Returns
-    -------
-    fastapi.FastAPI
-        FastAPI application including OGC API - Processes compliant routes.
-    """
-    landing_page_router = routers.create_landing_page_router(client=client)
-    app.include_router(landing_page_router)
-    conformance_declaration_router = routers.create_conformance_declaration_router(
-        client=client
+def set_response_model(
+    client: clients.BaseClient, route_name: str
+) -> pydantic.BaseModel:
+    if route_name == "GetLandingPage":
+        base_model = responses.LandingPage
+    elif route_name == "GetConformance":
+        base_model = responses.ConfClass  # type: ignore
+    else:
+        base_model = typing.get_type_hints(
+            getattr(client, config.ROUTES[route_name]["client_method"])  # type: ignore
+        )["return"]
+    response_model = pydantic.create_model(
+        route_name,
+        __base__=base_model,
     )
-    app.include_router(conformance_declaration_router)
-    processes_router = routers.create_processes_router(client=client)
-    app.include_router(processes_router)
-    jobs_router = routers.create_jobs_router(client=client)
-    app.include_router(jobs_router)
+    if route_name in ("GetProcesses", "GetJobs"):
+        response_model.__fields__["links"].required = True
 
-    return app
+    return response_model  # type: ignore
 
 
-def include_exception_handlers(app: fastapi.FastAPI) -> fastapi.FastAPI:
-    """Add OGC API - Processes compliatn exceptions handlers to a FastAPI application.
-
-    Parameters
-    ----------
-    app : fastapi.FastAPI
-        FastAPI application to which OGC API - Processes compliant exceptions handlers.
-        should be added.
-
-    Returns
-    -------
-    fastapi.FastAPI
-        FastAPI application including OGC API - Processes compliant exceptions handlers.
-    """
-    app.add_exception_handler(
-        exceptions.NoSuchProcess, exceptions.no_such_process_exception_handler
+def register_route(
+    client: clients.BaseClient, router: fastapi.APIRouter, route_name: str
+) -> None:
+    response_model = set_response_model(client, route_name)
+    route_endpoint = endpoints.create_endpoint(route_name, client=client)
+    router.add_api_route(
+        name=route_name,
+        path=config.ROUTES[route_name]["path"],  # type: ignore
+        response_model=response_model,
+        response_model_exclude_unset=False,
+        response_model_exclude_none=True,
+        status_code=config.ROUTES[route_name].get("status_code", 200),  # type: ignore
+        methods=config.ROUTES[route_name]["methods"],  # type: ignore
+        endpoint=route_endpoint,
     )
-    app.add_exception_handler(
-        exceptions.NoSuchJob, exceptions.no_such_job_exception_handler
-    )
-    app.add_exception_handler(
-        exceptions.ResultsNotReady, exceptions.results_not_ready_exception_handler
-    )
-    app.add_exception_handler(
-        exceptions.JobResultsFailed, exceptions.job_results_failed_exception_handler
-    )
-    return app
+
+
+def register_core_routes(router: fastapi.APIRouter, client: clients.BaseClient) -> None:
+    for route_name in config.ROUTES.keys():
+        register_route(client, router, route_name)
+
+
+def instantiate_router(client: clients.BaseClient) -> fastapi.APIRouter:
+    router = fastapi.APIRouter()
+    register_core_routes(router, client)
+    return router
 
 
 def instantiate_app(client: clients.BaseClient) -> fastapi.FastAPI:
-    """Create an instance of an OGC API - Processes compliant FastAPI application.
-
-    Parameters
-    ----------
-    client : clients.BaseClient
-        Client implementing the API endpoints.
-
-    Returns
-    -------
-    fastapi.FastAPI
-        OGC API - Processes compliant FastAPI application.
-    """
     app = fastapi.FastAPI()
-    app = include_routers(app=app, client=client)
-
+    router = instantiate_router(client)
+    app.include_router(router)
     return app

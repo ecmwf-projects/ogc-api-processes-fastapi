@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
+import datetime
 import enum
-from datetime import datetime
 from typing import Any, Dict, ForwardRef, List, Optional, Union, cast
 
 import pydantic
@@ -88,9 +88,9 @@ class ProcessSummary(DescriptionType):
     links: Optional[List[Link]] = None
 
 
-class ProcessesList(pydantic.BaseModel):
+class ProcessList(pydantic.BaseModel):
     processes: List[ProcessSummary]
-    links: List[Link]
+    links: Optional[List[Link]] = None
 
 
 class MaxOccur(enum.Enum):
@@ -204,7 +204,7 @@ class Format(pydantic.BaseModel):
 
 
 class InputValue(pydantic.BaseModel):
-    __root__: Union[InputValueNoObject, Dict[str, Any]]
+    __root__: Union[Dict[str, Any], InputValueNoObject]
 
 
 class QualifiedInputValue(Format):
@@ -261,22 +261,25 @@ class JobType(enum.Enum):
 
 
 class StatusInfo(pydantic.BaseModel):
+    class Config:
+        extra = pydantic.Extra.allow
+
     processID: Optional[str] = None
     type: JobType
     jobID: str
     status: StatusCode
     message: Optional[str] = None
-    created: Optional[datetime] = None
-    started: Optional[datetime] = None
-    finished: Optional[datetime] = None
-    updated: Optional[datetime] = None
+    created: Optional[datetime.datetime] = None
+    started: Optional[datetime.datetime] = None
+    finished: Optional[datetime.datetime] = None
+    updated: Optional[datetime.datetime] = None
     progress: Optional[ConInt] = None
     links: Optional[List[Link]] = None
 
 
 class JobList(pydantic.BaseModel):
     jobs: List[StatusInfo]
-    links: List[Link]
+    links: Optional[List[Link]] = None
 
 
 class Results(pydantic.BaseModel):
