@@ -22,8 +22,14 @@ except ImportError:  # pragma: no cover
     # Local copy or not installed with setuptools
     __version__ = "999"
 
-from .api import OGCProcessesAPI
 from .clients import BaseClient
 from .exceptions import include_exception_handlers
+from .main import instantiate_app, instantiate_router
 
-__all__ = ["__version__", "BaseClient", "OGCProcessesAPI", "include_exception_handlers"]
+__all__ = [
+    "__version__",
+    "BaseClient",
+    "instantiate_app",
+    "instantiate_router",
+    "include_exception_handlers",
+]
