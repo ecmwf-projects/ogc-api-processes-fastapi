@@ -14,10 +14,10 @@ def set_response_model(
     if route_name == "GetLandingPage":
         base_model = responses.LandingPage
     elif route_name == "GetConformance":
-        base_model = responses.ConfClass
+        base_model = responses.ConfClass  # type: ignore
     else:
         base_model = typing.get_type_hints(
-            getattr(client, config.ROUTES[route_name]["client_method"])
+            getattr(client, config.ROUTES[route_name]["client_method"])  # type: ignore
         )["return"]
     response_model = pydantic.create_model(
         route_name,
@@ -26,7 +26,7 @@ def set_response_model(
     if route_name in ("GetProcesses", "GetJobs"):
         response_model.__fields__["links"].required = True
 
-    return response_model
+    return response_model  # type: ignore
 
 
 def register_route(
@@ -36,12 +36,12 @@ def register_route(
     route_endpoint = endpoints.create_endpoint(route_name, client=client)
     router.add_api_route(
         name=route_name,
-        path=config.ROUTES[route_name]["path"],
-        response_model=response_model,
+        path=config.ROUTES[route_name]["path"],  # type: ignore
+        response_model=response_model,  # type: ignore
         response_model_exclude_unset=False,
         response_model_exclude_none=True,
-        status_code=config.ROUTES[route_name].get("status_code", 200),
-        methods=config.ROUTES[route_name]["methods"],
+        status_code=config.ROUTES[route_name].get("status_code", 200),  # type: ignore
+        methods=config.ROUTES[route_name]["methods"],  # type: ignore
         endpoint=route_endpoint,
     )
 

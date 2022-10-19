@@ -1,7 +1,7 @@
 """Endpoints definition."""
 
 import urllib.parse
-from typing import Any, Callable, Dict
+from typing import Callable, List, Optional
 
 import fastapi
 
@@ -10,7 +10,7 @@ from . import clients, responses
 
 def create_links_to_job(
     job: responses.StatusInfo, request: fastapi.Request
-) -> Dict[str, Any]:
+) -> List[responses.Link]:
     """Create links to attach to provided the job.
 
     Parameters
@@ -20,7 +20,7 @@ def create_links_to_job(
 
     Returns
     -------
-    List[schema["Link"]]
+    List[responses.Link]
         Links to attach to job.
     """
     rel_job_link = "self"
@@ -29,68 +29,76 @@ def create_links_to_job(
         rel_job_link = "monitor"
         title_job_link = "job status info"
     links = [
-        {
-            "href": urllib.parse.urljoin(str(request.base_url), f"jobs/{job.jobID}"),
-            "rel": rel_job_link,
-            "type": "application/json",
-            "title": title_job_link,
-        }
+        responses.Link(
+            href=urllib.parse.urljoin(str(request.base_url), f"jobs/{job.jobID}"),
+            rel=rel_job_link,
+            type="application/json",
+            title=title_job_link,
+        )
     ]
     if job.status.value in ("successful", "failed"):
         links.append(
-            {
-                "href": urllib.parse.urljoin(
+            responses.Link(
+                href=urllib.parse.urljoin(
                     str(request.base_url), f"jobs/{job.jobID}/results"
                 ),
-                "rel": "results",
-            }
+                rel="results",
+            )
         )
     return links
 
 
-def create_self_link(request: fastapi.Request, title: str = None) -> Dict[str, Any]:
-    self_link = {"href": str(request.url), "rel": "self"}
+def create_self_link(
+    request: fastapi.Request, title: Optional[str] = None, type: Optional[str] = None
+) -> responses.Link:
+    self_link = responses.Link(href=str(request.url), rel="self")
+    if type:
+        self_link.type = type
     if title:
-        self_link["title"] = title
+        self_link.title = title
     return self_link
 
 
-def create_get_landing_page_endpoint(client: clients.BaseClient) -> Callable:
+def create_get_landing_page_endpoint(
+    client: clients.BaseClient,
+) -> Callable[[fastapi.Request], responses.LandingPage]:
     def get_landing_page(
         request: fastapi.Request,
     ) -> responses.LandingPage:
         """Get the API landing page."""
         links = [
-            {
-                "href": urllib.parse.urljoin(str(request.base_url), "openapi.json"),
-                "rel": "service-desc",
-                "type": "application/vnd.oai.openapi+json;version=3.0",
-                "title": "OpenAPI service description",
-            },
-            {
-                "href": urllib.parse.urljoin(str(request.base_url), "conformance"),
-                "rel": "http://www.opengis.net/def/rel/ogc/1.0/conformance",
-                "type": "application/json",
-                "title": "Conformance declaration",
-            },
-            {
-                "href": urllib.parse.urljoin(str(request.base_url), "processes"),
-                "rel": "http://www.opengis.net/def/rel/ogc/1.0/processes",
-                "type": "application/json",
-                "title": "Metadata about the processes",
-            },
+            responses.Link(
+                href=urllib.parse.urljoin(str(request.base_url), "openapi.json"),
+                rel="service-desc",
+                type="application/vnd.oai.openapi+json;version=3.0",
+                title="OpenAPI service description",
+            ),
+            responses.Link(
+                href=urllib.parse.urljoin(str(request.base_url), "conformance"),
+                rel="http://www.opengis.net/def/rel/ogc/1.0/conformance",
+                type="application/json",
+                title="Conformance declaration",
+            ),
+            responses.Link(
+                href=urllib.parse.urljoin(str(request.base_url), "processes"),
+                rel="http://www.opengis.net/def/rel/ogc/1.0/processes",
+                type="application/json",
+                title="Metadata about the processes",
+            ),
         ]
-        response_body = responses.LandingPage(links=links)
+        landing_page = responses.LandingPage(links=links)
 
-        return response_body
+        return landing_page
 
     return get_landing_page
 
 
-def create_get_conformance_endpoint(client: clients.BaseClient) -> Callable:
+def create_get_conformance_endpoint(
+    client: clients.BaseClient,
+) -> Callable[[fastapi.Request], responses.ConfClass]:
     def get_conformance(request: fastapi.Request) -> responses.ConfClass:
         """Get the API conformance declaration page."""
-        response_body = responses.ConfClass(
+        conformance = responses.ConfClass(
             conformsTo=[
                 "http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/core",
                 "http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/ogc-process-description",
@@ -100,14 +108,17 @@ def create_get_conformance_endpoint(client: clients.BaseClient) -> Callable:
             ]
         )
 
-        return response_body
+        return conformance
 
     return get_conformance
 
 
-def create_get_processes_endpoint(client: clients.BaseClient) -> Callable:
+def create_get_processes_endpoint(
+    client: clients.BaseClient,
+) -> Callable[[fastapi.Request], responses.ProcessList]:
     def get_processes(
-        request: fastapi.Request, process_list=fastapi.Depends(client.get_processes)
+        request: fastapi.Request,
+        process_list: responses.ProcessList = fastapi.Depends(client.get_processes),
     ) -> responses.ProcessList:
         """Get the list of available processes.
 
@@ -117,32 +128,28 @@ def create_get_processes_endpoint(client: clients.BaseClient) -> Callable:
         """
         for process in process_list.processes:
             process.links = [
-                {
-                    "href": urllib.parse.urljoin(
+                responses.Link(
+                    href=urllib.parse.urljoin(
                         str(request.base_url), f"processes/{process.id}"
                     ),
-                    "rel": "process",
-                    "type": "application/json",
-                    "title": "process description",
-                }
+                    rel="process",
+                    type="application/json",
+                    title="process description",
+                )
             ]
-        process_list.links = [
-            {
-                "href": urllib.parse.urljoin(str(request.base_url), "processes/"),
-                "rel": "self",
-                "type": "application/json",
-            }
-        ]
-        response_body = process_list
+        process_list.links = [create_self_link(request, type="application/json")]
 
-        return response_body
+        return process_list
 
     return get_processes
 
 
-def create_get_process_endpoint(client: clients.BaseClient) -> Callable:
+def create_get_process_endpoint(
+    client: clients.BaseClient,
+) -> Callable[[fastapi.Request], responses.ProcessDescription]:
     def get_process(
-        request: fastapi.Request, process=fastapi.Depends(client.get_process)
+        request: fastapi.Request,
+        process: responses.ProcessDescription = fastapi.Depends(client.get_process),
     ) -> responses.ProcessDescription:
         """Get the description of a specific process.
 
@@ -152,85 +159,92 @@ def create_get_process_endpoint(client: clients.BaseClient) -> Callable:
         """
         process.links = [
             create_self_link(request),
-            {
-                "href": urllib.parse.urljoin(
+            responses.Link(
+                href=urllib.parse.urljoin(
                     str(request.base_url), f"processes/{process.id}/execute"
                 ),
-                "rel": "execute",
-                "type": "application/json",
-                "title": "process execution",
-            },
+                rel="execute",
+                type="application/json",
+                title="process execution",
+            ),
         ]
-        response_body = process
 
-        return response_body
+        return process
 
     return get_process
 
 
-def create_post_process_execute_endpoint(client: clients.BaseClient) -> Callable:
+def create_post_process_execute_endpoint(
+    client: clients.BaseClient,
+) -> Callable[[fastapi.Request, fastapi.Response], responses.StatusInfo]:
     def post_process_execute(
         request: fastapi.Request,
         response: fastapi.Response,
-        status_info=fastapi.Depends(client.post_process_execute),
+        status_info: responses.StatusInfo = fastapi.Depends(
+            client.post_process_execute
+        ),
     ) -> responses.StatusInfo:
         """Create a new job."""
         status_info.links = [
             create_self_link(request),
-            {
-                "href": urllib.parse.urljoin(
+            responses.Link(
+                href=urllib.parse.urljoin(
                     str(request.base_url), f"jobs/{status_info.jobID}"
                 ),
-                "rel": "monitor",
-                "type": "application/json",
-                "title": "job status info",
-            },
+                rel="monitor",
+                type="application/json",
+                title="job status info",
+            ),
         ]
         response.headers["Location"] = urllib.parse.urljoin(
             str(request.base_url), f"jobs/{status_info.jobID}"
         )
-        response_body = status_info
 
-        return response_body
+        return status_info
 
     return post_process_execute
 
 
-def create_get_jobs_endpoint(client: clients.BaseClient) -> Callable:
+def create_get_jobs_endpoint(
+    client: clients.BaseClient,
+) -> Callable[[fastapi.Request], responses.JobList]:
     def get_jobs(
-        request: fastapi.Request, job_list=fastapi.Depends(client.get_jobs)
+        request: fastapi.Request,
+        job_list: responses.JobList = fastapi.Depends(client.get_jobs),
     ) -> responses.JobList:
         """Show the list of submitted jobs."""
         for job in job_list.jobs:
             job.links = create_links_to_job(job=job, request=request)
         job_list.links = [create_self_link(request, title="list of submitted jobs")]
-        response_body = job_list
 
-        return response_body
+        return job_list
 
     return get_jobs
 
 
-def create_get_job_endpoint(client: clients.BaseClient) -> Callable:
+def create_get_job_endpoint(
+    client: clients.BaseClient,
+) -> Callable[[fastapi.Request], responses.StatusInfo]:
     def get_job(
-        request: fastapi.Request, job=fastapi.Depends(client.get_job)
+        request: fastapi.Request,
+        job: responses.StatusInfo = fastapi.Depends(client.get_job),
     ) -> responses.StatusInfo:
         """Show the status of a job."""
         job.links = create_links_to_job(job=job, request=request)
-        response_body = job
 
-        return response_body
+        return job
 
     return get_job
 
 
-def create_get_job_results_endpoint(client: clients.BaseClient) -> Callable:
+def create_get_job_results_endpoint(
+    client: clients.BaseClient,
+) -> Callable[[], responses.Results]:
     def get_job_results(
-        job_results=fastapi.Depends(client.get_job_results),
+        job_results: responses.Results = fastapi.Depends(client.get_job_results),
     ) -> responses.Results:
         """Show results of a job."""
-        response_body = job_results
-        return response_body
+        return job_results
 
     return get_job_results
 
@@ -247,10 +261,10 @@ endpoints_generators = {
 }
 
 
-def create_endpoint(
+def create_endpoint(  # type: ignore
     route_name: str,
     client: clients.BaseClient,
-) -> Callable:
+):
     endpoint = endpoints_generators[route_name](client)
 
     return endpoint

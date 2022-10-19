@@ -52,7 +52,9 @@ def test_get_processes(
 
     assert response.json()["processes"] == exp_processes_all
 
-    exp_links = [{"href": BASE_URL, "rel": "self", "type": "application/json"}]
+    exp_links = [
+        {"href": BASE_URL.rstrip("/"), "rel": "self", "type": "application/json"}
+    ]
     assert response.json()["links"] == exp_links
 
     limit = 2

@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import pytest
 
 import ogc_api_processes_fastapi
 
 
-def equal_dicts(d1: Dict, d2: Dict, ignore_keys: List):
+def equal_dicts(d1: Dict[str, Any], d2: Dict[str, Any], ignore_keys: List[Any]) -> bool:
     ignored = set(ignore_keys)
     for k1, v1 in d1.items():
         if k1 not in ignored and (k1 not in d2 or d2[k1] != v1):
@@ -32,7 +32,7 @@ def equal_dicts(d1: Dict, d2: Dict, ignore_keys: List):
 
 def test_set_resp_model_get_landing_page_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
-):
+) -> None:
 
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetLandingPage"
@@ -45,7 +45,7 @@ def test_set_resp_model_get_landing_page_default(
 
 def test_set_resp_model_get_conformance_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
-):
+) -> None:
 
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetConformance"
@@ -58,7 +58,7 @@ def test_set_resp_model_get_conformance_default(
 
 def test_set_resp_model_get_process_list_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
-):
+) -> None:
 
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetProcesses"
@@ -75,7 +75,7 @@ def test_set_resp_model_get_process_list_default(
 
 def test_set_resp_model_get_process_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
-):
+) -> None:
 
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetProcess"
@@ -88,7 +88,7 @@ def test_set_resp_model_get_process_default(
 
 def test_set_resp_model_post_process_execute_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
-):
+) -> None:
 
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "PostProcessExecute"
@@ -101,7 +101,7 @@ def test_set_resp_model_post_process_execute_default(
 
 def test_set_resp_model_get_jobs_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
-):
+) -> None:
 
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetJobs"
@@ -118,7 +118,7 @@ def test_set_resp_model_get_jobs_default(
 
 def test_set_resp_model_get_job_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
-):
+) -> None:
 
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetJob"
@@ -132,7 +132,7 @@ def test_set_resp_model_get_job_default(
 @pytest.mark.skip(reason="to be inspected")
 def test_set_resp_model_get_jobs_results_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
-):
+) -> None:
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetJobResults"
     )

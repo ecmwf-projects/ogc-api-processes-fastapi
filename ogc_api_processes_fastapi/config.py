@@ -1,4 +1,6 @@
-ROUTES = {
+from typing import Dict, List, Optional, Union
+
+ROUTES: Dict[str, Dict[str, Optional[Union[str, int, List[str]]]]] = {
     "GetLandingPage": {
         "path": "/",
         "methods": ["GET"],

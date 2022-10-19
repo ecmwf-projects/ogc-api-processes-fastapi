@@ -81,7 +81,7 @@ class TestClientDefault(clients.BaseClient):
         status_info = responses.StatusInfo(jobID=1, status="running", type="process")
         return status_info
 
-    def get_job_results(
+    def get_job_results(  # type: ignore
         self,
         job_id: str = fastapi.Path(...),
     ) -> Dict[str, Any]:
@@ -96,7 +96,7 @@ class StatusInfo(responses.StatusInfo):
 
 
 class JobList(responses.JobList):
-    jobs: List[StatusInfo]
+    jobs: List[StatusInfo]  # type: ignore
 
 
 class TestClientExtended(clients.BaseClient):
@@ -150,7 +150,7 @@ class TestClientExtended(clients.BaseClient):
         status_info = StatusInfo(jobID=1, status="running", type="process")
         return status_info
 
-    def get_job_results(
+    def get_job_results(  # type: ignore
         self,
         job_id: str = fastapi.Path(...),
     ) -> Dict[str, Any]:
