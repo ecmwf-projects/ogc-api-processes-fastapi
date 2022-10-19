@@ -14,6 +14,8 @@
 
 from typing import Dict, List
 
+import pytest
+
 import ogc_api_processes_fastapi
 
 
@@ -28,7 +30,7 @@ def equal_dicts(d1: Dict, d2: Dict, ignore_keys: List):
     return True
 
 
-def test_set_response_model_default(
+def test_set_resp_model_get_landing_page_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
 ):
 
@@ -40,6 +42,11 @@ def test_set_response_model_default(
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
+
+def test_set_resp_model_get_conformance_default(
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
+):
+
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetConformance"
     )
@@ -47,6 +54,11 @@ def test_set_response_model_default(
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
+
+
+def test_set_resp_model_get_process_list_default(
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
+):
 
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetProcesses"
@@ -60,6 +72,11 @@ def test_set_response_model_default(
         and "links" not in exp_resp_model_schema["required"]
     )
 
+
+def test_set_resp_model_get_process_default(
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
+):
+
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetProcess"
     )
@@ -68,6 +85,11 @@ def test_set_response_model_default(
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
+
+def test_set_resp_model_post_process_execute_default(
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
+):
+
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "PostProcessExecute"
     )
@@ -75,6 +97,11 @@ def test_set_response_model_default(
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
+
+
+def test_set_resp_model_get_jobs_default(
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
+):
 
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetJobs"
@@ -88,6 +115,11 @@ def test_set_response_model_default(
         and "links" not in exp_resp_model_schema["required"]
     )
 
+
+def test_set_resp_model_get_job_default(
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
+):
+
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetJob"
     )
@@ -96,7 +128,11 @@ def test_set_response_model_default(
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
-    """
+
+@pytest.mark.skip(reason="to be inspected")
+def test_set_resp_model_get_jobs_results_default(
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
+):
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetJobResults"
     )
@@ -104,7 +140,6 @@ def test_set_response_model_default(
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
-    """
 
 
 def test_instantiate_app_default(
