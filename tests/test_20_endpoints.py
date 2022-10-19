@@ -22,8 +22,10 @@ import ogc_api_processes_fastapi
 BASE_URL = "http://testserver/processes/"
 
 
-def test_get_processes(test_client: ogc_api_processes_fastapi.BaseClient) -> None:
-    app = ogc_api_processes_fastapi.api.OGCProcessesAPI(client=test_client).app
+def test_get_processes(
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
+) -> None:
+    app = ogc_api_processes_fastapi.main.instantiate_app(client=test_client_default)
     client = fastapi.testclient.TestClient(app)
 
     exp_processes_all = [
@@ -62,9 +64,9 @@ def test_get_processes(test_client: ogc_api_processes_fastapi.BaseClient) -> Non
 
 
 def test_get_process(
-    test_client: ogc_api_processes_fastapi.BaseClient,
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
-    app = ogc_api_processes_fastapi.api.OGCProcessesAPI(client=test_client).app
+    app = ogc_api_processes_fastapi.main.instantiate_app(client=test_client_default)
     client = fastapi.testclient.TestClient(app)
 
     response = client.get("/processes/dataset-1")
@@ -75,9 +77,9 @@ def test_get_process(
 
 
 def test_post_process_execute(
-    test_client: ogc_api_processes_fastapi.BaseClient,
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
-    app = ogc_api_processes_fastapi.api.OGCProcessesAPI(client=test_client).app
+    app = ogc_api_processes_fastapi.main.instantiate_app(client=test_client_default)
     client = fastapi.testclient.TestClient(app)
 
     response = client.post("/processes/dataset-1/execute", json={})
@@ -93,9 +95,9 @@ def test_post_process_execute(
 
 
 def test_get_jobs(
-    test_client: ogc_api_processes_fastapi.BaseClient,
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
-    app = ogc_api_processes_fastapi.api.OGCProcessesAPI(client=test_client).app
+    app = ogc_api_processes_fastapi.main.instantiate_app(client=test_client_default)
     client = fastapi.testclient.TestClient(app)
 
     response = client.get("/jobs")
@@ -106,9 +108,9 @@ def test_get_jobs(
 
 
 def test_get_job(
-    test_client: ogc_api_processes_fastapi.BaseClient,
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
-    app = ogc_api_processes_fastapi.api.OGCProcessesAPI(client=test_client).app
+    app = ogc_api_processes_fastapi.main.instantiate_app(client=test_client_default)
     client = fastapi.testclient.TestClient(app)
 
     response = client.get("/jobs/job-1")
@@ -119,9 +121,9 @@ def test_get_job(
 
 
 def test_get_job_results(
-    test_client: ogc_api_processes_fastapi.BaseClient,
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
-    app = ogc_api_processes_fastapi.api.OGCProcessesAPI(client=test_client).app
+    app = ogc_api_processes_fastapi.main.instantiate_app(client=test_client_default)
     client = fastapi.testclient.TestClient(app)
     job_id = "job-1"
     response = client.get(f"/jobs/{job_id}/results")
