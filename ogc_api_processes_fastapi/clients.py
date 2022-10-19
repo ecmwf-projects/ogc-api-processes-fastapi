@@ -15,7 +15,7 @@
 # limitations under the License
 
 import abc
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 import fastapi
 
@@ -28,7 +28,7 @@ class BaseClient(abc.ABC):
     @abc.abstractmethod
     def get_processes(
         self, limit: Optional[int] = fastapi.Query(None)
-    ) -> responses.ProcessSummary:
+    ) -> responses.ProcessList:
         """Get all available processes.
 
         Called with `GET /processes`.
@@ -101,7 +101,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_jobs(self) -> List[responses.StatusInfo]:
+    def get_jobs(self) -> responses.JobList:
         """Get the list of submitted jobs.
 
         Called with `GET /jobs`.

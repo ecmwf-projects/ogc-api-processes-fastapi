@@ -107,15 +107,15 @@ def create_get_conformance_endpoint(client: clients.BaseClient) -> Callable:
 
 def create_get_processes_endpoint(client: clients.BaseClient) -> Callable:
     def get_processes(
-        request: fastapi.Request, processes=fastapi.Depends(client.get_processes)
-    ) -> responses.ProcessesList:
+        request: fastapi.Request, process_list=fastapi.Depends(client.get_processes)
+    ) -> responses.ProcessList:
         """Get the list of available processes.
 
         The list of processes contains a summary of each process
         the OGC API - Processes offers, including the link to a
         more detailed description of the process.
         """
-        for process in processes:
+        for process in process_list.processes:
             process.links = [
                 {
                     "href": urllib.parse.urljoin(
@@ -126,14 +126,14 @@ def create_get_processes_endpoint(client: clients.BaseClient) -> Callable:
                     "title": "process description",
                 }
             ]
-        links = [
+        process_list.links = [
             {
                 "href": urllib.parse.urljoin(str(request.base_url), "processes/"),
                 "rel": "self",
                 "type": "application/json",
             }
         ]
-        response_body = responses.ProcessesList(processes=processes, links=links)
+        response_body = process_list
 
         return response_body
 
@@ -201,13 +201,10 @@ def create_get_jobs_endpoint(client: clients.BaseClient) -> Callable:
         request: fastapi.Request, job_list=fastapi.Depends(client.get_jobs)
     ) -> responses.JobList:
         """Show the list of submitted jobs."""
-        for job in job_list:
+        for job in job_list.jobs:
             job.links = create_links_to_job(job=job, request=request)
-        jobs = {
-            "jobs": job_list,
-            "links": [create_self_link(request, title="list of submitted jobs")],
-        }
-        response_body = responses.JobList(**jobs)
+        job_list.links = [create_self_link(request, title="list of submitted jobs")]
+        response_body = job_list
 
         return response_body
 

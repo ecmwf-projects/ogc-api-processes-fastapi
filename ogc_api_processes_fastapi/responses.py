@@ -88,9 +88,9 @@ class ProcessSummary(DescriptionType):
     links: Optional[List[Link]] = None
 
 
-class ProcessesList(pydantic.BaseModel):
+class ProcessList(pydantic.BaseModel):
     processes: List[ProcessSummary]
-    links: List[Link]
+    links: Optional[List[Link]] = None
 
 
 class MaxOccur(enum.Enum):
@@ -279,7 +279,7 @@ class StatusInfo(pydantic.BaseModel):
 
 class JobList(pydantic.BaseModel):
     jobs: List[StatusInfo]
-    links: List[Link]
+    links: Optional[List[Link]] = None
 
 
 class Results(pydantic.BaseModel):
