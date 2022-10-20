@@ -72,7 +72,12 @@ class TestClientDefault(clients.BaseClient):
         status_info = responses.StatusInfo(jobID=1, status="accepted", type="process")
         return status_info
 
-    def get_jobs(self) -> responses.JobList:
+    def get_jobs(
+        self,
+        processID: Optional[List[str]] = fastapi.Query(None),
+        status: Optional[List[str]] = fastapi.Query(None),
+        limit: Optional[int] = fastapi.Query(10, ge=1, le=10000),
+    ) -> responses.JobList:
         jobs = [responses.StatusInfo(jobID=1, status="accepted", type="process")]
         job_list = responses.JobList(jobs=jobs)
         return job_list
@@ -141,7 +146,12 @@ class TestClientExtended(clients.BaseClient):
         status_info = responses.StatusInfo(jobID=1, status="accepted", type="process")
         return status_info
 
-    def get_jobs(self) -> JobList:
+    def get_jobs(
+        self,
+        processID: Optional[List[str]] = fastapi.Query(None),
+        status: Optional[List[str]] = fastapi.Query(None),
+        limit: Optional[int] = fastapi.Query(10, ge=1, le=10000),
+    ) -> JobList:
         jobs = [StatusInfo(jobID=1, status="accepted", type="process")]
         job_list = JobList(jobs=jobs)
         return job_list

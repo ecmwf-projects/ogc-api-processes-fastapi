@@ -15,7 +15,7 @@
 # limitations under the License
 
 import abc
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import fastapi
 
@@ -40,7 +40,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        List[responses.schema["ProcessSummary"]]
+        responses.ProcessList
             List of available processes summaries.
         """
         ...
@@ -90,7 +90,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.schema["StatusInfo"]
+        responses.StatusInfo
             Information on the status of the submitted job.
 
         Raises
@@ -101,18 +101,33 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_jobs(self) -> responses.JobList:
+    def get_jobs(
+        self,
+        processID: Optional[List[str]] = fastapi.Query(None),
+        status: Optional[List[str]] = fastapi.Query(None),
+        limit: Optional[int] = fastapi.Query(10, ge=1, le=10000),
+    ) -> responses.JobList:
         """Get the list of submitted jobs.
 
         Called with `GET /jobs`.
 
         Parameters
         ----------
-        ...
+        processID: Optional[List[str]] = fastapi.Query(None)
+            If the parameter is specified with the operation, only jobs that have a value for
+            the processID property that matches one of the values specified for the processID
+            parameter shall be included in the response.
+        status: Optional[List[str]] = fastapi.Query(None)
+            If the parameter is specified with the operation, only jobs that have a value for
+            the status property that matches one of the specified values of the status parameter
+            shall be included in the response.
+        limit: Optional[int] = fastapi.Query(10, ge=1, le=10000)
+            The response shall not contain more jobs than specified by the optional ``limit``
+            parameter.
 
         Returns
         -------
-        List[responses.schema["StatusInfo"]]
+        responses.JobList
             List of jobs.
         """
 
@@ -129,7 +144,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.schema["StatusInfo"]
+        responses.StatusInfo
             Information on the status of the job.
 
         Raises
@@ -152,7 +167,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.schema["Results"]
+        responses.Results
             Job results.
 
         Raises
