@@ -37,7 +37,7 @@ def register_route(
     router.add_api_route(
         name=route_name,
         path=config.ROUTES[route_name]["path"],  # type: ignore
-        response_model=response_model,  # type: ignore
+        response_model=response_model,
         response_model_exclude_unset=False,
         response_model_exclude_none=True,
         status_code=config.ROUTES[route_name].get("status_code", 200),  # type: ignore
