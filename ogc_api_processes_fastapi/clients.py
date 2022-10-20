@@ -40,7 +40,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        List[responses.schema["ProcessSummary"]]
+        responses.ProcessList
             List of available processes summaries.
         """
         ...
@@ -90,7 +90,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.schema["StatusInfo"]
+        responses.StatusInfo
             Information on the status of the submitted job.
 
         Raises
@@ -112,7 +112,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        List[responses.schema["StatusInfo"]]
+        responses.JobList
             List of jobs.
         """
 
@@ -129,7 +129,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.schema["StatusInfo"]
+        responses.StatusInfo
             Information on the status of the job.
 
         Raises
@@ -152,7 +152,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.schema["Results"]
+        responses.Results
             Job results.
 
         Raises
