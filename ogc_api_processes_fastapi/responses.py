@@ -277,9 +277,18 @@ class StatusInfo(pydantic.BaseModel):
     links: Optional[List[Link]] = None
 
 
+class PaginationQueryParameters(pydantic.BaseModel):
+    next: Optional[Dict[str, str]] = None
+    prev: Optional[Dict[str, str]] = None
+
+
 class JobList(pydantic.BaseModel):
+    class Config:
+        underscore_attrs_are_private = True
+
     jobs: List[StatusInfo]
     links: Optional[List[Link]] = None
+    _pagination_qs: Optional[PaginationQueryParameters] = None
 
 
 class Results(pydantic.BaseModel):
