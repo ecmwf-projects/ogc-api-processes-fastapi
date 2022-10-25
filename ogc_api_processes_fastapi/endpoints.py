@@ -9,7 +9,7 @@ from . import clients, responses
 
 
 def create_links_to_job(
-    job: responses.StatusInfo, request: fastapi.Request
+    request: fastapi.Request, job: responses.StatusInfo
 ) -> List[responses.Link]:
     """Create links to attach to provided the job.
 
@@ -49,14 +49,45 @@ def create_links_to_job(
 
 
 def create_self_link(
-    request: fastapi.Request, title: Optional[str] = None, type: Optional[str] = None
+    request_url: str, title: Optional[str] = None, type: Optional[str] = None
 ) -> responses.Link:
-    self_link = responses.Link(href=str(request.url), rel="self")
+    self_link = responses.Link(href=str(request_url), rel="self")
     if type:
         self_link.type = type
     if title:
         self_link.title = title
     return self_link
+
+
+def create_page_link(
+    request_url: str, page: str, pagination_qs: responses.PaginationQueryParameters
+) -> responses.Link:
+    if page not in ("next", "prev"):
+        raise ValueError(f"{page} is not a valid value for ``page`` parameter")
+    request_parsed = urllib.parse.urlsplit(request_url)
+    queries = urllib.parse.parse_qs(request_parsed.query)
+    queries_page = queries.copy()
+    queries_new = getattr(pagination_qs, page)
+    queries_page.update(queries_new)
+    query_string = urllib.parse.urlencode(queries_page, doseq=True)
+    parsed_page_request = request_parsed._replace(query=query_string)
+    url_page = parsed_page_request.geturl()
+    link_page = responses.Link(href=url_page, rel=page)
+    return link_page
+
+
+def create_pagination_links(
+    request_url: str, pagination_qs: Optional[responses.PaginationQueryParameters]
+) -> List[responses.Link]:
+    pagination_links = []
+    if pagination_qs:
+        if pagination_qs.next:
+            link_next = create_page_link(request_url, "next", pagination_qs)
+            pagination_links.append(link_next)
+        if pagination_qs.prev:
+            link_prev = create_page_link(request_url, "prev", pagination_qs)
+            pagination_links.append(link_prev)
+    return pagination_links
 
 
 def create_get_landing_page_endpoint(
@@ -137,7 +168,9 @@ def create_get_processes_endpoint(
                     title="process description",
                 )
             ]
-        process_list.links = [create_self_link(request, type="application/json")]
+        process_list.links = [
+            create_self_link(str(request.url), type="application/json")
+        ]
 
         return process_list
 
@@ -158,7 +191,7 @@ def create_get_process_endpoint(
         more detailed description of the process.
         """
         process.links = [
-            create_self_link(request),
+            create_self_link(str(request.url)),
             responses.Link(
                 href=urllib.parse.urljoin(
                     str(request.base_url), f"processes/{process.id}/execute"
@@ -186,7 +219,7 @@ def create_post_process_execute_endpoint(
     ) -> responses.StatusInfo:
         """Create a new job."""
         status_info.links = [
-            create_self_link(request),
+            create_self_link(str(request.url)),
             responses.Link(
                 href=urllib.parse.urljoin(
                     str(request.base_url), f"jobs/{status_info.jobID}"
@@ -215,7 +248,14 @@ def create_get_jobs_endpoint(
         """Show the list of submitted jobs."""
         for job in job_list.jobs:
             job.links = create_links_to_job(job=job, request=request)
-        job_list.links = [create_self_link(request, title="list of submitted jobs")]
+        job_list.links = [
+            create_self_link(str(request.url), title="list of submitted jobs"),
+        ]
+        pagination_links = create_pagination_links(
+            str(request.url), job_list._pagination_qs
+        )
+        for link in pagination_links:
+            job_list.links.append(link)
 
         return job_list
 

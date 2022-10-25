@@ -16,10 +16,56 @@ import urllib.parse
 
 import fastapi
 import fastapi.testclient
+import pytest
 
 import ogc_api_processes_fastapi
+from ogc_api_processes_fastapi import endpoints, responses
 
 BASE_URL = "http://testserver/processes/"
+
+
+def test_create_self_link() -> None:
+    request_url = "http://localhost/myapi"
+    self_link = endpoints.create_self_link(request_url)
+    exp_link = responses.Link(href=request_url, rel="self")
+    assert self_link == exp_link
+
+    self_link = endpoints.create_self_link(request_url, title="Title", type="Type")
+    exp_link = responses.Link(href=request_url, rel="self", title="Title", type="Type")
+    assert self_link == exp_link
+
+
+def test_create_page_link() -> None:
+    request_url = "http://localhost/myapi"
+    page = "next"
+    pagination_qs = responses.PaginationQueryParameters(
+        next={"cursor": "mycursor", "back": "True"}
+    )
+    link_page = endpoints.create_page_link(request_url, page, pagination_qs)
+    exp_link = responses.Link(
+        href=f"{request_url}?cursor=mycursor&back=True", rel="next"
+    )
+    assert link_page == exp_link
+
+    request_url = "http://localhost/myapi"
+    page = "previous"
+    pagination_qs = responses.PaginationQueryParameters(
+        next={"cursor": "mycursor", "back": "True"}
+    )
+    with pytest.raises(ValueError):
+        link_page = endpoints.create_page_link(request_url, page, pagination_qs)
+
+
+def test_create_pagination_links() -> None:
+    request_url = "http://localhost/myapi"
+    pagination_qs = responses.PaginationQueryParameters(
+        prev={"cursor": "mycursor", "back": "False"}
+    )
+    pagination_links = endpoints.create_pagination_links(request_url, pagination_qs)
+    exp_links = [
+        responses.Link(href=f"{request_url}?cursor=mycursor&back=False", rel="prev")
+    ]
+    assert pagination_links == exp_links
 
 
 def test_get_processes(
