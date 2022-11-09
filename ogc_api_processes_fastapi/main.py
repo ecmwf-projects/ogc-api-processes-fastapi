@@ -17,7 +17,7 @@ def set_response_model(
         base_model = responses.ConfClass  # type: ignore
     else:
         base_model = typing.get_type_hints(
-            getattr(client, config.ROUTES[route_name]["client_method"])  # type: ignore
+            getattr(client, config.ROUTES[route_name].client_method)  # type: ignore
         )["return"]
     response_model = pydantic.create_model(
         route_name,
