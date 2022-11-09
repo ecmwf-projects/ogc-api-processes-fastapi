@@ -25,7 +25,14 @@ ROUTES: Dict[str, Dict[str, Optional[Union[str, int, List[str]]]]] = {
         "path": "/processes/{process_id}/execute",
         "methods": ["POST"],
         "status_code": 201,
-        "client_method": "post_process_execute",
+        "client_method": "post_process_execution",
+        "deprecated": True,
+    },
+    "PostProcessExecution": {
+        "path": "/processes/{process_id}/execution",
+        "methods": ["POST"],
+        "status_code": 201,
+        "client_method": "post_process_execution",
     },
     "GetJobs": {
         "path": "/jobs",

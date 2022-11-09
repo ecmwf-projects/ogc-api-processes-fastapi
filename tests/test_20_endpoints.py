@@ -124,13 +124,13 @@ def test_get_process(
     assert all([key in response.json() for key in exp_keys])
 
 
-def test_post_process_execute(
+def test_post_process_execution(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
     app = ogc_api_processes_fastapi.main.instantiate_app(client=test_client_default)
     client = fastapi.testclient.TestClient(app)
 
-    response = client.post("/processes/dataset-1/execute", json={})
+    response = client.post("/processes/dataset-1/execution", json={})
     assert response.status_code == 201
 
     exp_keys = ("jobID", "status", "type")

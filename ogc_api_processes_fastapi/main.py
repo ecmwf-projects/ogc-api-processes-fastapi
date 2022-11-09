@@ -37,6 +37,7 @@ def register_route(
     router.add_api_route(
         name=route_name,
         path=config.ROUTES[route_name]["path"],  # type: ignore
+        deprecated=config.ROUTES[route_name].get("deprecated", None),
         response_model=response_model,
         response_model_exclude_unset=False,
         response_model_exclude_none=True,

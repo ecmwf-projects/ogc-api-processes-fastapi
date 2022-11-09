@@ -194,7 +194,7 @@ def create_get_process_endpoint(
             create_self_link(str(request.url)),
             responses.Link(
                 href=urllib.parse.urljoin(
-                    str(request.base_url), f"processes/{process.id}/execute"
+                    str(request.base_url), f"processes/{process.id}/execution"
                 ),
                 rel="execute",
                 type="application/json",
@@ -207,14 +207,14 @@ def create_get_process_endpoint(
     return get_process
 
 
-def create_post_process_execute_endpoint(
+def create_post_process_execution_endpoint(
     client: clients.BaseClient,
 ) -> Callable[[fastapi.Request, fastapi.Response], responses.StatusInfo]:
-    def post_process_execute(
+    def post_process_execution(
         request: fastapi.Request,
         response: fastapi.Response,
         status_info: responses.StatusInfo = fastapi.Depends(
-            client.post_process_execute
+            client.post_process_execution
         ),
     ) -> responses.StatusInfo:
         """Create a new job."""
@@ -235,7 +235,7 @@ def create_post_process_execute_endpoint(
 
         return status_info
 
-    return post_process_execute
+    return post_process_execution
 
 
 def create_get_jobs_endpoint(
@@ -294,10 +294,11 @@ endpoints_generators = {
     "GetConformance": create_get_conformance_endpoint,
     "GetProcesses": create_get_processes_endpoint,
     "GetProcess": create_get_process_endpoint,
-    "PostProcessExecute": create_post_process_execute_endpoint,
+    "PostProcessExecution": create_post_process_execution_endpoint,
     "GetJobs": create_get_jobs_endpoint,
     "GetJob": create_get_job_endpoint,
     "GetJobResults": create_get_job_results_endpoint,
+    "PostProcessExecute": create_post_process_execution_endpoint,
 }
 
 
