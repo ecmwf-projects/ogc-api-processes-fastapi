@@ -17,7 +17,7 @@ def set_response_model(
         base_model = responses.ConfClass  # type: ignore
     else:
         base_model = typing.get_type_hints(
-            getattr(client, config.ROUTES[route_name]["client_method"])  # type: ignore
+            getattr(client, config.ROUTES[route_name].client_method)  # type: ignore
         )["return"]
     response_model = pydantic.create_model(
         route_name,
@@ -36,12 +36,13 @@ def register_route(
     route_endpoint = endpoints.create_endpoint(route_name, client=client)
     router.add_api_route(
         name=route_name,
-        path=config.ROUTES[route_name]["path"],  # type: ignore
+        path=config.ROUTES[route_name].path,
+        deprecated=config.ROUTES[route_name].deprecated,
         response_model=response_model,
         response_model_exclude_unset=False,
         response_model_exclude_none=True,
-        status_code=config.ROUTES[route_name].get("status_code", 200),  # type: ignore
-        methods=config.ROUTES[route_name]["methods"],  # type: ignore
+        status_code=config.ROUTES[route_name].status_code,
+        methods=config.ROUTES[route_name].methods,
         endpoint=route_endpoint,
     )
 

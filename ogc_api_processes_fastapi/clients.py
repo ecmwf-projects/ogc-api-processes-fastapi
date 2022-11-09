@@ -71,14 +71,14 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def post_process_execute(
+    def post_process_execution(
         self,
         process_id: str = fastapi.Path(...),
         execution_content: Dict[str, Any] = fastapi.Body(...),
     ) -> responses.StatusInfo:
         """Post request for execution of the process identified by `process_id`.
 
-        Called with `POST /processes/{process_id}/execute`.
+        Called with `POST /processes/{process_id}/execution`.
 
         Parameters
         ----------

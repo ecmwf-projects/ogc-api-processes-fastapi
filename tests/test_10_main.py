@@ -86,12 +86,12 @@ def test_set_resp_model_get_process_default(
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
 
-def test_set_resp_model_post_process_execute_default(
+def test_set_resp_model_post_process_execution_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
 
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
-        test_client_default, "PostProcessExecute"
+        test_client_default, "PostProcessExecution"
     )
     exp_resp_model = ogc_api_processes_fastapi.responses.StatusInfo
     resp_model_schema = resp_model.schema()
@@ -146,11 +146,11 @@ def test_instantiate_app_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
     app = ogc_api_processes_fastapi.instantiate_app(client=test_client_default)
-    routes_path = [app.routes[i].path for i in range(len(app.routes))]
+    routes_path = [app.routes[i].path for i in range(len(app.routes))]  # type: ignore
 
     assert "/processes" in routes_path
     assert "/processes/{process_id}" in routes_path
-    assert "/processes/{process_id}/execute" in routes_path
+    assert "/processes/{process_id}/execution" in routes_path
     assert "/jobs" in routes_path
     assert "/jobs/{job_id}" in routes_path
     assert "/jobs/{job_id}/results" in routes_path
@@ -168,11 +168,11 @@ def test_instantiate_app_extended(
     test_client_extended: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
     app = ogc_api_processes_fastapi.instantiate_app(client=test_client_extended)
-    routes_path = [app.routes[i].path for i in range(len(app.routes))]
+    routes_path = [app.routes[i].path for i in range(len(app.routes))]  # type: ignore
 
     assert "/processes" in routes_path
     assert "/processes/{process_id}" in routes_path
-    assert "/processes/{process_id}/execute" in routes_path
+    assert "/processes/{process_id}/execution" in routes_path
     assert "/jobs" in routes_path
     assert "/jobs/{job_id}" in routes_path
     assert "/jobs/{job_id}/results" in routes_path
