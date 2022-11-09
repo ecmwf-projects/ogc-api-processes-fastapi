@@ -64,7 +64,7 @@ class TestClientDefault(clients.BaseClient):
 
         return process
 
-    def post_process_execute(
+    def post_process_execution(
         self,
         process_id: str = fastapi.Path(...),
         execution_content: Dict[str, Any] = fastapi.Body(...),
@@ -138,7 +138,7 @@ class TestClientExtended(clients.BaseClient):
 
         return process
 
-    def post_process_execute(
+    def post_process_execution(
         self,
         process_id: str = fastapi.Path(...),
         execution_content: Dict[str, Any] = fastapi.Body(...),
