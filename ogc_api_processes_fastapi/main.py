@@ -36,14 +36,11 @@ def register_route(
     route_endpoint = endpoints.create_endpoint(route_name, client=client)
     router.add_api_route(
         name=route_name,
-        path=config.ROUTES[route_name].path,
-        deprecated=config.ROUTES[route_name].deprecated,
         response_model=response_model,
         response_model_exclude_unset=False,
         response_model_exclude_none=True,
-        status_code=config.ROUTES[route_name].status_code,
-        methods=config.ROUTES[route_name].methods,
         endpoint=route_endpoint,
+        **config.ROUTES[route_name].dict(exclude={"client_method"})
     )
 
 
