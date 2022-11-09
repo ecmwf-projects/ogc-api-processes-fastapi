@@ -146,7 +146,7 @@ def test_instantiate_app_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
     app = ogc_api_processes_fastapi.instantiate_app(client=test_client_default)
-    routes_path = [app.routes[i].path for i in range(len(app.routes))]
+    routes_path = [app.routes[i].path for i in range(len(app.routes))]  # type: ignore
 
     assert "/processes" in routes_path
     assert "/processes/{process_id}" in routes_path
@@ -168,7 +168,7 @@ def test_instantiate_app_extended(
     test_client_extended: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
     app = ogc_api_processes_fastapi.instantiate_app(client=test_client_extended)
-    routes_path = [app.routes[i].path for i in range(len(app.routes))]
+    routes_path = [app.routes[i].path for i in range(len(app.routes))]  # type: ignore
 
     assert "/processes" in routes_path
     assert "/processes/{process_id}" in routes_path
