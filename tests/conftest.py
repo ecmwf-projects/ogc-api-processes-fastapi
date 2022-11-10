@@ -95,6 +95,10 @@ class TestClientDefault(clients.BaseClient):
         }
         return results
 
+    def delete_job(self, job_id: str = fastapi.Path(...)) -> responses.StatusInfo:
+        status_info = responses.StatusInfo(jobID=1, status="dismissed", type="process")
+        return status_info
+
 
 class StatusInfo(responses.StatusInfo):
     metadata: str
@@ -168,6 +172,10 @@ class TestClientExtended(clients.BaseClient):
             "result": f"https://example.org/{job_id}-results.nc",
         }
         return results
+
+    def delete_job(self, job_id: str = fastapi.Path(...)) -> StatusInfo:
+        status_info = responses.StatusInfo(jobID=1, status="dismissed", type="process")
+        return status_info
 
 
 @pytest.fixture

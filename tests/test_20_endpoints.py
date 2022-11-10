@@ -181,3 +181,16 @@ def test_get_job_results(
     exp_body = {"result": f"https://example.org/{job_id}-results.nc"}
     body = response.json()
     assert body == exp_body
+
+
+def test_delete_job(
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
+) -> None:
+    app = ogc_api_processes_fastapi.main.instantiate_app(client=test_client_default)
+    client = fastapi.testclient.TestClient(app)
+
+    response = client.delete("/jobs/job-1")
+    assert response.status_code == 200
+
+    exp_keys = ("jobID", "status", "type")
+    assert all([key in response.json() for key in exp_keys])

@@ -68,4 +68,10 @@ ROUTES: Dict[str, RouteConfig] = {
         methods=["GET"],
         client_method="get_job_results",
     ),
+    "DeleteJob": RouteConfig(
+        path="/jobs/{job_id}",
+        summary="Cancel a job",
+        methods=["DELETE"],
+        client_method="delete_job",
+    ),
 }
