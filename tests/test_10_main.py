@@ -170,8 +170,8 @@ def test_instantiate_app_default(
 
     job_route_methods = set()
     for i in range(len(app.routes)):
-        if app.routes[i].path == "/jobs/{job_id}":
-            job_route_methods.update(app.routes[i].methods)
+        if app.routes[i].path == "/jobs/{job_id}":  # type: ignore
+            job_route_methods.update(app.routes[i].methods)  # type: ignore
     assert all([method in job_route_methods for method in ["GET", "DELETE"]])
 
     openapi_schema = app.openapi()
@@ -198,8 +198,8 @@ def test_instantiate_app_extended(
 
     job_route_methods = set()
     for i in range(len(app.routes)):
-        if app.routes[i].path == "/jobs/{job_id}":
-            job_route_methods.update(app.routes[i].methods)
+        if app.routes[i].path == "/jobs/{job_id}":  # type: ignore
+            job_route_methods.update(app.routes[i].methods)  # type: ignore
     assert all([method in job_route_methods for method in ["GET", "DELETE"]])
 
     openapi_schema = app.openapi()

@@ -174,7 +174,7 @@ class TestClientExtended(clients.BaseClient):
         return results
 
     def delete_job(self, job_id: str = fastapi.Path(...)) -> StatusInfo:
-        status_info = responses.StatusInfo(jobID=1, status="dismissed", type="process")
+        status_info = StatusInfo(jobID=1, status="dismissed", type="process")
         return status_info
 
 
