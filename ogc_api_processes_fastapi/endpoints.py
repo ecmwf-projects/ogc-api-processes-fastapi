@@ -289,6 +289,18 @@ def create_get_job_results_endpoint(
     return get_job_results
 
 
+def create_delete_job_endpoint(
+    client: clients.BaseClient,
+) -> Callable[[], responses.StatusInfo]:
+    def delete_job(
+        job: responses.StatusInfo = fastapi.Depends(client.delete_job),
+    ) -> responses.StatusInfo:
+        """Cancel a job."""
+        return job
+
+    return delete_job
+
+
 endpoints_generators = {
     "GetLandingPage": create_get_landing_page_endpoint,
     "GetConformance": create_get_conformance_endpoint,
@@ -298,6 +310,7 @@ endpoints_generators = {
     "GetJobs": create_get_jobs_endpoint,
     "GetJob": create_get_job_endpoint,
     "GetJobResults": create_get_job_results_endpoint,
+    "DeleteJob": create_delete_job_endpoint,
     "PostProcessExecute": create_post_process_execution_endpoint,
 }
 

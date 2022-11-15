@@ -142,6 +142,19 @@ def test_set_resp_model_get_jobs_results_default(
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
 
+def test_set_resp_model_delete_job_default(
+    test_client_default: ogc_api_processes_fastapi.BaseClient,
+) -> None:
+
+    resp_model = ogc_api_processes_fastapi.main.set_response_model(
+        test_client_default, "DeleteJob"
+    )
+    exp_resp_model = ogc_api_processes_fastapi.responses.StatusInfo
+    resp_model_schema = resp_model.schema()
+    exp_resp_model_schema = exp_resp_model.schema()
+    assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
+
+
 def test_instantiate_app_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
@@ -154,6 +167,12 @@ def test_instantiate_app_default(
     assert "/jobs" in routes_path
     assert "/jobs/{job_id}" in routes_path
     assert "/jobs/{job_id}/results" in routes_path
+
+    job_route_methods = set()
+    for i in range(len(app.routes)):
+        if app.routes[i].path == "/jobs/{job_id}":  # type: ignore
+            job_route_methods.update(app.routes[i].methods)  # type: ignore
+    assert all([method in job_route_methods for method in ["GET", "DELETE"]])
 
     openapi_schema = app.openapi()
     assert (
@@ -176,6 +195,12 @@ def test_instantiate_app_extended(
     assert "/jobs" in routes_path
     assert "/jobs/{job_id}" in routes_path
     assert "/jobs/{job_id}/results" in routes_path
+
+    job_route_methods = set()
+    for i in range(len(app.routes)):
+        if app.routes[i].path == "/jobs/{job_id}":  # type: ignore
+            job_route_methods.update(app.routes[i].methods)  # type: ignore
+    assert all([method in job_route_methods for method in ["GET", "DELETE"]])
 
     openapi_schema = app.openapi()
     assert (

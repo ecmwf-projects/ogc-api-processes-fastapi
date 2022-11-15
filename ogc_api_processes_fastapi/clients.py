@@ -180,3 +180,26 @@ class BaseClient(abc.ABC):
             If job `job_id` results preparation failed.
         """
         ...
+
+    @abc.abstractmethod
+    def delete_job(self, job_id: str = fastapi.Path(...)) -> responses.StatusInfo:
+        """Cancel the job identified by `job_id`.
+
+        Called with `DELETE /jobs/{job_id}`.
+
+        Parameters
+        ----------
+        job_id: str = fastapi.Path(...)
+            Identifier of the job.
+
+        Returns
+        -------
+        responses.StatusInfo
+            Information on the status of the job.
+
+        Raises
+        ------
+        exceptions.NoSuchJob
+            If the job `job_id` is not found.
+        """
+        ...
