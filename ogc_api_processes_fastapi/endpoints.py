@@ -291,7 +291,7 @@ def create_get_job_results_endpoint(
 
 def create_delete_job_endpoint(
     client: clients.BaseClient,
-) -> Callable[[fastapi.Request], responses.StatusInfo]:
+) -> Callable[[], responses.StatusInfo]:
     def delete_job(
         job: responses.StatusInfo = fastapi.Depends(client.delete_job),
     ) -> responses.StatusInfo:
