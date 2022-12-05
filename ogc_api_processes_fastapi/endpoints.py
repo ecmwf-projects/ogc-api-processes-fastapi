@@ -171,6 +171,11 @@ def create_get_processes_endpoint(
         process_list.links = [
             create_self_link(str(request.url), type="application/json")
         ]
+        pagination_links = create_pagination_links(
+            str(request.url), process_list._pagination_qs
+        )
+        for link in pagination_links:
+            process_list.links.append(link)
 
         return process_list
 
