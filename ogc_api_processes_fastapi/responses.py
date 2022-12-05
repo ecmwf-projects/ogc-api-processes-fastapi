@@ -43,6 +43,11 @@ class TransmissionMode(enum.Enum):
     reference: str = "reference"
 
 
+class PaginationQueryParameters(pydantic.BaseModel):
+    next: Optional[Dict[str, str]] = None
+    prev: Optional[Dict[str, str]] = None
+
+
 class Link(pydantic.BaseModel):
     href: str
     rel: Optional[str] = pydantic.Field(None, example="service")
@@ -91,6 +96,7 @@ class ProcessSummary(DescriptionType):
 class ProcessList(pydantic.BaseModel):
     processes: List[ProcessSummary]
     links: Optional[List[Link]] = None
+    _pagination_qs: Optional[PaginationQueryParameters] = None
 
 
 class MaxOccur(enum.Enum):
@@ -275,11 +281,6 @@ class StatusInfo(pydantic.BaseModel):
     updated: Optional[datetime.datetime] = None
     progress: Optional[ConInt] = None
     links: Optional[List[Link]] = None
-
-
-class PaginationQueryParameters(pydantic.BaseModel):
-    next: Optional[Dict[str, str]] = None
-    prev: Optional[Dict[str, str]] = None
 
 
 class JobList(pydantic.BaseModel):
