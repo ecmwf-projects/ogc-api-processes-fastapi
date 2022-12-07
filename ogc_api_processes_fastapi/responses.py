@@ -94,6 +94,9 @@ class ProcessSummary(DescriptionType):
 
 
 class ProcessList(pydantic.BaseModel):
+    class Config:
+        underscore_attrs_are_private = True
+
     processes: List[ProcessSummary]
     links: Optional[List[Link]] = None
     _pagination_qs: Optional[PaginationQueryParameters] = None
