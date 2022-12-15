@@ -5,16 +5,16 @@ import typing
 import fastapi
 import pydantic
 
-from . import clients, config, endpoints, responses
+from . import clients, config, endpoints, models
 
 
 def set_response_model(
     client: clients.BaseClient, route_name: str
 ) -> pydantic.BaseModel:
     if route_name == "GetLandingPage":
-        base_model = responses.LandingPage
+        base_model = models.LandingPage
     elif route_name == "GetConformance":
-        base_model = responses.ConfClass  # type: ignore
+        base_model = models.ConfClass  # type: ignore
     else:
         base_model = typing.get_type_hints(
             getattr(client, config.ROUTES[route_name].client_method)  # type: ignore

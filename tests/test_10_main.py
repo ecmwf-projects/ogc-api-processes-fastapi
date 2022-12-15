@@ -37,7 +37,7 @@ def test_set_resp_model_get_landing_page_default(
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetLandingPage"
     )
-    exp_resp_model = ogc_api_processes_fastapi.responses.LandingPage
+    exp_resp_model = ogc_api_processes_fastapi.models.LandingPage
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
@@ -50,7 +50,7 @@ def test_set_resp_model_get_conformance_default(
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetConformance"
     )
-    exp_resp_model = ogc_api_processes_fastapi.responses.ConfClass
+    exp_resp_model = ogc_api_processes_fastapi.models.ConfClass
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
@@ -63,7 +63,7 @@ def test_set_resp_model_get_process_list_default(
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetProcesses"
     )
-    exp_resp_model = ogc_api_processes_fastapi.responses.ProcessList
+    exp_resp_model = ogc_api_processes_fastapi.models.ProcessList
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert resp_model_schema["properties"] == exp_resp_model_schema["properties"]
@@ -80,7 +80,7 @@ def test_set_resp_model_get_process_default(
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetProcess"
     )
-    exp_resp_model = ogc_api_processes_fastapi.responses.ProcessDescription
+    exp_resp_model = ogc_api_processes_fastapi.models.ProcessDescription
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
@@ -93,7 +93,7 @@ def test_set_resp_model_post_process_execution_default(
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "PostProcessExecution"
     )
-    exp_resp_model = ogc_api_processes_fastapi.responses.StatusInfo
+    exp_resp_model = ogc_api_processes_fastapi.models.StatusInfo
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
@@ -106,7 +106,7 @@ def test_set_resp_model_get_jobs_default(
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetJobs"
     )
-    exp_resp_model = ogc_api_processes_fastapi.responses.JobList
+    exp_resp_model = ogc_api_processes_fastapi.models.JobList
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert resp_model_schema["properties"] == exp_resp_model_schema["properties"]
@@ -123,7 +123,7 @@ def test_set_resp_model_get_job_default(
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetJob"
     )
-    exp_resp_model = ogc_api_processes_fastapi.responses.StatusInfo
+    exp_resp_model = ogc_api_processes_fastapi.models.StatusInfo
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
@@ -136,7 +136,7 @@ def test_set_resp_model_get_jobs_results_default(
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "GetJobResults"
     )
-    exp_resp_model = ogc_api_processes_fastapi.responses.Results
+    exp_resp_model = ogc_api_processes_fastapi.models.Results
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
@@ -149,7 +149,7 @@ def test_set_resp_model_delete_job_default(
     resp_model = ogc_api_processes_fastapi.main.set_response_model(
         test_client_default, "DeleteJob"
     )
-    exp_resp_model = ogc_api_processes_fastapi.responses.StatusInfo
+    exp_resp_model = ogc_api_processes_fastapi.models.StatusInfo
     resp_model_schema = resp_model.schema()
     exp_resp_model_schema = exp_resp_model.schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
