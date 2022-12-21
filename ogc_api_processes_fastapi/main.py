@@ -37,7 +37,7 @@ def register_route(
     router.add_api_route(
         name=route_name,
         response_model=response_model,
-        response_model_exclude_unset=False,
+        response_model_exclude_unset=True,
         response_model_exclude_none=True,
         endpoint=route_endpoint,
         **config.ROUTES[route_name].dict(exclude={"client_method"})
