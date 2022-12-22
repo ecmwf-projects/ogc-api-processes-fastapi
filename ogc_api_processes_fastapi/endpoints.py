@@ -5,22 +5,22 @@ from typing import Callable, List, Optional
 
 import fastapi
 
-from . import clients, responses
+from . import clients, models
 
 
 def create_links_to_job(
-    request: fastapi.Request, job: responses.StatusInfo
-) -> List[responses.Link]:
+    request: fastapi.Request, job: models.StatusInfo
+) -> List[models.Link]:
     """Create links to attach to provided the job.
 
     Parameters
     ----------
-    job : schema["StatusInfo"]
+    job : models.StatusInfo
         Job to create links for.
 
     Returns
     -------
-    List[responses.Link]
+    List[models.Link]
         Links to attach to job.
     """
     rel_job_link = "self"
@@ -29,7 +29,7 @@ def create_links_to_job(
         rel_job_link = "monitor"
         title_job_link = "job status info"
     links = [
-        responses.Link(
+        models.Link(
             href=urllib.parse.urljoin(str(request.base_url), f"jobs/{job.jobID}"),
             rel=rel_job_link,
             type="application/json",
@@ -38,7 +38,7 @@ def create_links_to_job(
     ]
     if job.status.value in ("successful", "failed"):
         links.append(
-            responses.Link(
+            models.Link(
                 href=urllib.parse.urljoin(
                     str(request.base_url), f"jobs/{job.jobID}/results"
                 ),
@@ -50,8 +50,8 @@ def create_links_to_job(
 
 def create_self_link(
     request_url: str, title: Optional[str] = None, type: Optional[str] = None
-) -> responses.Link:
-    self_link = responses.Link(href=str(request_url), rel="self")
+) -> models.Link:
+    self_link = models.Link(href=str(request_url), rel="self")
     if type:
         self_link.type = type
     if title:
@@ -60,8 +60,8 @@ def create_self_link(
 
 
 def create_page_link(
-    request_url: str, page: str, pagination_qs: responses.PaginationQueryParameters
-) -> responses.Link:
+    request_url: str, page: str, pagination_qs: models.PaginationQueryParameters
+) -> models.Link:
     if page not in ("next", "prev"):
         raise ValueError(f"{page} is not a valid value for ``page`` parameter")
     request_parsed = urllib.parse.urlsplit(request_url)
@@ -72,13 +72,13 @@ def create_page_link(
     query_string = urllib.parse.urlencode(queries_page, doseq=True)
     parsed_page_request = request_parsed._replace(query=query_string)
     url_page = parsed_page_request.geturl()
-    link_page = responses.Link(href=url_page, rel=page)
+    link_page = models.Link(href=url_page, rel=page)
     return link_page
 
 
 def create_pagination_links(
-    request_url: str, pagination_qs: Optional[responses.PaginationQueryParameters]
-) -> List[responses.Link]:
+    request_url: str, pagination_qs: Optional[models.PaginationQueryParameters]
+) -> List[models.Link]:
     pagination_links = []
     if pagination_qs:
         if pagination_qs.next:
@@ -92,32 +92,32 @@ def create_pagination_links(
 
 def create_get_landing_page_endpoint(
     client: clients.BaseClient,
-) -> Callable[[fastapi.Request], responses.LandingPage]:
+) -> Callable[[fastapi.Request], models.LandingPage]:
     def get_landing_page(
         request: fastapi.Request,
-    ) -> responses.LandingPage:
+    ) -> models.LandingPage:
         """Get the API landing page."""
         links = [
-            responses.Link(
+            models.Link(
                 href=urllib.parse.urljoin(str(request.base_url), "openapi.json"),
                 rel="service-desc",
                 type="application/vnd.oai.openapi+json;version=3.0",
                 title="OpenAPI service description",
             ),
-            responses.Link(
+            models.Link(
                 href=urllib.parse.urljoin(str(request.base_url), "conformance"),
                 rel="http://www.opengis.net/def/rel/ogc/1.0/conformance",
                 type="application/json",
                 title="Conformance declaration",
             ),
-            responses.Link(
+            models.Link(
                 href=urllib.parse.urljoin(str(request.base_url), "processes"),
                 rel="http://www.opengis.net/def/rel/ogc/1.0/processes",
                 type="application/json",
                 title="Metadata about the processes",
             ),
         ]
-        landing_page = responses.LandingPage(links=links)
+        landing_page = models.LandingPage(links=links)
 
         return landing_page
 
@@ -126,10 +126,10 @@ def create_get_landing_page_endpoint(
 
 def create_get_conformance_endpoint(
     client: clients.BaseClient,
-) -> Callable[[fastapi.Request], responses.ConfClass]:
-    def get_conformance(request: fastapi.Request) -> responses.ConfClass:
+) -> Callable[[fastapi.Request], models.ConfClass]:
+    def get_conformance(request: fastapi.Request) -> models.ConfClass:
         """Get the API conformance declaration page."""
-        conformance = responses.ConfClass(
+        conformance = models.ConfClass(
             conformsTo=[
                 "http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/core",
                 "http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/ogc-process-description",
@@ -146,11 +146,11 @@ def create_get_conformance_endpoint(
 
 def create_get_processes_endpoint(
     client: clients.BaseClient,
-) -> Callable[[fastapi.Request], responses.ProcessList]:
+) -> Callable[[fastapi.Request], models.ProcessList]:
     def get_processes(
         request: fastapi.Request,
-        process_list: responses.ProcessList = fastapi.Depends(client.get_processes),
-    ) -> responses.ProcessList:
+        process_list: models.ProcessList = fastapi.Depends(client.get_processes),
+    ) -> models.ProcessList:
         """Get the list of available processes.
 
         The list of processes contains a summary of each process
@@ -159,7 +159,7 @@ def create_get_processes_endpoint(
         """
         for process in process_list.processes:
             process.links = [
-                responses.Link(
+                models.Link(
                     href=urllib.parse.urljoin(
                         str(request.base_url), f"processes/{process.id}"
                     ),
@@ -184,11 +184,11 @@ def create_get_processes_endpoint(
 
 def create_get_process_endpoint(
     client: clients.BaseClient,
-) -> Callable[[fastapi.Request], responses.ProcessDescription]:
+) -> Callable[[fastapi.Request], models.ProcessDescription]:
     def get_process(
         request: fastapi.Request,
-        process: responses.ProcessDescription = fastapi.Depends(client.get_process),
-    ) -> responses.ProcessDescription:
+        process: models.ProcessDescription = fastapi.Depends(client.get_process),
+    ) -> models.ProcessDescription:
         """Get the description of a specific process.
 
         The list of processes contains a summary of each process
@@ -197,7 +197,7 @@ def create_get_process_endpoint(
         """
         process.links = [
             create_self_link(str(request.url)),
-            responses.Link(
+            models.Link(
                 href=urllib.parse.urljoin(
                     str(request.base_url), f"processes/{process.id}/execution"
                 ),
@@ -214,18 +214,16 @@ def create_get_process_endpoint(
 
 def create_post_process_execution_endpoint(
     client: clients.BaseClient,
-) -> Callable[[fastapi.Request, fastapi.Response], responses.StatusInfo]:
+) -> Callable[[fastapi.Request, fastapi.Response], models.StatusInfo]:
     def post_process_execution(
         request: fastapi.Request,
         response: fastapi.Response,
-        status_info: responses.StatusInfo = fastapi.Depends(
-            client.post_process_execution
-        ),
-    ) -> responses.StatusInfo:
+        status_info: models.StatusInfo = fastapi.Depends(client.post_process_execution),
+    ) -> models.StatusInfo:
         """Create a new job."""
         status_info.links = [
             create_self_link(str(request.url)),
-            responses.Link(
+            models.Link(
                 href=urllib.parse.urljoin(
                     str(request.base_url), f"jobs/{status_info.jobID}"
                 ),
@@ -245,11 +243,11 @@ def create_post_process_execution_endpoint(
 
 def create_get_jobs_endpoint(
     client: clients.BaseClient,
-) -> Callable[[fastapi.Request], responses.JobList]:
+) -> Callable[[fastapi.Request], models.JobList]:
     def get_jobs(
         request: fastapi.Request,
-        job_list: responses.JobList = fastapi.Depends(client.get_jobs),
-    ) -> responses.JobList:
+        job_list: models.JobList = fastapi.Depends(client.get_jobs),
+    ) -> models.JobList:
         """Show the list of submitted jobs."""
         for job in job_list.jobs:
             job.links = create_links_to_job(job=job, request=request)
@@ -269,11 +267,11 @@ def create_get_jobs_endpoint(
 
 def create_get_job_endpoint(
     client: clients.BaseClient,
-) -> Callable[[fastapi.Request], responses.StatusInfo]:
+) -> Callable[[fastapi.Request], models.StatusInfo]:
     def get_job(
         request: fastapi.Request,
-        job: responses.StatusInfo = fastapi.Depends(client.get_job),
-    ) -> responses.StatusInfo:
+        job: models.StatusInfo = fastapi.Depends(client.get_job),
+    ) -> models.StatusInfo:
         """Show the status of a job."""
         job.links = create_links_to_job(job=job, request=request)
 
@@ -284,10 +282,10 @@ def create_get_job_endpoint(
 
 def create_get_job_results_endpoint(
     client: clients.BaseClient,
-) -> Callable[[], responses.Results]:
+) -> Callable[[], models.Results]:
     def get_job_results(
-        job_results: responses.Results = fastapi.Depends(client.get_job_results),
-    ) -> responses.Results:
+        job_results: models.Results = fastapi.Depends(client.get_job_results),
+    ) -> models.Results:
         """Show results of a job."""
         return job_results
 
@@ -296,10 +294,10 @@ def create_get_job_results_endpoint(
 
 def create_delete_job_endpoint(
     client: clients.BaseClient,
-) -> Callable[[], responses.StatusInfo]:
+) -> Callable[[], models.StatusInfo]:
     def delete_job(
-        job: responses.StatusInfo = fastapi.Depends(client.delete_job),
-    ) -> responses.StatusInfo:
+        job: models.StatusInfo = fastapi.Depends(client.delete_job),
+    ) -> models.StatusInfo:
         """Cancel a job."""
         return job
 

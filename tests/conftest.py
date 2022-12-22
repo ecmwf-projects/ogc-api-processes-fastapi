@@ -17,7 +17,7 @@ from typing import Any, Dict, Iterator, List, Optional
 import fastapi
 import pytest
 
-from ogc_api_processes_fastapi import clients, responses
+from ogc_api_processes_fastapi import clients, models
 
 PROCESSES_DB = [
     {
@@ -37,25 +37,25 @@ class TestClientDefault(clients.BaseClient):
 
     def get_processes(
         self, limit: Optional[int] = fastapi.Query(None)
-    ) -> responses.ProcessList:
+    ) -> models.ProcessList:
         if not limit:
             limit = len(PROCESSES_DB)
         processes = [
-            responses.ProcessSummary(
+            models.ProcessSummary(
                 id=PROCESSES_DB[i]["id"],
                 version=PROCESSES_DB[i]["version"],
             )
             for i in range(0, limit)
         ]
-        process_list = responses.ProcessList(processes=processes)
+        process_list = models.ProcessList(processes=processes)
         return process_list
 
     def get_process(
         self, process_id: str = fastapi.Path(...)
-    ) -> responses.ProcessDescription:
+    ) -> models.ProcessDescription:
         for i, elem in enumerate(PROCESSES_DB):
             if elem["id"] == process_id:
-                process = responses.ProcessDescription(
+                process = models.ProcessDescription(
                     id=PROCESSES_DB[i]["id"],
                     version=PROCESSES_DB[i]["version"],
                     inputs=PROCESSES_DB[i]["inputs"],
@@ -68,8 +68,8 @@ class TestClientDefault(clients.BaseClient):
         self,
         process_id: str = fastapi.Path(...),
         execution_content: Dict[str, Any] = fastapi.Body(...),
-    ) -> responses.StatusInfo:
-        status_info = responses.StatusInfo(jobID=1, status="accepted", type="process")
+    ) -> models.StatusInfo:
+        status_info = models.StatusInfo(jobID=1, status="accepted", type="process")
         return status_info
 
     def get_jobs(
@@ -77,13 +77,13 @@ class TestClientDefault(clients.BaseClient):
         processID: Optional[List[str]] = fastapi.Query(None),
         status: Optional[List[str]] = fastapi.Query(None),
         limit: Optional[int] = fastapi.Query(10, ge=1, le=10000),
-    ) -> responses.JobList:
-        jobs = [responses.StatusInfo(jobID=1, status="accepted", type="process")]
-        job_list = responses.JobList(jobs=jobs)
+    ) -> models.JobList:
+        jobs = [models.StatusInfo(jobID=1, status="accepted", type="process")]
+        job_list = models.JobList(jobs=jobs)
         return job_list
 
-    def get_job(self, job_id: str = fastapi.Path(...)) -> responses.StatusInfo:
-        status_info = responses.StatusInfo(jobID=1, status="running", type="process")
+    def get_job(self, job_id: str = fastapi.Path(...)) -> models.StatusInfo:
+        status_info = models.StatusInfo(jobID=1, status="running", type="process")
         return status_info
 
     def get_job_results(  # type: ignore
@@ -95,16 +95,16 @@ class TestClientDefault(clients.BaseClient):
         }
         return results
 
-    def delete_job(self, job_id: str = fastapi.Path(...)) -> responses.StatusInfo:
-        status_info = responses.StatusInfo(jobID=1, status="dismissed", type="process")
+    def delete_job(self, job_id: str = fastapi.Path(...)) -> models.StatusInfo:
+        status_info = models.StatusInfo(jobID=1, status="dismissed", type="process")
         return status_info
 
 
-class StatusInfo(responses.StatusInfo):
+class StatusInfo(models.StatusInfo):
     metadata: str
 
 
-class JobList(responses.JobList):
+class JobList(models.JobList):
     jobs: List[StatusInfo]  # type: ignore
 
 
@@ -115,25 +115,25 @@ class TestClientExtended(clients.BaseClient):
 
     def get_processes(
         self, limit: Optional[int] = fastapi.Query(None)
-    ) -> responses.ProcessList:
+    ) -> models.ProcessList:
         if not limit:
             limit = len(PROCESSES_DB)
         processes = [
-            responses.ProcessSummary(
+            models.ProcessSummary(
                 id=PROCESSES_DB[i]["id"],
                 version=PROCESSES_DB[i]["version"],
             )
             for i in range(0, limit)
         ]
-        process_list = responses.ProcessList(processes=processes)
+        process_list = models.ProcessList(processes=processes)
         return process_list
 
     def get_process(
         self, process_id: str = fastapi.Path(...)
-    ) -> responses.ProcessDescription:
+    ) -> models.ProcessDescription:
         for i, elem in enumerate(PROCESSES_DB):
             if elem["id"] == process_id:
-                process = responses.ProcessDescription(
+                process = models.ProcessDescription(
                     id=PROCESSES_DB[i]["id"],
                     version=PROCESSES_DB[i]["version"],
                     inputs=PROCESSES_DB[i]["inputs"],
@@ -146,8 +146,8 @@ class TestClientExtended(clients.BaseClient):
         self,
         process_id: str = fastapi.Path(...),
         execution_content: Dict[str, Any] = fastapi.Body(...),
-    ) -> responses.StatusInfo:
-        status_info = responses.StatusInfo(jobID=1, status="accepted", type="process")
+    ) -> models.StatusInfo:
+        status_info = models.StatusInfo(jobID=1, status="accepted", type="process")
         return status_info
 
     def get_jobs(

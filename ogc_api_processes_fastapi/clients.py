@@ -19,7 +19,7 @@ from typing import Any, Dict, List, Optional
 
 import fastapi
 
-from . import responses
+from . import models
 
 
 class BaseClient(abc.ABC):
@@ -28,7 +28,7 @@ class BaseClient(abc.ABC):
     @abc.abstractmethod
     def get_processes(
         self, limit: Optional[int] = fastapi.Query(None)
-    ) -> responses.ProcessList:
+    ) -> models.ProcessList:
         """Get all available processes.
 
         Called with `GET /processes`.
@@ -40,7 +40,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.ProcessList
+        models.ProcessList
             List of available processes summaries.
         """
         ...
@@ -48,7 +48,7 @@ class BaseClient(abc.ABC):
     @abc.abstractmethod
     def get_process(
         self, process_id: str = fastapi.Path(...)
-    ) -> responses.ProcessDescription:
+    ) -> models.ProcessDescription:
         """Get description of the process identified by `process_id`.
 
         Called with `GET /processes/{process_id}`.
@@ -60,7 +60,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.schema["ProcessDescription"]
+        models.ProcessDescription
             Description of the process.
 
         Raises
@@ -75,7 +75,7 @@ class BaseClient(abc.ABC):
         self,
         process_id: str = fastapi.Path(...),
         execution_content: Dict[str, Any] = fastapi.Body(...),
-    ) -> responses.StatusInfo:
+    ) -> models.StatusInfo:
         """Post request for execution of the process identified by `process_id`.
 
         Called with `POST /processes/{process_id}/execution`.
@@ -90,7 +90,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.StatusInfo
+        models.StatusInfo
             Information on the status of the submitted job.
 
         Raises
@@ -106,7 +106,7 @@ class BaseClient(abc.ABC):
         processID: Optional[List[str]] = fastapi.Query(None),
         status: Optional[List[str]] = fastapi.Query(None),
         limit: Optional[int] = fastapi.Query(10, ge=1, le=10000),
-    ) -> responses.JobList:
+    ) -> models.JobList:
         """Get the list of submitted jobs.
 
         Called with `GET /jobs`.
@@ -127,12 +127,12 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.JobList
+        models.JobList
             List of jobs.
         """
 
     @abc.abstractmethod
-    def get_job(self, job_id: str = fastapi.Path(...)) -> responses.StatusInfo:
+    def get_job(self, job_id: str = fastapi.Path(...)) -> models.StatusInfo:
         """Get status information of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}`.
@@ -144,7 +144,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.StatusInfo
+        models.StatusInfo
             Information on the status of the job.
 
         Raises
@@ -155,7 +155,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def get_job_results(self, job_id: str = fastapi.Path(...)) -> responses.Results:
+    def get_job_results(self, job_id: str = fastapi.Path(...)) -> models.Results:
         """Get results of the job identified by `job_id`.
 
         Called with `GET /jobs/{job_id}/results`.
@@ -167,7 +167,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.Results
+        models.Results
             Job results.
 
         Raises
@@ -182,7 +182,7 @@ class BaseClient(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def delete_job(self, job_id: str = fastapi.Path(...)) -> responses.StatusInfo:
+    def delete_job(self, job_id: str = fastapi.Path(...)) -> models.StatusInfo:
         """Cancel the job identified by `job_id`.
 
         Called with `DELETE /jobs/{job_id}`.
@@ -194,7 +194,7 @@ class BaseClient(abc.ABC):
 
         Returns
         -------
-        responses.StatusInfo
+        models.StatusInfo
             Information on the status of the job.
 
         Raises
