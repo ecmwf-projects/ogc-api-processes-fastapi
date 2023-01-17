@@ -5,6 +5,8 @@ OGC API Processes service based on FastAPI.
 ```{toctree}
 :caption: 'Contents:'
 :maxdepth: 2
+
+API Reference <_api/ogc_api_processes_fastapi/index>
 ```
 
 # Indices and tables
