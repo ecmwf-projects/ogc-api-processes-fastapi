@@ -56,6 +56,9 @@ ignore = [
   "D417"
 ]
 
+[tool.setuptools]
+packages = ["ogc_api_processes_fastapi"]
+
 [tool.setuptools_scm]
 write_to = "ogc_api_processes_fastapi/version.py"
 write_to_template = '''
