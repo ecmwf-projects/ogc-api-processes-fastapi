@@ -2,6 +2,13 @@
 
 OGC API Processes service based on FastAPI
 
+## Quick Start
+
+```python
+>>> import ogc_api_processes_fastapi
+
+```
+
 ## Workflow for developers/contributors
 
 For best experience create a new conda environment (e.g. DEVELOP) with Python 3.10:

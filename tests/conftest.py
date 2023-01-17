@@ -31,9 +31,7 @@ PROCESSES_DB = [
 
 
 class TestClientDefault(clients.BaseClient):
-    """
-    Test implementation of the OGC API - Processes endpoints.
-    """
+    """Test implementation of the OGC API - Processes endpoints."""
 
     def get_processes(
         self, limit: Optional[int] = fastapi.Query(None)
@@ -109,9 +107,7 @@ class JobList(models.JobList):
 
 
 class TestClientExtended(clients.BaseClient):
-    """
-    Test implementation of the OGC API - Processes endpoints.
-    """
+    """Test implementation of the OGC API - Processes endpoints."""
 
     def get_processes(
         self, limit: Optional[int] = fastapi.Query(None)

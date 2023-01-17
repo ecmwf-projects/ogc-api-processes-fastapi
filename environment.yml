@@ -1,17 +1,13 @@
+# environment.yml: Mandatory dependencies only.
 channels:
 - conda-forge
 - nodefaults
+# EXAMPLE:
+# dependencies:
+# - package1
+# - package2
+# DO NOT EDIT ABOVE THIS LINE, ADD DEPENDENCIES BELOW AS SHOWN IN THE EXAMPLE
 dependencies:
-- make
-- mypy
-- myst-parser
-- pre-commit
-- pydata-sphinx-theme
-- pytest
-- pytest-cov
-- sphinx
-- sphinxcontrib-apidoc
-# DO NOT EDIT ABOVE THIS LINE, ADD DEPENDENCIES BELOW
 - httpx
 - fastapi
 - requests

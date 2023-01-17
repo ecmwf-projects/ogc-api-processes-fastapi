@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/ecmwf-projects/cookiecutter-conda-package",
-  "commit": "fa22e97dff1a88de1834d9deba827197b081fe29",
+  "commit": "5e23a683532ab1ca0d6329402ff7a5be099ee8be",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -9,6 +9,8 @@
       "project_short_description": "OGC API Processes service based on FastAPI",
       "copyright_holder": "European Union",
       "copyright_year": "2022",
+      "mypy_strict": "True",
+      "integration_tests": "True",
       "_template": "https://github.com/ecmwf-projects/cookiecutter-conda-package"
     }
   },
