@@ -33,32 +33,30 @@ class OGCAPIException(Exception):
 
 @attrs.define
 class NoSuchProcess(OGCAPIException):
-    type: str = (
+    type = (
         "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-process"
     )
-    status_code: int = fastapi.status.HTTP_404_NOT_FOUND
+    status_code = fastapi.status.HTTP_404_NOT_FOUND
 
 
 @attrs.define
 class NoSuchJob(OGCAPIException):
-    type: str = (
-        "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-job"
-    )
-    status_code: int = fastapi.status.HTTP_404_NOT_FOUND
+    type = "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-job"
+    status_code = fastapi.status.HTTP_404_NOT_FOUND
 
 
 @attrs.define
 class ResultsNotReady(OGCAPIException):
-    type: str = (
+    type = (
         "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/result-not-ready"
     )
-    status_code: int = fastapi.status.HTTP_404_NOT_FOUND
+    status_code = fastapi.status.HTTP_404_NOT_FOUND
 
 
 @attrs.define
 class JobResultsFailed(OGCAPIException):
-    type: str = "generic error"
-    status_code: int = fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR
+    type = "generic error"
+    status_code = fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR
 
 
 def ogc_api_exception_handler(
