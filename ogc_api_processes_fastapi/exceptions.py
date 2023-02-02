@@ -14,84 +14,65 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
+from typing import Optional
+
 import attrs
 import fastapi
 
-
-class NoSuchProcess(Exception):
-    ...
-
-
-class NoSuchJob(Exception):
-    ...
-
-
-class ResultsNotReady(Exception):
-    ...
+from . import models
 
 
 @attrs.define
-class JobResultsFailed(Exception):
+class OGCAPIException(Exception):
+    type: str
+    status_code: int
+    title: Optional[str] = None
+    detail: Optional[str] = None
+    instance: Optional[str] = None
 
+
+@attrs.define
+class NoSuchProcess(OGCAPIException):
+    type: str = (
+        "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-process"
+    )
+    status_code: int = fastapi.status.HTTP_404_NOT_FOUND
+
+
+@attrs.define
+class NoSuchJob(OGCAPIException):
+    type: str = (
+        "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-job"
+    )
+    status_code: int = fastapi.status.HTTP_404_NOT_FOUND
+
+
+@attrs.define
+class ResultsNotReady(OGCAPIException):
+    type: str = (
+        "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/result-not-ready"
+    )
+    status_code: int = fastapi.status.HTTP_404_NOT_FOUND
+
+
+@attrs.define
+class JobResultsFailed(OGCAPIException):
     type: str = "generic error"
     status_code: int = fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR
-    title: str = "job failed"
-    detail: str = "job failed"
 
 
-def no_such_process_exception_handler(
-    request: fastapi.Request, exc: Exception
-) -> fastapi.responses.JSONResponse:
-    return fastapi.responses.JSONResponse(
-        status_code=fastapi.status.HTTP_404_NOT_FOUND,
-        content={
-            "type": "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-process",
-            "title": "process not found",
-            "detail": f"process {request.path_params['process_id']} has not been found",
-            "instance": str(request.url),
-        },
-    )
-
-
-def no_such_job_exception_handler(
-    request: fastapi.Request, exc: Exception
-) -> fastapi.responses.JSONResponse:
-    return fastapi.responses.JSONResponse(
-        status_code=fastapi.status.HTTP_404_NOT_FOUND,
-        content={
-            "type": "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-job",
-            "title": "job not found",
-            "detail": f"job {request.path_params['job_id']} has not been found",
-            "instance": str(request.url),
-        },
-    )
-
-
-def results_not_ready_exception_handler(
-    request: fastapi.Request, exc: Exception
-) -> fastapi.responses.JSONResponse:
-    return fastapi.responses.JSONResponse(
-        status_code=fastapi.status.HTTP_404_NOT_FOUND,
-        content={
-            "type": "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/result-not-ready",
-            "title": "job results not ready",
-            "detail": f"job {request.path_params['job_id']} results are not yet ready",
-            "instance": str(request.url),
-        },
-    )
-
-
-def job_results_failed_exception_handler(
-    request: fastapi.Request, exc: JobResultsFailed
+def ogc_api_exception_handler(
+    request: fastapi.Request, exc: OGCAPIException
 ) -> fastapi.responses.JSONResponse:
     return fastapi.responses.JSONResponse(
         status_code=exc.status_code,
-        content={
-            "type": exc.type,
-            "title": exc.title,
-            "detail": exc.detail,
-            "instance": str(request.url),
-        },
+        content=models.Exception(
+            type=exc.type,
+            title=exc.title,
+            status=exc.status_code,
+            detail=exc.detail,
+            instance=str(request.url),
+        ).dict(exclude_none=True),
     )
 
 
@@ -109,8 +90,8 @@ def include_exception_handlers(app: fastapi.FastAPI) -> fastapi.FastAPI:
     fastapi.FastAPI
         FastAPI application including OGC API - Processes compliant exceptions handlers.
     """
-    app.add_exception_handler(NoSuchProcess, no_such_process_exception_handler)
-    app.add_exception_handler(NoSuchJob, no_such_job_exception_handler)
-    app.add_exception_handler(ResultsNotReady, results_not_ready_exception_handler)
-    app.add_exception_handler(JobResultsFailed, job_results_failed_exception_handler)
+    app.add_exception_handler(NoSuchProcess, ogc_api_exception_handler)
+    app.add_exception_handler(NoSuchJob, ogc_api_exception_handler)
+    app.add_exception_handler(ResultsNotReady, ogc_api_exception_handler)
+    app.add_exception_handler(JobResultsFailed, ogc_api_exception_handler)
     return app
