@@ -1,11 +1,12 @@
 """API routes registration and initialization."""
 
 import typing
+from typing import Callable
 
 import fastapi
 import pydantic
 
-from . import clients, config, endpoints, models
+from . import clients, config, endpoints, exceptions, models
 
 
 def set_response_model(
@@ -55,8 +56,14 @@ def instantiate_router(client: clients.BaseClient) -> fastapi.APIRouter:
     return router
 
 
-def instantiate_app(client: clients.BaseClient) -> fastapi.FastAPI:
+def instantiate_app(
+    client: clients.BaseClient,
+    exception_handler: Callable[
+        [fastapi.Request, exceptions.OGCAPIException], fastapi.responses.JSONResponse
+    ] = exceptions.ogc_api_exception_handler,
+) -> fastapi.FastAPI:
     app = fastapi.FastAPI()
     router = instantiate_router(client)
     app.include_router(router)
+    app = exceptions.include_exception_handlers(app, exception_handler)
     return app

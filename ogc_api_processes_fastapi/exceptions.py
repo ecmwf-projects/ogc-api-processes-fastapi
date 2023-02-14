@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License
 
-from typing import Optional
+from typing import Callable, Optional
 
 import attrs
 import fastapi
 
-from . import models
+from . import exceptions, models
 
 
 @attrs.define
@@ -37,6 +37,7 @@ class NoSuchProcess(OGCAPIException):
         "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-process"
     )
     status_code: int = fastapi.status.HTTP_404_NOT_FOUND
+    title: str = "process not found"
 
 
 @attrs.define
@@ -45,6 +46,7 @@ class NoSuchJob(OGCAPIException):
         "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/no-such-job"
     )
     status_code: int = fastapi.status.HTTP_404_NOT_FOUND
+    title: str = "job not found"
 
 
 @attrs.define
@@ -53,12 +55,14 @@ class ResultsNotReady(OGCAPIException):
         "http://www.opengis.net/def/exceptions/ogcapi-processes-1/1.0/result-not-ready"
     )
     status_code: int = fastapi.status.HTTP_404_NOT_FOUND
+    title: str = "job results not ready"
 
 
 @attrs.define
 class JobResultsFailed(OGCAPIException):
-    type: str = "generic error"
+    type: str = "job results failed"
     status_code: int = fastapi.status.HTTP_500_INTERNAL_SERVER_ERROR
+    title: str = "job failed"
 
 
 def ogc_api_exception_handler(
@@ -76,7 +80,12 @@ def ogc_api_exception_handler(
     )
 
 
-def include_exception_handlers(app: fastapi.FastAPI) -> fastapi.FastAPI:
+def include_exception_handlers(
+    app: fastapi.FastAPI,
+    exception_handler: Callable[
+        [fastapi.Request, exceptions.OGCAPIException], fastapi.responses.JSONResponse
+    ],
+) -> fastapi.FastAPI:
     """Add OGC API - Processes compliatn exceptions handlers to a FastAPI application.
 
     Parameters
@@ -90,8 +99,8 @@ def include_exception_handlers(app: fastapi.FastAPI) -> fastapi.FastAPI:
     fastapi.FastAPI
         FastAPI application including OGC API - Processes compliant exceptions handlers.
     """
-    app.add_exception_handler(NoSuchProcess, ogc_api_exception_handler)
-    app.add_exception_handler(NoSuchJob, ogc_api_exception_handler)
-    app.add_exception_handler(ResultsNotReady, ogc_api_exception_handler)
-    app.add_exception_handler(JobResultsFailed, ogc_api_exception_handler)
+    app.add_exception_handler(NoSuchProcess, exception_handler)
+    app.add_exception_handler(NoSuchJob, exception_handler)
+    app.add_exception_handler(ResultsNotReady, exception_handler)
+    app.add_exception_handler(JobResultsFailed, exception_handler)
     return app
