@@ -39,7 +39,7 @@ class JobControlOptions(enum.Enum):
 
 
 class TransmissionMode(enum.Enum):
-    value: str = "value"
+    value: str = "value"  # type:ignore
     reference: str = "reference"
 
 
