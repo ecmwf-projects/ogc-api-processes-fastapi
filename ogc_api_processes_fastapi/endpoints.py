@@ -60,14 +60,16 @@ def create_self_link(
 
 
 def create_page_link(
-    request_url: str, page: str, pagination_qs: models.PaginationQueryParameters
+    request_url: str,
+    page: str,
+    pagination_query_params: models.PaginationQueryParameters,
 ) -> models.Link:
     if page not in ("next", "prev"):
         raise ValueError(f"{page} is not a valid value for ``page`` parameter")
     request_parsed = urllib.parse.urlsplit(request_url)
     queries = urllib.parse.parse_qs(request_parsed.query)
     queries_page = queries.copy()
-    queries_new = getattr(pagination_qs, page)
+    queries_new = getattr(pagination_query_params, page)
     queries_page.update(queries_new)
     query_string = urllib.parse.urlencode(queries_page, doseq=True)
     parsed_page_request = request_parsed._replace(query=query_string)
@@ -77,15 +79,16 @@ def create_page_link(
 
 
 def create_pagination_links(
-    request_url: str, pagination_qs: Optional[models.PaginationQueryParameters]
+    request_url: str,
+    pagination_query_params: Optional[models.PaginationQueryParameters],
 ) -> List[models.Link]:
     pagination_links = []
-    if pagination_qs:
-        if pagination_qs.next:
-            link_next = create_page_link(request_url, "next", pagination_qs)
+    if pagination_query_params:
+        if pagination_query_params.next:
+            link_next = create_page_link(request_url, "next", pagination_query_params)
             pagination_links.append(link_next)
-        if pagination_qs.prev:
-            link_prev = create_page_link(request_url, "prev", pagination_qs)
+        if pagination_query_params.prev:
+            link_prev = create_page_link(request_url, "prev", pagination_query_params)
             pagination_links.append(link_prev)
     return pagination_links
 
@@ -172,7 +175,7 @@ def create_get_processes_endpoint(
             create_self_link(str(request.url), type="application/json")
         ]
         pagination_links = create_pagination_links(
-            str(request.url), process_list._pagination_qs
+            str(request.url), process_list._pagination_query_params
         )
         for link in pagination_links:
             process_list.links.append(link)
@@ -255,7 +258,7 @@ def create_get_jobs_endpoint(
             create_self_link(str(request.url), title="list of submitted jobs"),
         ]
         pagination_links = create_pagination_links(
-            str(request.url), job_list._pagination_qs
+            str(request.url), job_list._pagination_query_params
         )
         for link in pagination_links:
             job_list.links.append(link)

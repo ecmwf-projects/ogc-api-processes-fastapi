@@ -99,7 +99,7 @@ class ProcessList(pydantic.BaseModel):
 
     processes: List[ProcessSummary]
     links: Optional[List[Link]] = None
-    _pagination_qs: Optional[PaginationQueryParameters] = None
+    _pagination_query_params: Optional[PaginationQueryParameters] = None
 
 
 class MaxOccur(enum.Enum):
@@ -292,7 +292,7 @@ class JobList(pydantic.BaseModel):
 
     jobs: List[StatusInfo]
     links: Optional[List[Link]] = None
-    _pagination_qs: Optional[PaginationQueryParameters] = None
+    _pagination_query_params: Optional[PaginationQueryParameters] = None
 
 
 class Results(pydantic.BaseModel):
