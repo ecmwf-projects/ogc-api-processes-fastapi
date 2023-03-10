@@ -257,12 +257,12 @@ class ConInt(pydantic.ConstrainedInt):
     le = 100
 
 
-class StatusCode(enum.Enum):
-    accepted = "accepted"
-    running = "running"
-    successful = "successful"
-    failed = "failed"
-    dismissed = "dismissed"
+class StatusCode(str, enum.Enum):
+    accepted: str = "accepted"
+    running: str = "running"
+    successful: str = "successful"
+    failed: str = "failed"
+    dismissed: str = "dismissed"
 
 
 class JobType(enum.Enum):
