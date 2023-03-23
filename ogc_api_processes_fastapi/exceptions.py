@@ -29,6 +29,7 @@ class OGCAPIException(Exception):
     title: Optional[str] = None
     detail: Optional[str] = None
     instance: Optional[str] = None
+    traceback: Optional[str] = None
 
 
 @attrs.define
