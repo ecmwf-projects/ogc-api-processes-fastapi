@@ -147,8 +147,8 @@ class SchemaItem(pydantic.BaseModel):  # type: ignore
     uniqueItems: Optional[bool] = False
     maxProperties: Optional[PositiveInt] = None
     minProperties: Optional[PositiveInt] = cast(PositiveInt, 0)
-    required: Optional[List[str]] = pydantic.Field(None, min_items=1)
-    enum: Optional[List[Any]] = pydantic.Field(None, min_items=1)
+    required: Optional[List[str]] = pydantic.Field(None, min_length=1)
+    enum: Optional[List[Any]] = pydantic.Field(None, min_length=1)
     type: Optional[ObjectType] = None
     description: Optional[str] = None
     format: Optional[str] = None
