@@ -289,7 +289,7 @@ class Results(pydantic.BaseModel):
 
 
 class Exception(pydantic.BaseModel):
-    mdoel_config = pydantic.ConfigDict(extra=pydantic.Extra.allow)
+    model_config = pydantic.ConfigDict(extra=pydantic.Extra.allow)
 
     type: str
     title: Optional[str] = None
