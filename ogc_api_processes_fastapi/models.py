@@ -94,9 +94,6 @@ class ProcessSummary(DescriptionType):
 
 
 class ProcessList(pydantic.BaseModel):
-    class Config:
-        underscore_attrs_are_private = True
-
     processes: List[ProcessSummary]
     links: Optional[List[Link]] = None
     _pagination_query_params: Optional[PaginationQueryParameters] = None
@@ -116,8 +113,7 @@ class ObjectType(enum.Enum):
 
 
 class Reference(pydantic.BaseModel):
-    class Config:
-        extra = pydantic.Extra.forbid
+    model_config = pydantic.ConfigDict(extra=pydantic.Extra.forbid)
 
     _ref: str = pydantic.Field(..., alias="$ref")
 
@@ -130,8 +126,7 @@ SchemaItem = ForwardRef("SchemaItem")
 
 
 class SchemaItem(pydantic.BaseModel):  # type: ignore
-    class Config:
-        extra = pydantic.Extra.forbid
+    model_config = pydantic.ConfigDict(extra=pydantic.Extra.forbid)
 
     title: Optional[str] = None
     multipleOf: Optional[pydantic.PositiveFloat] = None
@@ -169,8 +164,7 @@ SchemaItem.update_forward_refs()  # type: ignore
 
 
 class InputDescription(DescriptionType):
-    class Config:
-        allow_population_by_field_name = True
+    model_config = pydantic.ConfigDict(populate_by_name=True)
 
     minOccurs: Optional[int] = 1
     maxOccurs: Optional[Union[int, MaxOccur]] = None
@@ -178,8 +172,7 @@ class InputDescription(DescriptionType):
 
 
 class OutputDescription(DescriptionType):
-    class Config:
-        allow_population_by_field_name = True
+    model_config = pydantic.ConfigDict(populate_by_name=True)
 
     schema_: Union[Reference, SchemaItem] = pydantic.Field(..., alias="schema")  # type: ignore
 
@@ -270,8 +263,7 @@ class JobType(enum.Enum):
 
 
 class StatusInfo(pydantic.BaseModel):
-    class Config:
-        extra = pydantic.Extra.allow
+    model_config = pydantic.ConfigDict(extra=pydantic.Extra.allow)
 
     processID: Optional[str] = None
     type: JobType
@@ -287,9 +279,6 @@ class StatusInfo(pydantic.BaseModel):
 
 
 class JobList(pydantic.BaseModel):
-    class Config:
-        underscore_attrs_are_private = True
-
     jobs: List[StatusInfo]
     links: Optional[List[Link]] = None
     _pagination_query_params: Optional[PaginationQueryParameters] = None
@@ -300,8 +289,7 @@ class Results(pydantic.BaseModel):
 
 
 class Exception(pydantic.BaseModel):
-    class Config:
-        extra = pydantic.Extra.allow
+    mdoel_config = pydantic.ConfigDict(extra=pydantic.Extra.allow)
 
     type: str
     title: Optional[str] = None
