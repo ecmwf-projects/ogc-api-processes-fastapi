@@ -10,4 +10,6 @@ channels:
 dependencies:
 - httpx
 - fastapi
+- pydantic
+- pydantic-settings
 - requests
