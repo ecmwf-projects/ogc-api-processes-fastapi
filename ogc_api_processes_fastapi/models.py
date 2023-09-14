@@ -40,7 +40,7 @@ class JobControlOptions(enum.Enum):
 
 
 class TransmissionMode(enum.Enum):
-    value: str = "value"  # type:ignore
+    value: str = "value"
     reference: str = "reference"
 
 
@@ -51,11 +51,15 @@ class PaginationQueryParameters(pydantic.BaseModel):
 
 class Link(pydantic.BaseModel):
     href: str
-    rel: Optional[str] = pydantic.Field(None, json_schema_extra={"example": "service"})
-    type: Optional[str] = pydantic.Field(
-        None, json_schema_extra={"example": "application/json"}
+    rel: Optional[str] = pydantic.Field(
+        default=None, json_schema_extra={"example": "service"}
     )
-    hreflang: Optional[str] = pydantic.Field(None, json_schema_extra={"example": "en"})
+    type: Optional[str] = pydantic.Field(
+        default=None, json_schema_extra={"example": "application/json"}
+    )
+    hreflang: Optional[str] = pydantic.Field(
+        default=None, json_schema_extra={"example": "en"}
+    )
     title: Optional[str] = None
 
 
@@ -147,8 +151,8 @@ class SchemaItem(pydantic.BaseModel):  # type: ignore
     uniqueItems: Optional[bool] = False
     maxProperties: Optional[PositiveInt] = None
     minProperties: Optional[PositiveInt] = cast(PositiveInt, 0)
-    required: Optional[List[str]] = pydantic.Field(None, min_length=1)
-    enum: Optional[List[Any]] = pydantic.Field(None, min_length=1)
+    required: Optional[List[str]] = pydantic.Field(default=None, min_length=1)
+    enum: Optional[List[Any]] = pydantic.Field(default=None, min_length=1)
     type: Optional[ObjectType] = None
     description: Optional[str] = None
     format: Optional[str] = None
@@ -207,7 +211,9 @@ InputValueNoObject = pydantic.RootModel[
 class Format(pydantic.BaseModel):
     mediaType: Optional[str] = None
     encoding: Optional[str] = None
-    schema_: Optional[Union[str, Dict[str, Any]]] = pydantic.Field(None, alias="schema")
+    schema_: Optional[Union[str, Dict[str, Any]]] = pydantic.Field(
+        default=None, alias="schema"
+    )
 
 
 InputValue = pydantic.RootModel[Union[Dict[str, Any], InputValueNoObject]]
@@ -287,7 +293,7 @@ class JobList(pydantic.BaseModel):
     _pagination_query_params: Optional[PaginationQueryParameters] = None
 
 
-class Results(pydantic.RootModel[Dict[str, InlineOrRefData]]):
+class Results(pydantic.RootModel[Optional[Dict[str, InlineOrRefData]]]):
     root: Optional[Dict[str, InlineOrRefData]] = None
 
 
