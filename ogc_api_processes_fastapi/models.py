@@ -19,6 +19,7 @@ import enum
 from typing import Any, Dict, ForwardRef, List, Optional, Union, cast
 
 import pydantic
+import typing_extensions
 
 
 class Metadata(pydantic.BaseModel):
@@ -117,8 +118,7 @@ class Reference(pydantic.BaseModel):
     ref: str
 
 
-class PositiveInt(pydantic.ConstrainedInt):
-    ge = 0
+PositiveInt = typing_extensions.Annotated[int, pydantic.Field(ge=0)]
 
 
 SchemaItem = ForwardRef("SchemaItem")
@@ -244,9 +244,7 @@ class ProcessDescription(ProcessSummary):
     outputs: Optional[Dict[str, OutputDescription]] = None
 
 
-class ConInt(pydantic.ConstrainedInt):
-    ge = 0
-    le = 100
+ConInt = typing_extensions.Annotated[int, pydantic.Field(ge=0, le=100)]
 
 
 class StatusCode(str, enum.Enum):
