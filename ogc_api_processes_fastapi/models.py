@@ -96,7 +96,7 @@ class ProcessSummary(DescriptionType):
 
 class ProcessList(pydantic.BaseModel):
     processes: List[ProcessSummary]
-    links: Optional[List[Link]] = None
+    links: List[Link]
     _pagination_query_params: Optional[PaginationQueryParameters] = None
 
 

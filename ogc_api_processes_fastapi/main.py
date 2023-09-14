@@ -24,8 +24,6 @@ def set_response_model(
         route_name,
         __base__=base_model,
     )
-    if route_name in ("GetProcesses", "GetJobs"):
-        response_model.__fields__["links"].required = True
 
     return response_model  # type: ignore
 
