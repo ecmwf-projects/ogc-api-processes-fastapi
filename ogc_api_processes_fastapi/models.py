@@ -176,8 +176,7 @@ class OutputDescription(DescriptionType):
     schema_: Union[Reference, SchemaItem] = pydantic.Field(..., alias="schema")  # type: ignore
 
 
-class BinaryInputValue(pydantic.BaseModel):
-    __root__: str
+BinaryInputValue = pydantic.RootModel[str]
 
 
 class Crs(enum.Enum):
@@ -194,8 +193,9 @@ class Bbox(pydantic.BaseModel):
     crs: Optional[Crs] = Crs.http___www_opengis_net_def_crs_OGC_1_3_CRS84
 
 
-class InputValueNoObject(pydantic.BaseModel):
-    __root__: Union[str, float, int, bool, List[Any], BinaryInputValue, Bbox]
+InputValueNoObject = pydantic.RootModel[
+    Union[str, float, int, bool, List[Any], BinaryInputValue, Bbox]
+]
 
 
 class Format(pydantic.BaseModel):
@@ -204,16 +204,16 @@ class Format(pydantic.BaseModel):
     schema_: Optional[Union[str, Dict[str, Any]]] = pydantic.Field(None, alias="schema")
 
 
-class InputValue(pydantic.BaseModel):
-    __root__: Union[Dict[str, Any], InputValueNoObject]
+InputValue = pydantic.RootModel[Union[Dict[str, Any], InputValueNoObject]]
 
 
 class QualifiedInputValue(Format):
     value: InputValue
 
 
-class InlineOrRefData(pydantic.BaseModel):
-    __root__: Union[InputValueNoObject, QualifiedInputValue, Link]
+InlineOrRefData = pydantic.RootModel[
+    Union[InputValueNoObject, QualifiedInputValue, Link]
+]
 
 
 class Output(pydantic.BaseModel):
@@ -281,8 +281,8 @@ class JobList(pydantic.BaseModel):
     _pagination_query_params: Optional[PaginationQueryParameters] = None
 
 
-class Results(pydantic.BaseModel):
-    __root__: Optional[Dict[str, InlineOrRefData]] = None
+class Results(pydantic.RootModel[Dict[str, InlineOrRefData]]):
+    root: Optional[Dict[str, InlineOrRefData]] = None
 
 
 class Exception(pydantic.BaseModel):
