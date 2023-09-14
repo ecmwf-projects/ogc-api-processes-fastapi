@@ -14,9 +14,8 @@
 
 from typing import Any, Dict, List
 
-import pytest
-
 import ogc_api_processes_fastapi
+import ogc_api_processes_fastapi.models
 
 
 def equal_dicts(d1: Dict[str, Any], d2: Dict[str, Any], ignore_keys: List[Any]) -> bool:
@@ -64,10 +63,6 @@ def test_set_resp_model_get_process_list_default(
     resp_model_schema = resp_model.model_json_schema()
     exp_resp_model_schema = exp_resp_model.model_json_schema()
     assert resp_model_schema["properties"] == exp_resp_model_schema["properties"]
-    assert (
-        "links" in resp_model_schema["required"]
-        and "links" not in exp_resp_model_schema["required"]
-    )
 
 
 def test_set_resp_model_get_process_default(
@@ -104,10 +99,6 @@ def test_set_resp_model_get_jobs_default(
     resp_model_schema = resp_model.model_json_schema()
     exp_resp_model_schema = exp_resp_model.model_json_schema()
     assert resp_model_schema["properties"] == exp_resp_model_schema["properties"]
-    assert (
-        "links" in resp_model_schema["required"]
-        and "links" not in exp_resp_model_schema["required"]
-    )
 
 
 def test_set_resp_model_get_job_default(
@@ -122,7 +113,7 @@ def test_set_resp_model_get_job_default(
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
 
-@pytest.mark.skip(reason="to be inspected")
+# @pytest.mark.skip(reason="to be inspected")
 def test_set_resp_model_get_jobs_results_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:

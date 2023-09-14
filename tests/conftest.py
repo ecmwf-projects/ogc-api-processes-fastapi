@@ -45,7 +45,9 @@ class TestClientDefault(clients.BaseClient):
             )
             for i in range(0, limit)
         ]
-        process_list = models.ProcessList(processes=processes)
+        process_list = models.ProcessList(
+            processes=processes, links=[models.Link(href="https://example.org")]
+        )
         return process_list
 
     def get_process(
@@ -67,7 +69,7 @@ class TestClientDefault(clients.BaseClient):
         process_id: str = fastapi.Path(...),
         execution_content: Dict[str, Any] = fastapi.Body(...),
     ) -> models.StatusInfo:
-        status_info = models.StatusInfo(jobID=1, status="accepted", type="process")
+        status_info = models.StatusInfo(jobID="1", status="accepted", type="process")
         return status_info
 
     def get_jobs(
@@ -76,25 +78,25 @@ class TestClientDefault(clients.BaseClient):
         status: Optional[List[str]] = fastapi.Query(None),
         limit: Optional[int] = fastapi.Query(10, ge=1, le=10000),
     ) -> models.JobList:
-        jobs = [models.StatusInfo(jobID=1, status="accepted", type="process")]
+        jobs = [models.StatusInfo(jobID="1", status="accepted", type="process")]
         job_list = models.JobList(jobs=jobs)
         return job_list
 
     def get_job(self, job_id: str = fastapi.Path(...)) -> models.StatusInfo:
-        status_info = models.StatusInfo(jobID=1, status="running", type="process")
+        status_info = models.StatusInfo(jobID="1", status="running", type="process")
         return status_info
 
     def get_job_results(  # type: ignore
         self,
         job_id: str = fastapi.Path(...),
-    ) -> Dict[str, Any]:
+    ) -> models.Results:
         results = {
             "result": f"https://example.org/{job_id}-results.nc",
         }
         return results
 
     def delete_job(self, job_id: str = fastapi.Path(...)) -> models.StatusInfo:
-        status_info = models.StatusInfo(jobID=1, status="dismissed", type="process")
+        status_info = models.StatusInfo(jobID="1", status="dismissed", type="process")
         return status_info
 
 
@@ -121,7 +123,9 @@ class TestClientExtended(clients.BaseClient):
             )
             for i in range(0, limit)
         ]
-        process_list = models.ProcessList(processes=processes)
+        process_list = models.ProcessList(
+            processes=processes, links=[models.Link(href="https://example.org")]
+        )
         return process_list
 
     def get_process(
@@ -143,7 +147,7 @@ class TestClientExtended(clients.BaseClient):
         process_id: str = fastapi.Path(...),
         execution_content: Dict[str, Any] = fastapi.Body(...),
     ) -> models.StatusInfo:
-        status_info = models.StatusInfo(jobID=1, status="accepted", type="process")
+        status_info = models.StatusInfo(jobID="1", status="accepted", type="process")
         return status_info
 
     def get_jobs(
@@ -152,25 +156,25 @@ class TestClientExtended(clients.BaseClient):
         status: Optional[List[str]] = fastapi.Query(None),
         limit: Optional[int] = fastapi.Query(10, ge=1, le=10000),
     ) -> JobList:
-        jobs = [StatusInfo(jobID=1, status="accepted", type="process")]
+        jobs = [StatusInfo(jobID="1", status="accepted", type="process")]
         job_list = JobList(jobs=jobs)
         return job_list
 
     def get_job(self, job_id: str = fastapi.Path(...)) -> StatusInfo:
-        status_info = StatusInfo(jobID=1, status="running", type="process")
+        status_info = StatusInfo(jobID="1", status="running", type="process")
         return status_info
 
     def get_job_results(  # type: ignore
         self,
         job_id: str = fastapi.Path(...),
-    ) -> Dict[str, Any]:
+    ) -> models.Results:
         results = {
             "result": f"https://example.org/{job_id}-results.nc",
         }
         return results
 
     def delete_job(self, job_id: str = fastapi.Path(...)) -> StatusInfo:
-        status_info = StatusInfo(jobID=1, status="dismissed", type="process")
+        status_info = StatusInfo(jobID="1", status="dismissed", type="process")
         return status_info
 
 
