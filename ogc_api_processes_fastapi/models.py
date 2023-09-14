@@ -114,8 +114,7 @@ class ObjectType(enum.Enum):
 
 class Reference(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(extra=pydantic.Extra.forbid)
-
-    _ref: str = pydantic.Field(..., alias="$ref")
+    ref: str
 
 
 class PositiveInt(pydantic.ConstrainedInt):
