@@ -9,7 +9,7 @@ channels:
 # DO NOT EDIT ABOVE THIS LINE, ADD DEPENDENCIES BELOW AS SHOWN IN THE EXAMPLE
 dependencies:
 - attrs
-- httpx
+# - httpx
 - fastapi
 - pydantic>2
 - pydantic-settings>2
