@@ -147,6 +147,11 @@ def create_get_conformance_endpoint(
     return get_conformance
 
 
+# The nesting of endpoint functions inside generator functions is needed
+# to be able to pass the client to the endpoint function.
+# Client is passed as a dependency to the endpoint function so that all its
+# arguments are resolved as endpoints parameters and correctly inserted in the
+# automatic documentation.
 def create_get_processes_endpoint(
     client: clients.BaseClient,
 ) -> Callable[[fastapi.Request], models.ProcessList]:
