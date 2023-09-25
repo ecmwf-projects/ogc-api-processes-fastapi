@@ -15,7 +15,9 @@ classifiers = [
 ]
 dependencies = [
   "attrs",
-  "fastapi"
+  "fastapi",
+  "pydantic>2",
+  "pydantic-settings>2"
 ]
 description = "OGC API Processes service based on FastAPI"
 dynamic = ["version"]

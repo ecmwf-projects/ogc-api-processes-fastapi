@@ -14,9 +14,8 @@
 
 from typing import Any, Dict, List
 
-import pytest
-
 import ogc_api_processes_fastapi
+import ogc_api_processes_fastapi.models
 
 
 def equal_dicts(d1: Dict[str, Any], d2: Dict[str, Any], ignore_keys: List[Any]) -> bool:
@@ -37,8 +36,8 @@ def test_set_resp_model_get_landing_page_default(
         test_client_default, "GetLandingPage"
     )
     exp_resp_model = ogc_api_processes_fastapi.models.LandingPage
-    resp_model_schema = resp_model.schema()
-    exp_resp_model_schema = exp_resp_model.schema()
+    resp_model_schema = resp_model.model_json_schema()
+    exp_resp_model_schema = exp_resp_model.model_json_schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
 
@@ -49,8 +48,8 @@ def test_set_resp_model_get_conformance_default(
         test_client_default, "GetConformance"
     )
     exp_resp_model = ogc_api_processes_fastapi.models.ConfClass
-    resp_model_schema = resp_model.schema()
-    exp_resp_model_schema = exp_resp_model.schema()
+    resp_model_schema = resp_model.model_json_schema()
+    exp_resp_model_schema = exp_resp_model.model_json_schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
 
@@ -61,13 +60,9 @@ def test_set_resp_model_get_process_list_default(
         test_client_default, "GetProcesses"
     )
     exp_resp_model = ogc_api_processes_fastapi.models.ProcessList
-    resp_model_schema = resp_model.schema()
-    exp_resp_model_schema = exp_resp_model.schema()
+    resp_model_schema = resp_model.model_json_schema()
+    exp_resp_model_schema = exp_resp_model.model_json_schema()
     assert resp_model_schema["properties"] == exp_resp_model_schema["properties"]
-    assert (
-        "links" in resp_model_schema["required"]
-        and "links" not in exp_resp_model_schema["required"]
-    )
 
 
 def test_set_resp_model_get_process_default(
@@ -77,8 +72,8 @@ def test_set_resp_model_get_process_default(
         test_client_default, "GetProcess"
     )
     exp_resp_model = ogc_api_processes_fastapi.models.ProcessDescription
-    resp_model_schema = resp_model.schema()
-    exp_resp_model_schema = exp_resp_model.schema()
+    resp_model_schema = resp_model.model_json_schema()
+    exp_resp_model_schema = exp_resp_model.model_json_schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
 
@@ -89,8 +84,8 @@ def test_set_resp_model_post_process_execution_default(
         test_client_default, "PostProcessExecution"
     )
     exp_resp_model = ogc_api_processes_fastapi.models.StatusInfo
-    resp_model_schema = resp_model.schema()
-    exp_resp_model_schema = exp_resp_model.schema()
+    resp_model_schema = resp_model.model_json_schema()
+    exp_resp_model_schema = exp_resp_model.model_json_schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
 
@@ -101,13 +96,9 @@ def test_set_resp_model_get_jobs_default(
         test_client_default, "GetJobs"
     )
     exp_resp_model = ogc_api_processes_fastapi.models.JobList
-    resp_model_schema = resp_model.schema()
-    exp_resp_model_schema = exp_resp_model.schema()
+    resp_model_schema = resp_model.model_json_schema()
+    exp_resp_model_schema = exp_resp_model.model_json_schema()
     assert resp_model_schema["properties"] == exp_resp_model_schema["properties"]
-    assert (
-        "links" in resp_model_schema["required"]
-        and "links" not in exp_resp_model_schema["required"]
-    )
 
 
 def test_set_resp_model_get_job_default(
@@ -117,12 +108,12 @@ def test_set_resp_model_get_job_default(
         test_client_default, "GetJob"
     )
     exp_resp_model = ogc_api_processes_fastapi.models.StatusInfo
-    resp_model_schema = resp_model.schema()
-    exp_resp_model_schema = exp_resp_model.schema()
+    resp_model_schema = resp_model.model_json_schema()
+    exp_resp_model_schema = exp_resp_model.model_json_schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
 
-@pytest.mark.skip(reason="to be inspected")
+# @pytest.mark.skip(reason="to be inspected")
 def test_set_resp_model_get_jobs_results_default(
     test_client_default: ogc_api_processes_fastapi.BaseClient,
 ) -> None:
@@ -130,8 +121,8 @@ def test_set_resp_model_get_jobs_results_default(
         test_client_default, "GetJobResults"
     )
     exp_resp_model = ogc_api_processes_fastapi.models.Results
-    resp_model_schema = resp_model.schema()
-    exp_resp_model_schema = exp_resp_model.schema()
+    resp_model_schema = resp_model.model_json_schema()
+    exp_resp_model_schema = exp_resp_model.model_json_schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
 
@@ -142,8 +133,8 @@ def test_set_resp_model_delete_job_default(
         test_client_default, "DeleteJob"
     )
     exp_resp_model = ogc_api_processes_fastapi.models.StatusInfo
-    resp_model_schema = resp_model.schema()
-    exp_resp_model_schema = exp_resp_model.schema()
+    resp_model_schema = resp_model.model_json_schema()
+    exp_resp_model_schema = exp_resp_model.model_json_schema()
     assert equal_dicts(resp_model_schema, exp_resp_model_schema, ["title"])
 
 

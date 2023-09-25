@@ -19,6 +19,7 @@ import enum
 from typing import Any, Dict, ForwardRef, List, Optional, Union, cast
 
 import pydantic
+import typing_extensions
 
 
 class Metadata(pydantic.BaseModel):
@@ -39,7 +40,7 @@ class JobControlOptions(enum.Enum):
 
 
 class TransmissionMode(enum.Enum):
-    value: str = "value"  # type:ignore
+    value: str = "value"
     reference: str = "reference"
 
 
@@ -50,26 +51,36 @@ class PaginationQueryParameters(pydantic.BaseModel):
 
 class Link(pydantic.BaseModel):
     href: str
-    rel: Optional[str] = pydantic.Field(None, example="service")
-    type: Optional[str] = pydantic.Field(None, example="application/json")
-    hreflang: Optional[str] = pydantic.Field(None, example="en")
+    rel: Optional[str] = pydantic.Field(
+        default=None, json_schema_extra={"example": "service"}
+    )
+    type: Optional[str] = pydantic.Field(
+        default=None, json_schema_extra={"example": "application/json"}
+    )
+    hreflang: Optional[str] = pydantic.Field(
+        default=None, json_schema_extra={"example": "en"}
+    )
     title: Optional[str] = None
 
 
 class LandingPage(pydantic.BaseModel):
     title: Optional[str] = pydantic.Field(
-        default=None, example="Example processing server"
+        default=None, json_schema_extra={"example": "Example processing server"}
     )
     description: Optional[str] = pydantic.Field(
         default=None,
-        example="Example server implementing the OGC API - Processes 1.0 Standard",
+        json_schema_extra={
+            "example": "Example server implementing the OGC API - Processes 1.0 Standard"
+        },
     )
     links: List[Link]
 
 
 class ConfClass(pydantic.BaseModel):
     conformsTo: List[str] = pydantic.Field(
-        example="http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/core"
+        json_schema_extra={
+            "example": "http://www.opengis.net/spec/ogcapi-processes-1/1.0/conf/core"
+        }
     )
 
 
@@ -94,11 +105,8 @@ class ProcessSummary(DescriptionType):
 
 
 class ProcessList(pydantic.BaseModel):
-    class Config:
-        underscore_attrs_are_private = True
-
     processes: List[ProcessSummary]
-    links: Optional[List[Link]] = None
+    links: List[Link]
     _pagination_query_params: Optional[PaginationQueryParameters] = None
 
 
@@ -116,22 +124,18 @@ class ObjectType(enum.Enum):
 
 
 class Reference(pydantic.BaseModel):
-    class Config:
-        extra = pydantic.Extra.forbid
-
-    _ref: str = pydantic.Field(..., alias="$ref")
+    model_config = pydantic.ConfigDict(extra="forbid")
+    ref: str
 
 
-class PositiveInt(pydantic.ConstrainedInt):
-    ge = 0
+PositiveInt = typing_extensions.Annotated[int, pydantic.Field(ge=0)]
 
 
 SchemaItem = ForwardRef("SchemaItem")
 
 
 class SchemaItem(pydantic.BaseModel):  # type: ignore
-    class Config:
-        extra = pydantic.Extra.forbid
+    model_config = pydantic.ConfigDict(extra="forbid")
 
     title: Optional[str] = None
     multipleOf: Optional[pydantic.PositiveFloat] = None
@@ -147,8 +151,8 @@ class SchemaItem(pydantic.BaseModel):  # type: ignore
     uniqueItems: Optional[bool] = False
     maxProperties: Optional[PositiveInt] = None
     minProperties: Optional[PositiveInt] = cast(PositiveInt, 0)
-    required: Optional[List[str]] = pydantic.Field(None, min_items=1)
-    enum: Optional[List[Any]] = pydantic.Field(None, min_items=1)
+    required: Optional[List[str]] = pydantic.Field(default=None, min_length=1)
+    enum: Optional[List[Any]] = pydantic.Field(default=None, min_length=1)
     type: Optional[ObjectType] = None
     description: Optional[str] = None
     format: Optional[str] = None
@@ -165,12 +169,11 @@ class SchemaItem(pydantic.BaseModel):  # type: ignore
     properties: Optional[Dict[str, Union[Reference, SchemaItem]]] = None  # type: ignore
 
 
-SchemaItem.update_forward_refs()  # type: ignore
+SchemaItem.model_rebuild()  # type: ignore
 
 
 class InputDescription(DescriptionType):
-    class Config:
-        allow_population_by_field_name = True
+    model_config = pydantic.ConfigDict(populate_by_name=True)
 
     minOccurs: Optional[int] = 1
     maxOccurs: Optional[Union[int, MaxOccur]] = None
@@ -178,14 +181,12 @@ class InputDescription(DescriptionType):
 
 
 class OutputDescription(DescriptionType):
-    class Config:
-        allow_population_by_field_name = True
+    model_config = pydantic.ConfigDict(populate_by_name=True)
 
     schema_: Union[Reference, SchemaItem] = pydantic.Field(..., alias="schema")  # type: ignore
 
 
-class BinaryInputValue(pydantic.BaseModel):
-    __root__: str
+BinaryInputValue = pydantic.RootModel[str]
 
 
 class Crs(enum.Enum):
@@ -202,26 +203,29 @@ class Bbox(pydantic.BaseModel):
     crs: Optional[Crs] = Crs.http___www_opengis_net_def_crs_OGC_1_3_CRS84
 
 
-class InputValueNoObject(pydantic.BaseModel):
-    __root__: Union[str, float, int, bool, List[Any], BinaryInputValue, Bbox]
+InputValueNoObject = pydantic.RootModel[
+    Union[str, float, int, bool, List[Any], BinaryInputValue, Bbox]
+]
 
 
 class Format(pydantic.BaseModel):
     mediaType: Optional[str] = None
     encoding: Optional[str] = None
-    schema_: Optional[Union[str, Dict[str, Any]]] = pydantic.Field(None, alias="schema")
+    schema_: Optional[Union[str, Dict[str, Any]]] = pydantic.Field(
+        default=None, alias="schema"
+    )
 
 
-class InputValue(pydantic.BaseModel):
-    __root__: Union[Dict[str, Any], InputValueNoObject]
+InputValue = pydantic.RootModel[Union[Dict[str, Any], InputValueNoObject]]
 
 
 class QualifiedInputValue(Format):
     value: InputValue
 
 
-class InlineOrRefData(pydantic.BaseModel):
-    __root__: Union[InputValueNoObject, QualifiedInputValue, Link]
+InlineOrRefData = pydantic.RootModel[
+    Union[InputValueNoObject, QualifiedInputValue, Link]
+]
 
 
 class Output(pydantic.BaseModel):
@@ -252,9 +256,7 @@ class ProcessDescription(ProcessSummary):
     outputs: Optional[Dict[str, OutputDescription]] = None
 
 
-class ConInt(pydantic.ConstrainedInt):
-    ge = 0
-    le = 100
+ConInt = typing_extensions.Annotated[int, pydantic.Field(ge=0, le=100)]
 
 
 class StatusCode(str, enum.Enum):
@@ -270,8 +272,7 @@ class JobType(enum.Enum):
 
 
 class StatusInfo(pydantic.BaseModel):
-    class Config:
-        extra = pydantic.Extra.allow
+    model_config = pydantic.ConfigDict(extra="allow")
 
     processID: Optional[str] = None
     type: JobType
@@ -287,21 +288,17 @@ class StatusInfo(pydantic.BaseModel):
 
 
 class JobList(pydantic.BaseModel):
-    class Config:
-        underscore_attrs_are_private = True
-
     jobs: List[StatusInfo]
     links: Optional[List[Link]] = None
     _pagination_query_params: Optional[PaginationQueryParameters] = None
 
 
-class Results(pydantic.BaseModel):
-    __root__: Optional[Dict[str, InlineOrRefData]] = None
+class Results(pydantic.RootModel[Optional[Dict[str, InlineOrRefData]]]):
+    root: Optional[Dict[str, InlineOrRefData]] = None
 
 
 class Exception(pydantic.BaseModel):
-    class Config:
-        extra = pydantic.Extra.allow
+    model_config = pydantic.ConfigDict(extra="allow")
 
     type: str
     title: Optional[str] = None
