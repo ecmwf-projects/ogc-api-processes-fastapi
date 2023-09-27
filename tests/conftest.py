@@ -104,14 +104,14 @@ class TestClientDefault(clients.BaseClient):
         )
         return status_info
 
-    def get_job_results(  # type: ignore
+    def get_job_results(
         self,
         job_id: str = fastapi.Path(...),
     ) -> models.Results:
         results = {
             "result": f"https://example.org/{job_id}-results.nc",
         }
-        return results
+        return results  # type: ignore
 
     def delete_job(self, job_id: str = fastapi.Path(...)) -> models.StatusInfo:
         status_info = models.StatusInfo(
@@ -205,7 +205,7 @@ class TestClientExtended(clients.BaseClient):
         results = {
             "result": f"https://example.org/{job_id}-results.nc",
         }
-        return results
+        return results  # type: ignore
 
     def delete_job(self, job_id: str = fastapi.Path(...)) -> StatusInfo:
         status_info = StatusInfo(
