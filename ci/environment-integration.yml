@@ -7,5 +7,4 @@ dependencies:
 - pytest
 - pytest-cov
 # DO NOT EDIT ABOVE THIS LINE, ADD DEPENDENCIES BELOW
-- requests=2.27
-- fastapi=0.75
+- httpx
