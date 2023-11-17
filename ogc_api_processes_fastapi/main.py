@@ -39,7 +39,7 @@ def register_route(
         response_model_exclude_unset=True,
         response_model_exclude_none=True,
         endpoint=route_endpoint,
-        **config.ROUTES[route_name].model_dump(exclude={"client_method"})
+        **config.ROUTES[route_name].model_dump(exclude={"client_method"}),
     )
 
 
