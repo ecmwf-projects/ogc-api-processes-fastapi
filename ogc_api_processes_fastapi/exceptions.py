@@ -77,7 +77,7 @@ def ogc_api_exception_handler(
             status=exc.status_code,
             detail=exc.detail,
             instance=str(request.url),
-        ).dict(exclude_none=True),
+        ).model_dump(exclude_none=True),
     )
 
 
