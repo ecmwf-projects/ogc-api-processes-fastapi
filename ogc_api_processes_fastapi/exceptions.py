@@ -100,8 +100,8 @@ def include_exception_handlers(
     fastapi.FastAPI
         FastAPI application including OGC API - Processes compliant exceptions handlers.
     """
-    app.add_exception_handler(NoSuchProcess, exception_handler)
-    app.add_exception_handler(NoSuchJob, exception_handler)
-    app.add_exception_handler(ResultsNotReady, exception_handler)
-    app.add_exception_handler(JobResultsFailed, exception_handler)
+    app.add_exception_handler(NoSuchProcess, exception_handler)  # type: ignore
+    app.add_exception_handler(NoSuchJob, exception_handler)  # type: ignore
+    app.add_exception_handler(ResultsNotReady, exception_handler)  # type: ignore
+    app.add_exception_handler(JobResultsFailed, exception_handler)  # type: ignore
     return app
