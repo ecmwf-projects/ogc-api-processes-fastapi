@@ -322,7 +322,6 @@ endpoints_generators = {
     "GetJob": create_get_job_endpoint,
     "GetJobResults": create_get_job_results_endpoint,
     "DeleteJob": create_delete_job_endpoint,
-    "PostProcessExecute": create_post_process_execution_endpoint,
 }
 
 

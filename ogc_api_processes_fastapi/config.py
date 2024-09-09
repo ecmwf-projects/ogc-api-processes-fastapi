@@ -35,14 +35,6 @@ ROUTES: Dict[str, RouteConfig] = {
         methods=["GET"],
         client_method="get_process",
     ),
-    "PostProcessExecute": RouteConfig(
-        path="/processes/{process_id}/execute",
-        summary="Execution of a process",
-        methods=["POST"],
-        status_code=201,
-        client_method="post_process_execution",
-        deprecated=True,
-    ),
     "PostProcessExecution": RouteConfig(
         path="/processes/{process_id}/execution",
         summary="Execution of a process",
