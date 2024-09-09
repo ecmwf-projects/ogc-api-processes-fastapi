@@ -35,6 +35,7 @@ def register_route(
     route_endpoint = endpoints.create_endpoint(route_name, client=client)
     router.add_api_route(
         name=route_name,
+        description=client.endpoints_description.get(route_name, ""),
         response_model=response_model,
         response_model_exclude_unset=True,
         response_model_exclude_none=True,
