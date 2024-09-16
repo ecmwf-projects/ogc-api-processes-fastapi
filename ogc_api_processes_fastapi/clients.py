@@ -25,6 +25,18 @@ from . import models
 class BaseClient(abc.ABC):
     """Defines a pattern for implementing OGC API - Processes endpoints."""
 
+    endpoints_description: Dict[str, str] = {
+        "GetLandingPage": "Get landing page",
+        "GetConformance": "Get conformance classes",
+        "GetProcesses": "Get all available processes",
+        "GetProcess": "Get description of the process",
+        "PostProcessExecution": "Post request for execution of the process",
+        "GetJobs": "Get the list of submitted jobs",
+        "GetJob": "Get status information of the job",
+        "GetJobResults": "Get results of the job",
+        "DeleteJob": "Cancel the job",
+    }
+
     @abc.abstractmethod
     def get_processes(
         self, limit: Optional[int] = fastapi.Query(None)
