@@ -34,14 +34,14 @@ class AdditionalParameter(pydantic.BaseModel):
 
 
 class JobControlOptions(enum.Enum):
-    sync_execute: str = "sync-execute"
-    async_execute: str = "async-execute"
-    dismiss: str = "dismiss"
+    sync_execute = "sync-execute"
+    async_execute = "async-execute"
+    dismiss = "dismiss"
 
 
 class TransmissionMode(enum.Enum):
-    value: str = "value"
-    reference: str = "reference"
+    value = "value"
+    reference = "reference"
 
 
 class PaginationQueryParameters(pydantic.BaseModel):
@@ -260,11 +260,11 @@ ConInt = typing_extensions.Annotated[int, pydantic.Field(ge=0, le=100)]
 
 
 class StatusCode(str, enum.Enum):
-    accepted: str = "accepted"
-    running: str = "running"
-    successful: str = "successful"
-    failed: str = "failed"
-    dismissed: str = "dismissed"
+    accepted = "accepted"
+    running = "running"
+    successful = "successful"
+    failed = "failed"
+    dismissed = "dismissed"
 
 
 class JobType(enum.Enum):
