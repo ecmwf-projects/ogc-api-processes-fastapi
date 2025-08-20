@@ -198,7 +198,7 @@ class TestClientExtended(clients.BaseClient):
         )
         return status_info
 
-    def get_job_results(  # type: ignore
+    def get_job_results(
         self,
         job_id: str = fastapi.Path(...),
     ) -> models.Results:
