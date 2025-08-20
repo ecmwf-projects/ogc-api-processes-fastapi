@@ -16,7 +16,7 @@
 
 import datetime
 import enum
-from typing import Any, Dict, ForwardRef, List, Optional, Union, cast
+from typing import Any, Dict, ForwardRef, List, Optional, Union
 
 import pydantic
 import typing_extensions
@@ -144,13 +144,13 @@ class SchemaItem(pydantic.BaseModel):  # type: ignore
     minimum: Optional[float] = None
     exclusiveMinimum: Optional[bool] = False
     maxLength: Optional[PositiveInt] = None
-    minLength: Optional[PositiveInt] = cast(PositiveInt, 0)
+    minLength: Optional[PositiveInt] = 0
     pattern: Optional[str] = None
     maxItems: Optional[PositiveInt] = None
-    minItems: Optional[PositiveInt] = cast(PositiveInt, 0)
+    minItems: Optional[PositiveInt] = 0
     uniqueItems: Optional[bool] = False
     maxProperties: Optional[PositiveInt] = None
-    minProperties: Optional[PositiveInt] = cast(PositiveInt, 0)
+    minProperties: Optional[PositiveInt] = 0
     required: Optional[List[str]] = pydantic.Field(default=None, min_length=1)
     enum: Optional[List[Any]] = pydantic.Field(default=None, min_length=1)
     type: Optional[ObjectType] = None
