@@ -6,6 +6,7 @@ OGC API Processes service based on FastAPI.
 :caption: 'Contents:'
 :maxdepth: 2
 
+README.md
 API Reference <_api/ogc_api_processes_fastapi/index>
 ```
 
